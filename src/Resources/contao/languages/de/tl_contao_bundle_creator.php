@@ -9,13 +9,12 @@
  *
  */
 
-
 /**
  * Operations
  */
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['edit'] = ["Bundle mit ID: %s bearbeiten","Bundle mit ID: %s bearbeiten"];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['delete'] = ["Bundle mit ID: %s löschen","Bundle mit ID: %s löschen"];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle mit ID: %s ansehen","Bundle mit ID: %s ansehen"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['edit'] = ["Bundle mit ID: %s bearbeiten", "Bundle mit ID: %s bearbeiten"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['delete'] = ["Bundle mit ID: %s löschen", "Bundle mit ID: %s löschen"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle mit ID: %s ansehen", "Bundle mit ID: %s ansehen"];
 
 /**
  * Legends
@@ -30,11 +29,13 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable_settings_legend'] = "D
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundlename'] = ["Bundle Name", "Geben Sie einen Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "Geben Sie Ihren Vendornamen ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name", "Geben Sie den Repository Namen für das Bundle ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamige Erweiterung überschreiben", "Soll eine gleichnamige, bereits bestehende Extension überschrieben werden?"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['licence'] = ["Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorname'] = ["Autorname", "Geben Sie den Namen des Entwicklers ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["Autor E-Mail-Adresse", "Geben Sie die E-Mail-Adresse des Autors an."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorwebsite'] = ["Autor Webseite-Adresse", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addDcaTable'] = ["DCA Tabelle hinzufügen", "Geben Sie an, ob eine DCA Tabelle generiert werden soll."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname", "Geben Sie den Namen der Tabelle an: z.B. tl_sample_table"];
 
 /**

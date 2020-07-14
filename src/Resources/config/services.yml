@@ -5,4 +5,8 @@ services:
         public: true
 
 
-    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator: ~
+    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator:
+        arguments:
+        - '@session'
+        - '%kernel.project_dir%'
+        public: true

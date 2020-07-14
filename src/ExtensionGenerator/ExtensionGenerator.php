@@ -16,8 +16,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 use Contao\File;
 use Contao\Files;
 use Contao\Folder;
-use Contao\System;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ExtensionGenerator
@@ -25,6 +25,12 @@ use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
  */
 class ExtensionGenerator
 {
+    /** @var SessionInterface */
+    private $session;
+
+    /** @var string|string */
+    private $projectDir;
+
     /** @var string */
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Samples/sample-repository';
 
@@ -33,11 +39,23 @@ class ExtensionGenerator
      */
     const STR_INFO_FLASH_TYPE = 'contao.BE.info';
 
+    /**
+     * @var string
+     */
+    const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
+
     /** @var ContaoBundleCreatorModel */
     protected $model;
 
-    public function __construct()
+    /**
+     * ExtensionGenerator constructor.
+     * @param SessionInterface $session
+     * @param string $projectDir
+     */
+    public function __construct(SessionInterface $session, string $projectDir)
     {
+        $this->session = $session;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -46,18 +64,43 @@ class ExtensionGenerator
     public function run(ContaoBundleCreatorModel $model): void
     {
         $this->model = $model;
+
+        if ($this->bundleExists() && !$this->model->overwriteexisting)
+        {
+            $this->addErrorFlashMessage('An extension with the same name already exists. Please set the "override extension flag".');
+            return;
+        }
+
+        $this->addInfoFlashMessage(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
+
+        // Generate the folders
         $this->generateFolders();
 
+        // Generate the composer.json file
         $this->generateComposerJsonFile();
-        $this->generateContaoManagerFile();
+
+        // Generate the bundle class
+        $this->generateBundleClass();
+
+        // Generate the Contao Manager Plugin class
+        $this->generateContaoManagerPluginClass();
+
         // Config files, assets, etc.
         $this->copyFiles();
-        $this->generateBundleFile();
 
-        if ($this->model->dcatable != '')
+        // Generate dca table
+        if ($this->model->addDcaTable && $this->model->dcatable != '')
         {
             $this->generateDcaTable();
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function bundleExists(): bool
+    {
+        return is_dir($this->projectDir . '/vendor/' . $this->model->vendorname . '/' . $this->model->repositoryname);
     }
 
     /**
@@ -80,6 +123,9 @@ class ExtensionGenerator
         {
             new Folder($strFolder);
         }
+
+        // Add message
+        $this->addInfoFlashMessage(sprintf('Generating folder structure in  "vendor/%s/%s".', $this->model->vendorname, $this->model->repositoryname));
     }
 
     /**
@@ -111,15 +157,14 @@ class ExtensionGenerator
         $objTarget->append($content);
         $objTarget->close();
 
-        // Show message in the backend
-        $msg = sprintf('Created file "%s".', $target);
-        $this->addInfoFlashMessage($msg);
+        // Add message
+        $this->addInfoFlashMessage('Generating composer.json file.');
     }
 
     /**
      *
      */
-    protected function generateBundleFile(): void
+    protected function generateBundleClass(): void
     {
         $source = self::SAMPLE_DIR . '/src/BundleFile.php';
 
@@ -139,15 +184,14 @@ class ExtensionGenerator
         $objTarget->append($content);
         $objTarget->close();
 
-        // Show message in the backend
-        $msg = sprintf('Created file "%s".', $target);
-        $this->addInfoFlashMessage($msg);
+        // Add message
+        $this->addInfoFlashMessage('Generating bundle class.');
     }
 
     /**
      *
      */
-    protected function generateContaoManagerFile(): void
+    protected function generateContaoManagerPluginClass(): void
     {
         $source = self::SAMPLE_DIR . '/src/ContaoManager/Plugin.php';
 
@@ -167,9 +211,8 @@ class ExtensionGenerator
         $objTarget->append($content);
         $objTarget->close();
 
-        // Show message in the backend
-        $msg = sprintf('Created file "%s".', $target);
-        $this->addInfoFlashMessage($msg);
+        // Add message
+        $this->addInfoFlashMessage('Generating Contao Manager Plugin class.');
     }
 
     /**
@@ -229,6 +272,9 @@ class ExtensionGenerator
             $target = sprintf('vendor/%s/%s/src/Resources/config/%s', $this->model->vendorname, $this->model->repositoryname, $file);
 
             Files::getInstance()->copy($source, $target);
+
+            // Add message
+            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
 
         // Contao config/config.php && languages/de/modules.php
@@ -251,6 +297,9 @@ class ExtensionGenerator
             $objFile->truncate();
             $objFile->append($content);
             $objFile->close();
+
+            // Add message
+            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
 
         // Assets
@@ -261,6 +310,9 @@ class ExtensionGenerator
             $target = sprintf('vendor/%s/%s/src/Resources/public/%s', $this->model->vendorname, $this->model->repositoryname, $file);
 
             Files::getInstance()->copy($source, $target);
+
+            // Add message
+            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
 
         // Readme
@@ -271,6 +323,9 @@ class ExtensionGenerator
             $target = sprintf('vendor/%s/%s/%s', $this->model->vendorname, $this->model->repositoryname, $file);
 
             Files::getInstance()->copy($source, $target);
+
+            // Add message
+            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
     }
 
@@ -338,18 +393,34 @@ class ExtensionGenerator
      */
     private function addInfoFlashMessage(string $msg): void
     {
+        $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
+    }
+
+    /**
+     * @param string $msg
+     */
+    private function addErrorFlashMessage(string $msg): void
+    {
+        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
+    }
+
+    /**
+     * @param string $msg
+     * @param string $type
+     */
+    private function addFlashMessage(string $msg, string $type): void
+    {
         // Get flash bag
-        $session = System::getContainer()->get('session');
-        $flashBag = $session->getFlashBag();
+        $flashBag = $this->session->getFlashBag();
         $arrFlash = [];
-        if ($flashBag->has(static::STR_INFO_FLASH_TYPE))
+        if ($flashBag->has($type))
         {
-            $arrFlash = $flashBag->get(static::STR_INFO_FLASH_TYPE);
+            $arrFlash = $flashBag->get($type);
         }
 
         $arrFlash[] = $msg;
 
-        $flashBag->set(static::STR_INFO_FLASH_TYPE, $arrFlash);
+        $flashBag->set($type, $arrFlash);
     }
 
 }
