@@ -9,6 +9,11 @@
 
 !!! ***Bereits bestehende Dateien werden überschrieben.***
 
+## Verzeichnisstruktur
+Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
+![Alt text](src/Resources/public/file-tree.png?raw=true "Verzeichnisstruktur")
+
+
 ## Inbetriebsetzung des Bundles
 * Bundle generieren
 * Das passende repository in github anlegen.

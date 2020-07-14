@@ -1,6 +1,6 @@
 {
   "name": "markocupic/contao-bundle-creator-bundle",
-  "description": "Contao bundle creator",
+  "description": "Create a contao bundle boilerplate from the backend",
   "keywords": [
     "contao",
     "bundle",
@@ -8,8 +8,8 @@
     "extension",
     "boilerplate"
   ],
-  "type": "contao-module",
-  "license": "MIT",
+  "type": "contao-bundle",
+  "licence": "MIT",
   "authors": [
     {
       "name": "Marko Cupic",
