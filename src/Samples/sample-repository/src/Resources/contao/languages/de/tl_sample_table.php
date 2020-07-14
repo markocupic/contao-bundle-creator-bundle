@@ -6,7 +6,7 @@
  * Legends
  */
 $GLOBALS['TL_LANG']['#dcatable#']['first_legend'] = "Basis Einstellungen";
-$GLOBALS['TL_LANG']['#dcatable#']['first_legend'] = "Erweiterte Einstellungen";
+$GLOBALS['TL_LANG']['#dcatable#']['second_legend'] = "Erweiterte Einstellungen";
 
 /**
  * Operations
