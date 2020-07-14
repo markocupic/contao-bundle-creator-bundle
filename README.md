@@ -38,5 +38,5 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
   },
 ```
 
-* Contao Manager starten und ein vollständiges Paketupdate durch führen
+* Contao Manager starten und ein vollständiges Paketupdate durchführen
 * Installtool aufrufen und Datenbankupdate durchführen
