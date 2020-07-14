@@ -43,4 +43,5 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['createBundleButton'] = "Bundle-Generator starten";
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] = "Bundle herunterladen";
 

@@ -23,6 +23,9 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
                 'id' => 'primary'
             ]
         ],
+        'onload_callback'   => [
+            ['tl_contao_bundle_creator', 'downloadZipFile']
+        ],
         'onsubmit_callback' => [
             ['tl_contao_bundle_creator', 'runCreator']
         ]
@@ -82,13 +85,13 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Fields
     'fields'      => [
-        'id'                  => [
+        'id'                     => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
-        'tstamp'              => [
+        'tstamp'                 => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
-        'bundlename'          => [
+        'bundlename'             => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -97,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'vendorname'          => [
+        'vendorname'             => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -106,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'repositoryname'      => [
+        'repositoryname'         => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -115,21 +118,21 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'overwriteexisting'   => [
+        'overwriteexisting'      => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'addDcaTable'         => [
+        'addDcaTable'            => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'composerdescription' => [
+        'composerdescription'    => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -147,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 16, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(16) NOT NULL default ''"
         ],
-        'license'             => [
+        'license'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -156,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authorname'          => [
+        'authorname'             => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -165,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alpha'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authoremail'         => [
+        'authoremail'            => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -174,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'email'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authorwebsite'       => [
+        'authorwebsite'          => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -183,13 +186,13 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'addDcaTable'         => [
+        'addDcaTable'            => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'dcatable'            => [
+        'dcatable'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -216,7 +219,8 @@ class tl_contao_bundle_creator extends Contao\Backend
     }
 
     /**
-     * onsubmit_callback
+     * onsubmit callback
+     * Run the extension creator
      * @param \Contao\DataContainer $dc
      */
     public function runCreator(Contao\DataContainer $dc)
@@ -233,6 +237,35 @@ class tl_contao_bundle_creator extends Contao\Backend
     }
 
     /**
+     * onload callback
+     * Download extension as zip file when clicking on the download button
+     * @param \Contao\DC_Table $dc
+     */
+    public function downloadZipFile(\Contao\DC_Table $dc)
+    {
+        if (Contao\Input::get('id') != '' && Contao\Input::post('downloadBundle') === '' && Contao\Input::post('FORM_SUBMIT') === 'tl_contao_bundle_creator' && Contao\Input::post('SUBMIT_TYPE') != 'auto')
+        {
+            /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+            $session = \Contao\System::getContainer()->get('session');
+            if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
+            {
+                $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR-LAST-ZIP');
+                $session->remove('CONTAO-BUNDLE-CREATOR-LAST-ZIP');
+
+                $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+                $filepath = $projectDir . '/' . $zipSrc;
+                $filename = basename($filepath);
+                header('Content-Type: application/zip');
+                header('Content-Disposition: attachment; filename="' . $filename . '"');
+                header('Content-Length: ' . filesize($filepath));
+                readfile($filepath);
+                exit();
+            }
+        }
+    }
+
+    /**
      * @param $arrButtons
      * @param \Contao\DC_Table $dc
      * @return mixed
@@ -242,6 +275,13 @@ class tl_contao_bundle_creator extends Contao\Backend
         if (Contao\Input::get('act') === 'edit')
         {
             $arrButtons['createBundle'] = '<button type="submit" name="createBundle" id="createBundle" class="tl_submit createBundle" accesskey="x">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['createBundleButton'] . '</button>';
+
+            /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+            $session = \Contao\System::getContainer()->get('session');
+            if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
+            {
+                $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="javascript:this.style.display = \'none\'">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] . '</button>';
+            }
         }
 
         return $arrButtons;

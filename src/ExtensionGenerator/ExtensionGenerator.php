@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 
+use Contao\Controller;
 use Contao\File;
 use Contao\Files;
 use Contao\Folder;
@@ -94,10 +95,12 @@ class ExtensionGenerator
             $this->generateDcaTable();
         }
 
-        $this->zipData(
-            sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname),
-            sprintf('system/tmp/%s.zip', $this->model->repositoryname)
-        );
+        $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
+        $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname);
+        if ($this->zipData($zipSource, $zipTarget))
+        {
+            $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
+        }
     }
 
     /**
@@ -474,7 +477,6 @@ class ExtensionGenerator
                         $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
                         foreach ($files as $objSplFileInfo)
                         {
-
                             $file = $objSplFileInfo->getRealPath();
 
                             if (is_dir($file))
