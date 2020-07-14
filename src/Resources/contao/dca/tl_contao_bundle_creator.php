@@ -221,7 +221,7 @@ class tl_contao_bundle_creator extends Contao\Backend
     /**
      * onsubmit callback
      * Run the extension creator
-     * @param \Contao\DataContainer $dc
+     * @param Contao\DataContainer $dc
      */
     public function runCreator(Contao\DataContainer $dc)
     {
@@ -239,14 +239,14 @@ class tl_contao_bundle_creator extends Contao\Backend
     /**
      * onload callback
      * Download extension as zip file when clicking on the download button
-     * @param \Contao\DC_Table $dc
+     * @param Contao\DC_Table $dc
      */
-    public function downloadZipFile(\Contao\DC_Table $dc)
+    public function downloadZipFile(Contao\DC_Table $dc)
     {
         if (Contao\Input::get('id') != '' && Contao\Input::post('downloadBundle') === '' && Contao\Input::post('FORM_SUBMIT') === 'tl_contao_bundle_creator' && Contao\Input::post('SUBMIT_TYPE') != 'auto')
         {
             /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-            $session = \Contao\System::getContainer()->get('session');
+            $session = Contao\System::getContainer()->get('session');
             if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
             {
                 $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR-LAST-ZIP');
@@ -267,7 +267,7 @@ class tl_contao_bundle_creator extends Contao\Backend
 
     /**
      * @param $arrButtons
-     * @param \Contao\DC_Table $dc
+     * @param Contao\DC_Table $dc
      * @return mixed
      */
     public function buttonsCallback($arrButtons, Contao\DC_Table $dc)
@@ -277,7 +277,7 @@ class tl_contao_bundle_creator extends Contao\Backend
             $arrButtons['createBundle'] = '<button type="submit" name="createBundle" id="createBundle" class="tl_submit createBundle" accesskey="x">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['createBundleButton'] . '</button>';
 
             /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-            $session = \Contao\System::getContainer()->get('session');
+            $session = Contao\System::getContainer()->get('session');
             if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
             {
                 $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="javascript:this.style.display = \'none\'">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] . '</button>';
