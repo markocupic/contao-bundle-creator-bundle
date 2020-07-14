@@ -4,14 +4,14 @@
 
 declare(strict_types=1);
 
-namespace #vendornamenamespace#\#bundlenamenamespace#;
+namespace #toplevelnamespace#\#sublevelnamespace#;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class #vendornamenamespace##bundlenamenamespace#
- * @package #vendornamenamespace#\#bundlenamenamespace#
+ * Class #toplevelnamespace##sublevelnamespace#
+ * @package #toplevelnamespace#\#sublevelnamespace#
  */
-class #vendornamenamespace##bundlenamenamespace# extends Bundle
+class #toplevelnamespace##sublevelnamespace# extends Bundle
 {
 }

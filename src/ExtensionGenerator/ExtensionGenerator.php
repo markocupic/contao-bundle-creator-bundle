@@ -96,6 +96,7 @@ class ExtensionGenerator
     }
 
     /**
+     * Check if extension with same name already exists
      * @return bool
      */
     protected function bundleExists(): bool
@@ -104,6 +105,7 @@ class ExtensionGenerator
     }
 
     /**
+     * Generate the plugiin folder structure
      * @throws \Exception
      */
     protected function generateFolders(): void
@@ -129,7 +131,7 @@ class ExtensionGenerator
     }
 
     /**
-     *
+     * Generate the composer.json file
      */
     protected function generateComposerJsonFile(): void
     {
@@ -146,8 +148,8 @@ class ExtensionGenerator
         $content = str_replace('#authorname#', $this->model->authorname, $content);
         $content = str_replace('#authoremail#', $this->model->authoremail, $content);
         $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
-        $content = str_replace('#vendornamenamespace#', $this->getNamespaceFromString($this->model->vendorname), $content);
-        $content = str_replace('#bundlenamenamespace#', $this->getNamespaceFromString($this->model->repositoryname), $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
 
         $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
 
@@ -162,7 +164,7 @@ class ExtensionGenerator
     }
 
     /**
-     *
+     * Generate the bundle class
      */
     protected function generateBundleClass(): void
     {
@@ -173,10 +175,12 @@ class ExtensionGenerator
         $content = $sourceFile->getContent();
 
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-        $content = str_replace('#vendornamenamespace#', $this->getNamespaceFromString($this->model->vendorname), $content);
-        $content = str_replace('#bundlenamenamespace#', $this->getNamespaceFromString($this->model->repositoryname), $content);
+        // Top-level namespace
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        // Sub-level namespace
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
 
-        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->getNamespaceFromString($this->model->vendorname), $this->getNamespaceFromString($this->model->repositoryname));
+        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify($this->model->vendorname), $this->namespaceify($this->model->repositoryname));
 
         /** @var File $objTarget */
         $objTarget = new File($target);
@@ -189,7 +193,7 @@ class ExtensionGenerator
     }
 
     /**
-     *
+     * Generate the Contao Manager plugin class
      */
     protected function generateContaoManagerPluginClass(): void
     {
@@ -200,8 +204,10 @@ class ExtensionGenerator
         $content = $sourceFile->getContent();
 
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-        $content = str_replace('#vendornamenamespace#', $this->getNamespaceFromString($this->model->vendorname), $content);
-        $content = str_replace('#bundlenamenamespace#', $this->getNamespaceFromString($this->model->repositoryname), $content);
+        // Top-level namespace
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        // Sub-level namespace
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
 
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
 
@@ -216,7 +222,8 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate dca table and the corresponding language file
+     * Generate the dca table and
+     * the corresponding language file
      */
     protected function generateDcaTable(): void
     {
@@ -249,13 +256,13 @@ class ExtensionGenerator
         // Append backend module string to contao/config.php
         $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
         $objFile = new File($target);
-        $objFile->append($this->getTemplateFile('contao_config_be_mod.txt'));
+        $objFile->append($this->getContentFromPartialFile('contao_config_be_mod.txt'));
         $objFile->close();
 
         // Append backend module string to contao/languages/de/modules.php
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/de/modules.php', $this->model->vendorname, $this->model->repositoryname);
         $objFile = new File($target);
-        $objFile->append($this->getTemplateFile('contao_lang_de_modules.txt'));
+        $objFile->append($this->getContentFromPartialFile('contao_lang_de_modules.txt'));
         $objFile->close();
     }
 
@@ -302,7 +309,7 @@ class ExtensionGenerator
             $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
 
-        // Assets
+        // Assets in src/Resources/public
         $arrFiles = ['logo.png'];
         foreach ($arrFiles as $file)
         {
@@ -315,7 +322,7 @@ class ExtensionGenerator
             $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
         }
 
-        // Readme
+        // README.md
         $arrFiles = ['README.md'];
         foreach ($arrFiles as $file)
         {
@@ -330,6 +337,7 @@ class ExtensionGenerator
     }
 
     /**
+     * Get the php doc from the partial file
      * @return string
      * @throws \Exception
      */
@@ -357,7 +365,7 @@ class ExtensionGenerator
      * @return string
      * @throws \Exception
      */
-    protected function getTemplateFile(string $strFilename): string
+    protected function getContentFromPartialFile(string $strFilename): string
     {
         $source = self::SAMPLE_DIR . '/partials/' . $strFilename;
 
@@ -372,10 +380,13 @@ class ExtensionGenerator
     }
 
     /**
+     * Convert string to namespace
+     * "my_custom name-space" will become "MyCustomNameSpace"
+     *
      * @param string $strName
      * @return string
      */
-    private function getNamespaceFromString(string $strName): string
+    private function namespaceify(string $strName): string
     {
         $strName = str_replace('_', '-', $strName);
         $strName = str_replace(' ', '-', $strName);

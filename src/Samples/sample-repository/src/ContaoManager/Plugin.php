@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace #vendornamenamespace#\#bundlenamenamespace#\ContaoManager;
+namespace #toplevelnamespace#\#sublevelnamespace#\ContaoManager;
 
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -14,7 +14,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Class Plugin
- * @package #vendornamenamespace#\#bundlenamenamespace#\ContaoManager
+ * @package #toplevelnamespace#\#sublevelnamespace#\ContaoManager
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface
 {
@@ -24,7 +24,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('#vendornamenamespace#\#bundlenamenamespace#\#vendornamenamespace##bundlenamenamespace#')
+            BundleConfig::create('#toplevelnamespace#\#sublevelnamespace#\#toplevelnamespace##sublevelnamespace#')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
     }

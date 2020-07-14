@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "#vendornamenamespace#\\#bundlenamenamespace#\\": "src/"
+      "#toplevelnamespace#\\#sublevelnamespace#\\": "src/"
     },
     "classmap": [
       "src/Resources/contao"
@@ -39,7 +39,7 @@
     ]
   },
   "extra": {
-    "contao-manager-plugin": "#vendornamenamespace#\\#bundlenamenamespace#\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "#toplevelnamespace#\\#sublevelnamespace#\\ContaoManager\\Plugin"
   }
 
 }

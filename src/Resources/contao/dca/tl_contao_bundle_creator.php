@@ -94,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'vendorname'          => [
@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'repositoryname'      => [
@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'overwriteexisting'   => [
@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'licence'             => [
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'authorname'          => [
@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alpha'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'authoremail'         => [
@@ -186,7 +186,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
     ]
