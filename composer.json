@@ -41,7 +41,7 @@
     ]
   },
   "extra": {
-    "contao-manager-plugin": "Markocupic\\RszBenutzerverwaltungBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "Markocupic\\ContaoBundleCreatorBundle\\ContaoManager\\Plugin"
   }
 
 }
