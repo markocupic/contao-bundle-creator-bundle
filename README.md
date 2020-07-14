@@ -11,6 +11,7 @@
 
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
+
 ![Alt text](src/Resources/public/file-tree.png?raw=true "Verzeichnisstruktur")
 
 
