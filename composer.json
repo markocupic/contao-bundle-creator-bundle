@@ -9,7 +9,7 @@
     "boilerplate"
   ],
   "type": "contao-bundle",
-  "licence": "MIT",
+  "license": "MIT",
   "authors": [
     {
       "name": "Marko Cupic",
