@@ -7,7 +7,7 @@
     "tag 1",
     "tag 2"
   ],
-  "type": "contao-module",
+  "type": "contao-bundle",
   "licence": "#licence#",
   "authors": [
     {

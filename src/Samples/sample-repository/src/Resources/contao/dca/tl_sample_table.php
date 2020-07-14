@@ -8,7 +8,7 @@
 $GLOBALS['TL_DCA']['#dcatable#'] = [
 
     // Config
-    'config'   => [
+    'config'      => [
         'dataContainer'    => 'Table',
         'enableVersioning' => true,
         'sql'              => [
@@ -17,12 +17,12 @@ $GLOBALS['TL_DCA']['#dcatable#'] = [
             ]
         ],
     ],
-    'edit'     => [
+    'edit'        => [
         'buttons_callback' => [
             ['#dcatable#', 'buttonsCallback']
         ]
     ],
-    'list'     => [
+    'list'        => [
         'sorting'           => [
             'mode'        => 2,
             'fields'      => ['title'],
@@ -62,11 +62,16 @@ $GLOBALS['TL_DCA']['#dcatable#'] = [
         ]
     ],
     // Palettes
-    'palettes' => [
-        'default' => '{bundle_settings_legend},title,selectField,checkboxField,multitextField,textareaField'
+    'palettes'    => [
+        '__selector__' => ['addSubpalette'],
+        'default'      => '{first_legend},title,selectField,checkboxField,multitextField;{second_legend},addSubpalette'
+    ],
+    // Subpalettes
+    'subpalettes' => [
+        'addSubpalette' => 'textareaField',
     ],
     // Fields
-    'fields'   => [
+    'fields'      => [
         'id'             => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
@@ -119,6 +124,12 @@ $GLOBALS['TL_DCA']['#dcatable#'] = [
             'sorting'   => true,
             'eval'      => ['multiple' => true, 'size' => 4, 'decodeEntities' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'addSubpalette'  => [
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
         'textareaField'  => [
             'inputType' => 'textarea',
