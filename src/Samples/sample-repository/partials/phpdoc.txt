@@ -2,7 +2,7 @@
  * @copyright  #authorname# 2020 <#authoremail#>
  * @author     #authorname#
  * @package    #bundlename#
- * @licence    #licence#
+ * @license    #license#
  * @see        https://github.com/#vendorname#/#repositoryname#
  *
  */

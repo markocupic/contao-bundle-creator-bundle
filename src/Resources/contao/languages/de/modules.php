@@ -4,7 +4,7 @@
  * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
- * @licence    MIT
+ * @license    MIT
  * @see        https://github.com/markocupic/contao-bundle-creator
  *
  */

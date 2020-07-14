@@ -9,7 +9,7 @@
   ],
   "version": "#composerpackageversion#",
   "type": "contao-bundle",
-  "licence": "#licence#",
+  "license": "#license#",
   "authors": [
     {
       "name": "#authorname#",

@@ -4,7 +4,7 @@
  * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
- * @licence    MIT
+ * @license    MIT
  * @see        https://github.com/markocupic/contao-bundle-creator
  *
  */
@@ -93,6 +93,11 @@ class ExtensionGenerator
         {
             $this->generateDcaTable();
         }
+
+        $this->zipData(
+            sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname),
+            sprintf('system/tmp/%s.zip', $this->model->repositoryname)
+        );
     }
 
     /**
@@ -144,7 +149,7 @@ class ExtensionGenerator
         $content = str_replace('#vendorname#', $this->model->vendorname, $content);
         $content = str_replace('#repositoryname#', $this->model->repositoryname, $content);
         $content = str_replace('#composerdescription#', $this->model->composerdescription, $content);
-        $content = str_replace('#licence#', $this->model->licence, $content);
+        $content = str_replace('#license#', $this->model->license, $content);
         $content = str_replace('#authorname#', $this->model->authorname, $content);
         $content = str_replace('#authoremail#', $this->model->authoremail, $content);
         $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
@@ -360,7 +365,7 @@ class ExtensionGenerator
 
         $content = str_replace('#bundlename#', $this->model->bundlename, $content);
         $content = str_replace('#year#', date('Y'), $content);
-        $content = str_replace('#licence#', $this->model->licence, $content);
+        $content = str_replace('#license#', $this->model->license, $content);
         $content = str_replace('#authorname#', $this->model->authorname, $content);
         $content = str_replace('#authoremail#', $this->model->authoremail, $content);
         $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
@@ -441,6 +446,63 @@ class ExtensionGenerator
         $arrFlash[] = $msg;
 
         $flashBag->set($type, $arrFlash);
+    }
+
+    /**
+     * @param string $source
+     * @param string $destination
+     * @return bool
+     */
+    protected function zipData(string $source, string $destination): bool
+    {
+        if (extension_loaded('zip'))
+        {
+            $source = $this->projectDir . '/' . $source;
+            $destination = $this->projectDir . '/' . $destination;
+
+            if (file_exists($source))
+            {
+                $zip = new \ZipArchive();
+                if ($zip->open($destination, \ZipArchive::CREATE))
+                {
+                    $source = realpath($source);
+                    if (is_dir($source))
+                    {
+                        $iterator = new \RecursiveDirectoryIterator($source);
+                        // skip dot files while iterating
+                        //$iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
+                        $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
+                        foreach ($files as $objSplFileInfo)
+                        {
+
+                            $file = $objSplFileInfo->getRealPath();
+
+                            if (is_dir($file))
+                            {
+                                $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+                            }
+                            else
+                            {
+                                if (is_file($file))
+                                {
+                                    $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (is_file($source))
+                        {
+                            $zip->addFromString(basename($source), file_get_contents($source));
+                        }
+                    }
+                }
+                return $zip->close();
+            }
+
+            return false;
+        }
     }
 
 }
