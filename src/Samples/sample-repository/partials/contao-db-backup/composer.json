@@ -1,0 +1,46 @@
+{
+  "name": "markocupic/contao-db-backup",
+  "description": "Store a daily backup of your contao db to the contao file system.",
+  "keywords": [
+    "contao",
+    "database",
+    "backup"
+  ],
+  "type": "contao-module",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marko Cupic",
+      "email": "m.cupic@gmx.ch",
+      "homepage": "https://github.com/markocupic",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/markocupic/contao-db-backup/issues",
+    "source": "https://github.com/markocupic/contao-db-backup"
+  },
+  "require": {
+    "contao/core-bundle": "^4.4",
+    "pclzip/pclzip": "~2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Markocupic\\ContaoDbBackup\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config"
+    ]
+  },
+  "extra": {
+    "contao-manager-plugin": "Markocupic\\ContaoDbBackup\\ContaoManager\\Plugin",
+    "contao": {
+      "sources": {
+        "src/Resources/contao": "system/modules/contao-db-backup"
+      }
+    }
+  }
+}

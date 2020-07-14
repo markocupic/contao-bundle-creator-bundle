@@ -1,0 +1,8 @@
+/**
+ * @copyright  #authorname# 2020 <#authoremail#>
+ * @author     #authorname#
+ * @package    #bundlename#
+ * @licence    #licence#
+ * @see        https://github.com/#vendorname#/#repositoryname#
+ *
+ */

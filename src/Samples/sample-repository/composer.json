@@ -1,0 +1,45 @@
+{
+  "name": "#vendorname#/#repositoryname#",
+  "description": "#composerdescription#",
+  "keywords": [
+    "contao",
+    "bundle",
+    "tag 1",
+    "tag 2"
+  ],
+  "type": "contao-module",
+  "licence": "#licence#",
+  "authors": [
+    {
+      "name": "#authorname#",
+      "email": "#authoremail#",
+      "homepage": "#authorwebsite#",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/#vendorname#/#repositoryname#/issues",
+    "source": "https://github.com/#vendorname#/#repositoryname#"
+  },
+  "require": {
+    "contao/core-bundle": "^4.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "#vendornamenamespace#\\#bundlenamenamespace#\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config",
+      "src/Resources/contao/dca",
+      "src/Resources/contao/languages",
+      "src/Resources/contao/templates"
+    ]
+  },
+  "extra": {
+    "contao-manager-plugin": "#vendornamenamespace#\\#bundlenamenamespace#\\ContaoManager\\Plugin"
+  }
+
+}

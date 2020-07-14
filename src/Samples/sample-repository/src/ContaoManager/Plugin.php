@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
- * @author     Marko Cupic
- * @package    Contao Bundle Creator
- * @licence    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator
- *
- */
+#phpdoc#
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ContaoManager;
+namespace #vendornamenamespace#\#bundlenamenamespace#\ContaoManager;
 
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -21,7 +14,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Class Plugin
- * @package Markocupic\ContaoBundleCreatorBundle\ContaoManager
+ * @package #vendornamenamespace#\#bundlenamenamespace#\ContaoManager
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface
 {
@@ -31,7 +24,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Markocupic\ContaoBundleCreatorBundle\MarkocupicContaoBundleCreatorBundle')
+            BundleConfig::create('#vendornamenamespace#\#bundlenamenamespace#\#vendornamenamespace##bundlenamenamespace#')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
     }

@@ -4,7 +4,7 @@
  * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
- * @license    MIT
+ * @licence    MIT
  * @see        https://github.com/markocupic/contao-bundle-creator
  *
  */
@@ -23,21 +23,24 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
                 'id' => 'primary'
             ]
         ],
+        'onload_callback'  => [
+            ['tl_contao_bundle_creator', 'runCreator']
+        ]
     ],
-    'edit'     => array(
-        'buttons_callback' => array(
-            array('tl_contao_bundle_creator', 'buttonsCallback')
-        )
-    ),
+    'edit'     => [
+        'buttons_callback' => [
+            ['tl_contao_bundle_creator', 'buttonsCallback']
+        ]
+    ],
     'list'     => [
         'sorting'           => [
             'mode'        => 2,
-            'fields'      => ['title'],
+            'fields'      => ['bundlename'],
             'flag'        => 1,
             'panelLayout' => 'filter;sort,search,limit'
         ],
         'label'             => [
-            'fields' => ['title'],
+            'fields' => ['bundlename'],
             'format' => '%s',
         ],
         'global_operations' => [
@@ -70,47 +73,95 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Palettes
     'palettes' => [
-        'default' => '{bundle_legend},title,vendorname,githubRepositoryName'
+        'default' => '{bundle_settings_legend},bundlename,vendorname,repositoryname;{composer_settings_legend},composerdescription,licence,authorname,authoremail,authorwebsite;{dcatable_settings_legend},dcatable'
     ],
     // Fields
     'fields'   => [
-        'id'     => [
+        'id'                  => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
-        'tstamp' => [
+        'tstamp'              => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
-        'title'  => [
+        'bundlename'          => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50',
-
-            ],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'vendorname'  => [
+        'vendorname'          => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50',
-
-            ],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'githubRepositoryName'  => [
+        'repositoryname'      => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50',
-
-            ],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'composerdescription' => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'licence'             => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'authorname'          => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'authoremail'         => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'email'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'authorwebsite'       => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'dcatable'            => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
     ]
@@ -119,7 +170,33 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
 /**
  * Class tl_contao_bundle_creator
  */
-class tl_contao_bundle_creator extends Contao\Backend{
+class tl_contao_bundle_creator extends Contao\Backend
+{
+
+    /**
+     * tl_contao_bundle_creator constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * onload_callback
+     * @param \Contao\DC_Table $dc
+     */
+    public function runCreator(Contao\DC_Table $dc)
+    {
+        if (Contao\Input::get('id') != '' && Contao\Input::post('createBundle') === '' && Contao\Input::post('FORM_SUBMIT') === 'tl_contao_bundle_creator' && Contao\Input::post('SUBMIT_TYPE') != 'auto')
+        {
+            if (null !== ($objModel = Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel::findByPk(Contao\Input::get('id'))))
+            {
+                /** @var  Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator $objInit */
+                $objInit = Contao\System::getContainer()->get(Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator::class);
+                $objInit->run($objModel);
+            }
+        }
+    }
 
     /**
      * @param $arrButtons
