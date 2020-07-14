@@ -4,7 +4,9 @@
 # Contao Bundle Creator
 
 !!! Dieses Modul befindet sich im Entwicklungsstadium.
+
 !!! Achtung: Das Modul ist für Entwickler gedacht, und generiert eine Basis (Boilerplate) für ein Contao Bundle.
+
 !!! ***Bereits bestehende Dateien werden überschrieben.***
 
 ## Inbetriebsetzung des Bundles
