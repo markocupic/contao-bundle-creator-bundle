@@ -150,6 +150,15 @@ class ExtensionGenerator
         $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
         $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
         $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        // Add/remove version keyword
+        if ($this->model->composerpackageversion == '')
+        {
+            $content = preg_replace('/(.*)version(.*)#composerpackageversion#(.*),[\r\n|\n]/', '', $content);
+        }
+        else
+        {
+            $content = preg_replace('/#composerpackageversion#/', $this->model->composerpackageversion, $content);
+        }
 
         $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
 

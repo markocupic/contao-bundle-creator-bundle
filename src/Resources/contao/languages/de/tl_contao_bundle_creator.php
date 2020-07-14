@@ -31,6 +31,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name", "Geben Sie den Repository Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamige Erweiterung überschreiben", "Soll eine gleichnamige, bereits bestehende Extension überschrieben werden?"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json Paketversion (für Paketupload in Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['licence'] = ["Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorname'] = ["Autorname", "Geben Sie den Namen des Entwicklers ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["Autor E-Mail-Adresse", "Geben Sie die E-Mail-Adresse des Autors an."];

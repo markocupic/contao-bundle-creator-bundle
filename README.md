@@ -23,7 +23,7 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
 ## Inbetriebsetzung des Bundles
 * Bundle generieren
 * Das passende repository in github anlegen.
-* Danach die composer.json im Root der Webseite wie folgt anpassen
+* Danach a) die composer.json im Root der Webseite wie folgt anpassen
 
 ```
  "repositories": [
@@ -37,6 +37,6 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
     "vendorname/my-new-bundle": "dev-master"
   },
 ```
-
+* Oder b) die Erweiterung als Paket von github herunterladen und im Contao Manager hochladen
 * Contao Manager starten und ein vollständiges Paketupdate durchführen
 * Installtool aufrufen und Datenbankupdate durchführen

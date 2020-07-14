@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     // Palettes
     'palettes'    => [
         '__selector__' => ['addDcaTable'],
-        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,licence,authorname,authoremail,authorwebsite;{dcatable_settings_legend},addDcaTable'
+        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,licence,authorname,authoremail,authorwebsite,composerpackageversion;{dcatable_settings_legend},addDcaTable'
     ],
     // Subpalettes
     'subpalettes' => [
@@ -137,6 +137,15 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'composerpackageversion' => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => false, 'maxlength' => 16, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'sql'       => "varchar(16) NOT NULL default ''"
         ],
         'licence'             => [
             'inputType' => 'text',
