@@ -1,4 +1,4 @@
-![Alt text](src/Resources/public/logo.png?raw=true "Marko Cupic")
+![Alt text](src/Resources/public/logo.png?raw=true width="300")
 
 
 # Contao Bundle Creator
