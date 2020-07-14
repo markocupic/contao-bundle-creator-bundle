@@ -9,6 +9,11 @@
 
 !!! ***Bereits bestehende Dateien werden überschrieben.***
 
+## Via Contao Backend das Bundle konfigurieren
+
+![Alt text](src/Resources/public/backend.png?raw=true "Backend")
+
+
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
 
