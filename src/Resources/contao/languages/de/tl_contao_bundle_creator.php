@@ -22,6 +22,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle mit ID: %s an
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundle_settings_legend'] = "Bundle Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composer_settings_legend'] = "composer.json Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable_settings_legend'] = "DCA Tabellen Einstellungen";
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodule_settings_legend'] = "Frontendmodul Einstellungen";
 
 /**
  * Fields
@@ -38,6 +39,11 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["Autor E-Mail-
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorwebsite'] = ["Autor Webseite-Adresse", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addDcaTable'] = ["DCA Tabelle hinzufügen", "Geben Sie an, ob eine DCA Tabelle generiert werden soll."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname", "Geben Sie den Namen der Tabelle an: z.B. tl_sample_table"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addFrontendModule'] = ["Frontendmodul hinzufügen", "Fügen Sie dem Package ein Frontendmodul hinzu."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategory'] = ["Frontendmodul-Kategorie (camelcase)", "Geben Sie die Kategorie in camelcase an. z.B. myCustomModules"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategorytrans'] = ["Frontendmodul-Kategorie-Übersetzung", "Bei bereits bestehenden Kategorien sollte das Feld leer gelassen werden."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulename'] = ["Frontendmodul-Name (camelcase)", "Geben Sie den Namen des Modules in camelcase an. z.B. myCustom"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletrans'] = ["Frontendmodul-Name-Übersetzung und Beschreibung", "Geben Sie dem Modul einen Namen und eine Beschreibung."];
 
 /**
  * Buttons

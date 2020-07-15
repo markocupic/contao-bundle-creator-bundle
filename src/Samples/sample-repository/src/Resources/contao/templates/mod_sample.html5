@@ -1,0 +1,8 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+    <h3><?= $this->helloTitle ?></h3>
+    <p><?= $this->helloText ?></p>
+
+<?php $this->endblock(); ?>
