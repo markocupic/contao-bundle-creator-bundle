@@ -42,6 +42,8 @@ und im require-Teil das neu erstellte Bundle registrieren.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
+___
+
 ### Variante B
 Die Erweiterung auf github.com hochladen und in der composer.json folgende 2 Einträge machen.
 ```
