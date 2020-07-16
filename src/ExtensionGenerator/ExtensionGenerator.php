@@ -28,10 +28,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class ExtensionGenerator
 {
     /** @var SessionInterface */
-    private $session;
+    protected $session;
 
     /** @var string|string */
-    private $projectDir;
+    protected $projectDir;
+
+    /** @var ContaoBundleCreatorModel */
+    protected $model;
 
     /** @var string */
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Samples/sample-repository';
@@ -45,9 +48,6 @@ class ExtensionGenerator
      * @var string
      */
     const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
-
-    /** @var ContaoBundleCreatorModel */
-    protected $model;
 
     /**
      * ExtensionGenerator constructor.
@@ -229,9 +229,9 @@ class ExtensionGenerator
 
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
         // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string)$this->model->vendorname), $content);
         // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string)$this->model->repositoryname), $content);
 
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
 
@@ -299,78 +299,74 @@ class ExtensionGenerator
         $arrFolders = [];
         $arrFolders[] = sprintf('vendor/%s/%s/src/Controller/FrontendModule', $this->model->vendorname, $this->model->repositoryname);
         $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/templates', $this->model->vendorname, $this->model->repositoryname);
-
         foreach ($arrFolders as $strFolder)
         {
             new Folder($strFolder);
         }
 
+        // Get sample content for the frontend module class
         $objFile = new File(self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php');
         $content = $objFile->getContent();
 
-        // Add phpdoc
+        // Replace #phpdoc# with the phpdoc block in the frontend module class
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
 
-        // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        // Replace #toplevelnamespace# with top-level namespace in the frontend module class
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
 
-        // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        // Replace #sublevelnamespace# with sub-level namespace in the frontend module class
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
 
-        // Frontend module name
-        $strFrontendModuleName = $this->toCamelcase($this->model->frontendmodulename);
-        $this->model->frontendmodulename = $strFrontendModuleName;
+        // Get the frontend module type and sanitize it to the contao frontend module convention
+        $strFrontendModuleType = $this->getFrontendModuleType();
+        $this->model->frontendmoduletype = $strFrontendModuleType;
         $this->model->save();
 
-        // Frontend module category
-        $strFrontendModuleCategory = $this->toCamelcase($this->model->frontendmodulecategory);
+        // Get the frontend module category and sanitize it to the contao frontend module convention
+        $strFrontendModuleCategory = $this->toSnakecase((string) $this->model->frontendmodulecategory);
         $this->model->frontendmodulecategory = $strFrontendModuleCategory;
         $this->model->save();
 
-        // Template name
-        $strFrontenModuleTemplateName = $this->getTemplateNameFromFrontendModuleName($strFrontendModuleName);
+        // Get the frontend module template name
+        $strFrontenModuleTemplateName = $this->getFrontendModuleTemplateName();
 
-        // Frontend module classname
-        $strFrontendModuleClassname = 'Module' . ucfirst($strFrontendModuleName);
+        // Replace #frontendmoduleclassname# with frontend module classname
+        $strFrontendModuleClassname = $this->getFrontendModuleClassname();
         $content = str_replace('#frontendmoduleclassname#', $strFrontendModuleClassname, $content);
 
-        // Add new frontend class to filesystem
+        // Add new frontend class to src/Controller/FrontendController
         $strNewFile = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
         $objNewFile = new File($strNewFile);
         $objNewFile->truncate();
         $objNewFile->append($content);
         $objNewFile->close();
 
-        // Add tl_module.php
+        // Add src/Resources/contao/dca/tl_module.php
         $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->model->vendorname, $this->model->repositoryname);
         $objNewFile = new File($target);
         $objNewFile->truncate();
-
         $objSource = new File(self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.php');
         $content = $objSource->getContent();
 
-        // Add phpdoc
+        // Add phpdoc to src/Resources/contao/dca/tl_module.php
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
         $objNewFile->append($content);
 
-        // Add module palette to tl_module.php
-        $content = str_replace('#frontendmodulename#', $strFrontendModuleName, $this->getContentFromPartialFile('contao_tl_module.txt'));
+        // Add module palette to src/Resources/contao/dca/tl_module.php
+        $content = str_replace('#frontendmoduletype#', $strFrontendModuleType, $this->getContentFromPartialFile('contao_tl_module.txt'));
         $objNewFile->append($content);
         $objNewFile->close();
 
-        // Add tags to config/services.yml
-        // Add tl_module.php
+        // Replace tags in src/Resources/config/services.yml
         $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
         $objNewFile = new File($target);
-
-        // Add module palette to tl_module.php
         $content = $this->getContentFromPartialFile('config_services_frontend_modules.txt');
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
         $content = str_replace('#frontendmoduleclassname#', $strFrontendModuleClassname, $content);
         $content = str_replace('#frontendmodulecategory#', $strFrontendModuleCategory, $content);
         $content = str_replace('#frontendmoduletemplate#', $strFrontenModuleTemplateName, $content);
-        $content = str_replace('#frontendmodulename#', $strFrontendModuleName, $content);
+        $content = str_replace('#frontendmoduletype#', $strFrontendModuleType, $content);
 
         $objNewFile->append($content);
         $objNewFile->close();
@@ -386,7 +382,7 @@ class ExtensionGenerator
         $objFile->append($this->getContentFromPartialFile('contao_lang_en_fe_modules.txt'));
         $objFile->close();
 
-        // Add message
+        // Add message in the backend
         $this->addInfoFlashMessage(sprintf('Created frontend module "%s".', $strFrontendModuleClassname));
     }
 
@@ -503,7 +499,7 @@ class ExtensionGenerator
         $content = str_replace('#bemodule#', str_replace('tl_', '', $this->model->dcatable), $content);
 
         // Handle frontend module
-        $content = str_replace('#frontendmodulename#', $this->model->frontendmodulename, $content);
+        $content = str_replace('#frontendmoduletype#', $this->model->frontendmoduletype, $content);
         $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
         $content = str_replace('#frontendmoduletrans_0#', $arrLabel[0], $content);
         $content = str_replace('#frontendmoduletrans_1#', $arrLabel[1], $content);
@@ -523,29 +519,9 @@ class ExtensionGenerator
     }
 
     /**
-     * Convert string to namespace
-     * "my_custom name-space" will become "MyCustomNameSpace"
-     *
-     * @param string $strName
-     * @return string
-     */
-    private function namespaceify(string $strName): string
-    {
-        $strName = str_replace('_', '-', $strName);
-        $strName = str_replace(' ', '-', $strName);
-        $arrNamespace = explode('-', $strName);
-        $arrNamespace = array_filter($arrNamespace, 'strlen');
-        $arrNamespace = array_map('strtolower', $arrNamespace);
-        $arrNamespace = array_map('ucfirst', $arrNamespace);
-        $strBundleNamespace = implode('', $arrNamespace);
-
-        return $strBundleNamespace;
-    }
-
-    /**
      * @param string $msg
      */
-    private function addInfoFlashMessage(string $msg): void
+    protected function addInfoFlashMessage(string $msg): void
     {
         $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
     }
@@ -553,7 +529,7 @@ class ExtensionGenerator
     /**
      * @param string $msg
      */
-    private function addErrorFlashMessage(string $msg): void
+    protected function addErrorFlashMessage(string $msg): void
     {
         $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
     }
@@ -562,7 +538,7 @@ class ExtensionGenerator
      * @param string $msg
      * @param string $type
      */
-    private function addFlashMessage(string $msg, string $type): void
+    protected function addFlashMessage(string $msg, string $type): void
     {
         // Get flash bag
         $flashBag = $this->session->getFlashBag();
@@ -578,59 +554,84 @@ class ExtensionGenerator
     }
 
     /**
-     * Converts string into camelcase string
-     * MyNew_super NASA Module => myNewSuperNasaModule
+     * Convert string to namespace
+     * "my_custom name-space" will become "MyCustomNameSpace"
+     *
+     * @param string $strName
+     * @return string
+     */
+    protected function namespaceify(string $strName): string
+    {
+        $strName = str_replace('_', '-', $strName);
+        $strName = str_replace(' ', '-', $strName);
+        $arrNamespace = explode('-', $strName);
+        $arrNamespace = array_filter($arrNamespace, 'strlen');
+        $arrNamespace = array_map('strtolower', $arrNamespace);
+        $arrNamespace = array_map('ucfirst', $arrNamespace);
+        $strBundleNamespace = implode('', $arrNamespace);
+
+        return $strBundleNamespace;
+    }
+
+    /**
+     * Converts a string to snakecase
+     * My custom module => my_custom_module
+     *
      * @param string $str
      * @return string
      */
-    protected function toCamelcase(string $str): string
+    protected function toSnakecase(string $str): string
     {
-        $str = str_replace('_', ' ', $str);
+        $str = str_replace(' ', '_', $str);
         $str = str_replace('-', ' ', $str);
-
-        $arrStr = explode(' ', $str);
-        $arrStr = array_map('ucfirst', $arrStr);
-
-        $str = implode('', $arrStr);
-
-        // Make camelcase
-        $arrStr = preg_split(
-            '/(^[^A-Z]+|[A-Z][^A-Z]+)/',
-            $str,
-            -1, /* no limit for replacement count */
-            PREG_SPLIT_NO_EMPTY /*don't return empty elements*/
-            | PREG_SPLIT_DELIM_CAPTURE /*don't strip anything from output array*/
-        );
-
-        $str = implode(' ', $arrStr);
-        $arrStr = array_map('strtolower', $arrStr);
-        $arrStr = array_map('ucfirst', $arrStr);
-
-        $str = implode('', $arrStr);
-        $str = lcfirst($str);
+        $str = strtolower($str);
 
         return $str;
     }
 
     /**
-     * @param string $str
+     * Get the frontend module type (f.ex. my_custom_module)
+     * Convention => snakecase with postfix "_module"
+     *     *
+     * @param string $postfix
+     * @return string
+     */
+    protected function getFrontendModuleType($postfix = '_module'): string
+    {
+        $str = $this->toSnakecase((string) $this->model->frontendmoduletype);
+
+        $str = preg_replace('/^(module_|module|mod_|mod)/', '', $str);
+        $str = preg_replace('/(_module|module)$/', '', $str);
+
+        // Add postfix
+        $str = $str . $postfix;
+
+        return $str;
+    }
+
+    /**
+     * Get the frontend module classname from module type and add the "Controller" postfix
+     * f.ex. my_custom_module => MyCustomModuleController
+     *
+     * @param string $postfix
+     * @return string
+     */
+    protected function getFrontendModuleClassname(string $postfix = 'Controller'): string
+    {
+        $str = $this->getFrontendModuleType();
+        $str = $this->namespaceify($str);
+        return $str . $postfix;
+    }
+
+    /**
+     * Get the frontend module template name from the frontend module type and add the prefix "mod_"
      * @param string $strPrefix
      * @return string
      */
-    protected function getTemplateNameFromFrontendModuleName(string $str, string $strPrefix = 'mod_', string $strExtension = ''): string
+    protected function getFrontendModuleTemplateName($strPrefix = 'mod_'): string
     {
-        $arrStr = preg_split(
-            '/(^[^A-Z]+|[A-Z][^A-Z]+)/',
-            $str,
-            -1, /* no limit for replacement count */
-            PREG_SPLIT_NO_EMPTY /*don't return empty elements*/
-            | PREG_SPLIT_DELIM_CAPTURE /*don't strip anything from output array*/
-        );
-        $arrStr = array_map('strtolower', $arrStr);
-        $arrStr = array_filter($arrStr, 'strlen');
-        $str = implode('_', $arrStr);
-
-        return $strPrefix . $str . $strExtension;
+        $str = $this->getFrontendModuleType();
+        return $strPrefix . $str;
     }
 
     /**
@@ -663,12 +664,14 @@ class ExtensionGenerator
 
                             if (is_dir($file))
                             {
+                                // Add empty dir and remove the source path
                                 $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
                             }
                             else
                             {
                                 if (is_file($file))
                                 {
+                                    // Add file and remove the source path
                                     $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
                                 }
                             }

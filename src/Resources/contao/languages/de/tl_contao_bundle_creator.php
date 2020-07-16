@@ -29,20 +29,20 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodule_settings_legend'
  */
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundlename'] = ["Bundle Name", "Geben Sie einen Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "Geben Sie Ihren Vendornamen ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name", "Geben Sie den Repository Namen für das Bundle ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name (f.ex. \"hello-world-bundle\")", "Geben Sie den Repository Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamige Erweiterung überschreiben", "Soll eine gleichnamige, bereits bestehende Extension überschrieben werden?"];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json Paketversion (für Paketupload in Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['license'] = ["Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorname'] = ["Autorname", "Geben Sie den Namen des Entwicklers ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["Autor E-Mail-Adresse", "Geben Sie die E-Mail-Adresse des Autors an."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorwebsite'] = ["Autor Webseite-Adresse", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json: Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json: Paketversion (für Paketupload in Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['license'] = ["composer.json: Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorname'] = ["composer.json: Name des Autors", "Geben Sie den Namen des Entwicklers ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["composer.json: E-Mail-Adresse des Autors", "Geben Sie die E-Mail-Adresse des Autors an."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorwebsite'] = ["composer.json: Webseite", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addDcaTable'] = ["DCA Tabelle hinzufügen", "Geben Sie an, ob eine DCA Tabelle generiert werden soll."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname", "Geben Sie den Namen der Tabelle an: z.B. tl_sample_table"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addFrontendModule'] = ["Frontendmodul hinzufügen", "Fügen Sie dem Package ein Frontendmodul hinzu."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategory'] = ["Frontendmodul-Kategorie (camelcase)", "Geben Sie die Kategorie in camelcase an. z.B. myCustomModules"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategory'] = ["Frontendmodul-Kategorie (snakecase)", "Geben Sie die Kategorie in camelcase an. z.B. my_custom_modules"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategorytrans'] = ["Frontendmodul-Kategorie-Übersetzung", "Bei bereits bestehenden Kategorien sollte das Feld leer gelassen werden."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulename'] = ["Frontendmodul-Name (camelcase)", "Geben Sie den Namen des Modules in camelcase an. z.B. myCustom"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletype'] = ["Frontendmodul-Typ (snakecase mit \"_module\" als postfix)", "Geben Sie den Namen des Modules in snakecase an. z.B. my_custom_module"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletrans'] = ["Frontendmodul-Name-Übersetzung und Beschreibung", "Geben Sie dem Modul einen Namen und eine Beschreibung."];
 
 /**

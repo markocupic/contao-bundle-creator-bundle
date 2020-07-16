@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     // Subpalettes
     'subpalettes' => [
         'addDcaTable' => 'dcatable',
-        'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmodulename,frontendmoduletrans'
+        'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans'
     ],
     // Fields
     'fields'      => [
@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'vendorname'                  => [
@@ -217,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'frontendmodulename'          => [
+        'frontendmoduletype'          => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
