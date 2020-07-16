@@ -30,7 +30,7 @@ In der composer.json folgende 2 Einträge machen:
     }
   ],
 ```
-In der composer.json den **absolten Pfad** zum Bundle im vendor-Verzeichnis angeben.
+In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben.
 ```
   "require": {
     ....
