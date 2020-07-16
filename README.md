@@ -26,7 +26,7 @@ In der composer.json folgende 2 Einträge machen:
 "repositories": [
     {
       "type": "path",
-      "url": "/home/aeracing/public_html/kletterkader.com/vendor/dirtyharrycoding/hello-world-bundle"
+      "url": "/home/myhosting/public_html/dirtyharryproductions.com/vendor/dirtyharrycoding/hello-world-bundle"
     }
   ],
 ```
