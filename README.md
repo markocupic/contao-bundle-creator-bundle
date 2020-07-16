@@ -1,13 +1,10 @@
 ![Alt text](src/Resources/public/logo.png?raw=true "Marko Cupic")
 
 
-# Contao Bundle Creator
+# Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-!!! Dieses Modul befindet sich im Entwicklungsstadium.
+Das Modul ist für Entwickler gedacht, und generiert ein Grundgerüst (Boilerplate) für ein Contao Bundle.
 
-!!! Achtung: Das Modul ist für Entwickler gedacht, und generiert eine Basis (Boilerplate) für ein Contao Bundle.
-
-!!! ***Bereits bestehende Dateien werden überschrieben.***
 
 ## Via Contao Backend das Bundle konfigurieren
 
