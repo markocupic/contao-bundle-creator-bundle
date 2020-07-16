@@ -18,22 +18,67 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
 
 
 ## Inbetriebsetzung des Bundles
-* Bundle generieren
-* Das passende repository in github anlegen.
-* Danach a) die composer.json im Root der Webseite wie folgt anpassen
+* Bundle generieren im Backend per Knopfdruck generieren. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein.
 
+### Variante A 
+In der composer.json folgende 2 Einträge machen:
 ```
- "repositories": [
+"repositories": [
     {
-      "type": "vcs",
-      "url": "https://github.com/vendorname/my-new-bundle"
+      "type": "path",
+      "url": "/home/aeracing/public_html/kletterkader.com/vendor/dirtyharrycoding/hello-world-bundle"
     }
   ],
+```
+In der composer.json den absolten Pfad zum Bundle im vendor Verzeichnis angeben.
+```
   "require": {
-    "php": "^7.1",
-    "vendorname/my-new-bundle": "dev-master"
+    ....
+    ....
+    "dirtyharrycoding/hello-world-bundle": "dev-master"
   },
 ```
-* Oder b) die Erweiterung als Paket von github herunterladen und im Contao Manager hochladen
-* Contao Manager starten und ein vollständiges Paketupdate durchführen
-* Installtool aufrufen und Datenbankupdate durchführen
+und im require-Teil das neu erstellte Bundle registrieren. 
+
+Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
+
+### Variante B
+Die Erweiterung auf github.com hochladen und in der composer.json folgende 2 Einträge machen.
+```
+"repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/dirtyharrycoding/hello-world-bundle"
+    }
+  ],
+```
+In der composer.json den Pfad zum github repo angeben.
+```
+  "require": {
+    ....
+    ....
+    "dirtyharrycoding/hello-world-bundle": "dev-master"
+  },
+```
+und im require-Teil das neu erstellte Bundle registrieren. 
+
+Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
+
+Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. Die Erstellung eines oauth access token kann hier Abhilfe schaffen.
+Das Access Token muss dann in der config section der composer.json im Root eingesetzt werden. [Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+```
+   "config": {
+     "github-oauth": {
+       "github.com": "43dfdfxxxxxxxxxxxxxxxxxxx5645rtzrfhgfe9"
+     }
+   },
+```
+
+### Variante C
+Die Erweiterung im Backend via "Bundle herunterladen" Button downloaden und dann im Contao Manager als Paket importieren.
+Installtool aufrufen. Fertig!
+
+### Variante D
+Die Erweiterung via github auf packagist.org hochladen und dann via Contao Manager installieren.
+Installtool aufrufen. Fertig!
+
