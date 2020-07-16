@@ -18,7 +18,7 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
 
 
 ## Inbetriebsetzung des Bundles
-* Bundle generieren im Backend per Knopfdruck generieren. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein.
+Das Bundle, nachdem alle Eingaben im Backend gemacht wurden, ganz einfach per Knopfdruck generieren lassen. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
 
 ### Variante A 
 In der composer.json folgende 2 Einträge machen:
