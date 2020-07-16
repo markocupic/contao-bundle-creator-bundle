@@ -76,9 +76,13 @@ Das Access Token muss dann in der **config section** der composer.json im Root e
    },
 ```
 
+___
+
 ### Variante C
 Die Erweiterung im Backend via "Bundle herunterladen" Button downloaden und dann im Contao Manager als Paket importieren.
 Installtool aufrufen. Fertig!
+
+___
 
 ### Variante D
 Die Erweiterung via github auf packagist.org hochladen und dann via Contao Manager installieren.
