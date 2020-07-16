@@ -30,7 +30,7 @@ In der composer.json folgende 2 Einträge machen:
     }
   ],
 ```
-In der composer.json den absolten Pfad zum Bundle im vendor Verzeichnis angeben.
+In der composer.json den ***absolten Pfad*** zum Bundle im vendor-Verzeichnis angeben.
 ```
   "require": {
     ....
@@ -64,8 +64,8 @@ und im require-Teil das neu erstellte Bundle registrieren.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
-Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. Die Erstellung eines oauth access token kann hier Abhilfe schaffen.
-Das Access Token muss dann in der config section der composer.json im Root eingesetzt werden. [Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. Die Erstellung eines ***Oauth-Access-Tokens*** kann hier Abhilfe schaffen.
+Das Access Token muss dann in der ***config section*** der composer.json im Root eingesetzt werden. [Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
 ```
    "config": {
      "github-oauth": {
