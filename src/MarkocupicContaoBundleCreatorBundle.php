@@ -5,7 +5,7 @@
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator
+ * @see        https://github.com/markocupic/contao-bundle-creator-bundle
  *
  */
 

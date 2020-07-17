@@ -38,7 +38,7 @@ In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis ang
     "dirtyharrycoding/hello-world-bundle": "dev-master"
   },
 ```
-und im require-Teil das neu erstellte Bundle registrieren. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
+Im require-Teil das neu erstellte Bundle registrieren. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
@@ -62,7 +62,7 @@ In der composer.json den Pfad zum github repo angeben.
     "dirtyharrycoding/hello-world-bundle": "dev-master"
   },
 ```
-und im require-Teil das neu erstellte Bundle registrieren. 
+Im require-Teil das neu erstellte Bundle registrieren. 
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
@@ -88,3 +88,11 @@ ___
 Die Erweiterung via github auf packagist.org hochladen und dann via Contao Manager installieren.
 Installtool aufrufen. Fertig!
 
+## Anmerkungen
+* Falls die root composer.json durch die Anwendung manipuliert wird, speichert das Skript ein Backup der composer.json in system/tmp
+* Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package, das per Knopfdruck herutnergeladen werden kann, erstellt.
+
+## Last but not least
+Der Anwender sollte wissen, was er tut ;-)
+
+Im dümmsten Fall überschreibt man bereits bestehende Erweiterungen und beschädigt so die Installation.

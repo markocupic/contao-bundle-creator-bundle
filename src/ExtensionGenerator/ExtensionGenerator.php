@@ -5,7 +5,7 @@
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator
+ * @see        https://github.com/markocupic/contao-bundle-creator-bundle
  *
  */
 
@@ -30,7 +30,7 @@ class ExtensionGenerator
     /** @var Session */
     protected $session;
 
-    /** @var string|string */
+    /** @var string */
     protected $projectDir;
 
     /** @var ContaoBundleCreatorModel */
@@ -39,18 +39,15 @@ class ExtensionGenerator
     /** @var string */
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Samples/sample-repository';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     const STR_INFO_FLASH_TYPE = 'contao.BE.info';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
 
     /**
      * ExtensionGenerator constructor.
+     *
      * @param Session $session
      * @param string $projectDir
      */
@@ -61,6 +58,8 @@ class ExtensionGenerator
     }
 
     /**
+     * Run bundle creator
+     *
      * @param ContaoBundleCreatorModel $model
      * @throws \Exception
      */
@@ -110,7 +109,7 @@ class ExtensionGenerator
             $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
         }
 
-        // optionally extend the composer.json file located in the root directory
+        // Optionally extend the composer.json file located in the root directory
         $this->extendRootComposerJson();
     }
 
@@ -125,6 +124,7 @@ class ExtensionGenerator
 
     /**
      * Generate the plugiin folder structure
+     *
      * @throws \Exception
      */
     protected function generateFolders(): void
@@ -151,6 +151,7 @@ class ExtensionGenerator
 
     /**
      * Generate the composer.json file
+     *
      * @throws \Exception
      */
     protected function generateComposerJsonFile(): void
@@ -170,6 +171,7 @@ class ExtensionGenerator
         $content = str_replace('#composerauthorwebsite#', $this->model->composerauthorwebsite, $content);
         $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
         $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
+
         // Add/remove version keyword
         if ($this->model->composerpackageversion == '')
         {
@@ -194,6 +196,7 @@ class ExtensionGenerator
 
     /**
      * Generate the bundle class
+     *
      * @throws \Exception
      */
     protected function generateBundleClass(): void
@@ -224,6 +227,7 @@ class ExtensionGenerator
 
     /**
      * Generate the Contao Manager plugin class
+     *
      * @throws \Exception
      */
     protected function generateContaoManagerPluginClass(): void
@@ -254,7 +258,9 @@ class ExtensionGenerator
 
     /**
      * Generate the dca table and
-     * the corresponding language file     * @throws \Exception
+     *
+     * the corresponding language file
+     * @throws \Exception
      */
     protected function generateDcaTable(): void
     {
@@ -299,6 +305,7 @@ class ExtensionGenerator
 
     /**
      * Generate frontend module
+     *
      * @throws \Exception
      */
     protected function generateFrontendModule(): void
@@ -396,6 +403,7 @@ class ExtensionGenerator
 
     /**
      * Optionally extend the composer.json file located in the root directory
+     *
      * @throws \Exception
      */
     protected function extendRootComposerJson(): void
@@ -467,6 +475,7 @@ class ExtensionGenerator
 
     /**
      * Generate config files
+     *
      * @throws \Exception
      */
     protected function copyFiles(): void
@@ -538,6 +547,7 @@ class ExtensionGenerator
 
     /**
      * Get the php doc from the partial file
+     *
      * @return string
      * @throws \Exception
      */
@@ -563,6 +573,7 @@ class ExtensionGenerator
 
     /**
      * Replace tags and return content from partials
+     *
      * @param string $strFilename
      * @return string
      * @throws \Exception
@@ -592,7 +603,7 @@ class ExtensionGenerator
         }
         else
         {
-            // Remove obolete frontend module category label
+            // Remove obsolete frontend module category label
             $content = preg_replace('/([\r\n|\n])#fmdcatstart#(.*)#fmdcatend#([\r\n|\n])/', '', $content);
         }
 
@@ -600,6 +611,8 @@ class ExtensionGenerator
     }
 
     /**
+     * Add an info message to the contao backend
+     *
      * @param string $msg
      */
     protected function addInfoFlashMessage(string $msg): void
@@ -608,6 +621,8 @@ class ExtensionGenerator
     }
 
     /**
+     * Add an error message to the contao backend
+     *
      * @param string $msg
      */
     protected function addErrorFlashMessage(string $msg): void
@@ -616,6 +631,8 @@ class ExtensionGenerator
     }
 
     /**
+     * Add a message to the contao backend
+     *
      * @param string $msg
      * @param string $type
      */
@@ -706,6 +723,7 @@ class ExtensionGenerator
 
     /**
      * Get the frontend module template name from the frontend module type and add the prefix "mod_"
+     *
      * @param string $strPrefix
      * @return string
      */
@@ -716,6 +734,8 @@ class ExtensionGenerator
     }
 
     /**
+     * Zip folder recursively and store it to a predefined destination
+     *
      * @param string $source
      * @param string $destination
      * @return bool
@@ -736,8 +756,9 @@ class ExtensionGenerator
                     if (is_dir($source))
                     {
                         $iterator = new \RecursiveDirectoryIterator($source);
-                        // skip dot files while iterating
-                        //$iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
+
+                        // Skip dot files while iterating
+                        $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
                         $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
                         foreach ($files as $objSplFileInfo)
                         {
