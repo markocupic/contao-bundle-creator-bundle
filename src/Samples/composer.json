@@ -1,0 +1,91 @@
+{
+  "name": "contao/managed-edition",
+  "type": "project",
+  "description": "Contao Open Source CMS",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Leo Feyer",
+      "homepage": "https://github.com/leofeyer"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/markocupic/rsz-athletenumfrage-bundle"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/markocupic/rsz-benutzerverwaltung-bundle"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/markocupic/contao-bundle-creator-bundle"
+    },
+    {
+      "type": "path",
+      "url": "/home/aeracing/public_html/kletterkader.com/vendor/dirtyharrycoding/hello-world-bundle"
+    },
+    {
+      "type": "path",
+      "url": "/home/aeracing/public_html/kletterkader.com/vendor/markocupic/test-bundle-2"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "contao-bootstrap/form": "^2.1",
+    "contao-bootstrap/navbar": "^2.1",
+    "contao/calendar-bundle": "4.9.*",
+    "contao/comments-bundle": "4.9.*",
+    "contao/conflicts": "*@dev",
+    "contao/faq-bundle": "4.9.*",
+    "contao/listing-bundle": "4.9.*",
+    "contao/manager-bundle": "4.9.*",
+    "contao/news-bundle": "4.9.*",
+    "contao/newsletter-bundle": "4.9.*",
+    "dma/dma_simple_grid": "^1.0",
+    "markocupic/backend-password-recovery-bundle": "^1.0",
+    "markocupic/be_email": "^3.1",
+    "markocupic/bootstrap-carousel-bundle": "^1.0",
+    "markocupic/bootstrap_responsive_youtube_embed": "^1.0",
+    "markocupic/contao-article-class-select-bundle": "^2.0",
+    "markocupic/contao-bundle-creator-bundle": "dev-master",
+    "markocupic/contao-component-bootstrap": "^4.5",
+    "markocupic/contao-db-backup": "^1.2",
+    "markocupic/custom-section": "^1.0",
+    "markocupic/export_table": "^3.3",
+    "markocupic/gallery-creator-bundle": "^1.2",
+    "markocupic/heroimage": "^4.0",
+    "markocupic/import-from-csv-bundle": "^4.3",
+    "markocupic/log-report-bundle": "^4.3",
+    "markocupic/preloader-overlay": "dev-master",
+    "markocupic/rotate_image": "^1.0",
+    "markocupic/rsz-athletenumfrage-bundle": "dev-master",
+    "markocupic/rsz-benutzerverwaltung-bundle": "dev-master",
+    "markocupic/service_link": "^1.0",
+    "markocupic/test-bundle": "1.0",
+    "phpoffice/phpexcel": "^1.8",
+    "roave/security-advisories": "dev-master",
+    "dirtyharrycoding/hello-world-bundle": "dev-master",
+    "markocupic/test-bundle-2": "dev-master"
+  },
+  "config": {
+    "component-dir": "assets",
+    "github-oauth": {
+      "github.com": "4318df490c114170cb6865f44b23e07e6ebf5de9"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-4.5": "4.5.x-dev"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+    ],
+    "post-update-cmd": [
+      "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+    ]
+  }
+}
