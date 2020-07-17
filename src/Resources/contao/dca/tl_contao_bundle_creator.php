@@ -188,17 +188,18 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'rootcomposerextendrequirekey'      => [
-            'inputType' => 'checkbox',
+            'inputType' => 'select',
             'exclude'   => true,
+            'options'   => ['path', 'vcs-github'],
             'sorting'   => true,
-            'eval'      => ['tl_class' => 'w50'],
-            'sql'       => "char(1) NOT NULL default ''"
+            'eval'      => ['includeBlankOption' => true, 'tl_class' => 'clr'],
+            'sql'       => "varchar(16) NOT NULL default ''"
         ],
         'rootcomposerextendrepositorieskey' => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
-            'eval'      => ['tl_class' => 'w50'],
+            'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
         'addDcaTable'                       => [

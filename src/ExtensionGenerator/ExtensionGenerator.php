@@ -405,24 +405,42 @@ class ExtensionGenerator
         $content = $objComposerFile->getContent();
         $objJSON = json_decode($content);
 
-        if ($this->model->rootcomposerextendrepositorieskey)
+        if ($this->model->rootcomposerextendrepositorieskey !== '')
         {
-            $blnModified = true;
             if (!isset($objJSON->repositories))
             {
                 $objJSON->repositories = [];
             }
 
             $objRepositories = new \stdClass();
-            $objRepositories->type = 'path';
-            $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
 
-            // Prevent duplicate entries
-            if (!\in_array($objRepositories, $objJSON->repositories))
+            if ($this->model->rootcomposerextendrequirekey === 'path')
             {
-                $objJSON->repositories[] = $objRepositories;
+                $objRepositories->type = 'path';
+                $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+
+                // Prevent duplicate entries
+                if (!\in_array($objRepositories, $objJSON->repositories))
+                {
+                    $blnModified = true;
+                    $objJSON->repositories[] = $objRepositories;
+                    $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+                }
             }
-            $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+
+            if ($this->model->rootcomposerextendrequirekey === 'vcs-github')
+            {
+                $objRepositories->type = 'vcs';
+                $objRepositories->url = sprintf('https://github.com/%s/%s', $this->model->vendorname, $this->model->repositoryname);
+
+                // Prevent duplicate entries
+                if (!\in_array($objRepositories, $objJSON->repositories))
+                {
+                    $blnModified = true;
+                    $objJSON->repositories[] = $objRepositories;
+                    $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+                }
+            }
         }
 
         if ($this->model->rootcomposerextendrequirekey)
