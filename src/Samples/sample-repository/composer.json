@@ -9,12 +9,12 @@
   ],
   "version": "#composerpackageversion#",
   "type": "contao-bundle",
-  "license": "#license#",
+  "license": "#composerlicense#",
   "authors": [
     {
-      "name": "#authorname#",
-      "email": "#authoremail#",
-      "homepage": "#authorwebsite#",
+      "name": "#composerauthorname#",
+      "email": "#composerauthoremail#",
+      "homepage": "#composerauthorwebsite#",
       "role": "Developer"
     }
   ],

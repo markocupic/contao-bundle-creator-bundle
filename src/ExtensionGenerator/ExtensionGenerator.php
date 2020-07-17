@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 
-use Contao\Controller;
+use Contao\Date;
 use Contao\File;
 use Contao\Files;
 use Contao\Folder;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class ExtensionGenerator
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ExtensionGenerator
 {
-    /** @var SessionInterface */
+    /** @var Session */
     protected $session;
 
     /** @var string|string */
@@ -51,10 +51,10 @@ class ExtensionGenerator
 
     /**
      * ExtensionGenerator constructor.
-     * @param SessionInterface $session
+     * @param Session $session
      * @param string $projectDir
      */
-    public function __construct(SessionInterface $session, string $projectDir)
+    public function __construct(Session $session, string $projectDir)
     {
         $this->session = $session;
         $this->projectDir = $projectDir;
@@ -62,6 +62,7 @@ class ExtensionGenerator
 
     /**
      * @param ContaoBundleCreatorModel $model
+     * @throws \Exception
      */
     public function run(ContaoBundleCreatorModel $model): void
     {
@@ -108,6 +109,9 @@ class ExtensionGenerator
         {
             $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
         }
+
+        // optionally extend the composer.json file located in the root directory
+        $this->extendRootComposerJson();
     }
 
     /**
@@ -147,6 +151,7 @@ class ExtensionGenerator
 
     /**
      * Generate the composer.json file
+     * @throws \Exception
      */
     protected function generateComposerJsonFile(): void
     {
@@ -159,12 +164,12 @@ class ExtensionGenerator
         $content = str_replace('#vendorname#', $this->model->vendorname, $content);
         $content = str_replace('#repositoryname#', $this->model->repositoryname, $content);
         $content = str_replace('#composerdescription#', $this->model->composerdescription, $content);
-        $content = str_replace('#license#', $this->model->license, $content);
-        $content = str_replace('#authorname#', $this->model->authorname, $content);
-        $content = str_replace('#authoremail#', $this->model->authoremail, $content);
-        $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        $content = str_replace('#composerlicense#', $this->model->composerlicense, $content);
+        $content = str_replace('#composerauthorname#', $this->model->composerauthorname, $content);
+        $content = str_replace('#composerauthoremail#', $this->model->composerauthoremail, $content);
+        $content = str_replace('#composerauthorwebsite#', $this->model->composerauthorwebsite, $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
         // Add/remove version keyword
         if ($this->model->composerpackageversion == '')
         {
@@ -189,6 +194,7 @@ class ExtensionGenerator
 
     /**
      * Generate the bundle class
+     * @throws \Exception
      */
     protected function generateBundleClass(): void
     {
@@ -200,11 +206,11 @@ class ExtensionGenerator
 
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
         // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify($this->model->vendorname), $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
         // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify($this->model->repositoryname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
 
-        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify($this->model->vendorname), $this->namespaceify($this->model->repositoryname));
+        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify((string) $this->model->vendorname), $this->namespaceify((string) $this->model->repositoryname));
 
         /** @var File $objTarget */
         $objTarget = new File($target);
@@ -218,6 +224,7 @@ class ExtensionGenerator
 
     /**
      * Generate the Contao Manager plugin class
+     * @throws \Exception
      */
     protected function generateContaoManagerPluginClass(): void
     {
@@ -229,9 +236,9 @@ class ExtensionGenerator
 
         $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
         // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string)$this->model->vendorname), $content);
+        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
         // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string)$this->model->repositoryname), $content);
+        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
 
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
 
@@ -247,7 +254,7 @@ class ExtensionGenerator
 
     /**
      * Generate the dca table and
-     * the corresponding language file
+     * the corresponding language file     * @throws \Exception
      */
     protected function generateDcaTable(): void
     {
@@ -292,6 +299,7 @@ class ExtensionGenerator
 
     /**
      * Generate frontend module
+     * @throws \Exception
      */
     protected function generateFrontendModule(): void
     {
@@ -387,7 +395,61 @@ class ExtensionGenerator
     }
 
     /**
+     * Optionally extend the composer.json file located in the root directory
+     * @throws \Exception
+     */
+    protected function extendRootComposerJson(): void
+    {
+        $blnModified = false;
+        $objComposerFile = new File('composer.json');
+        $content = $objComposerFile->getContent();
+        $objJSON = json_decode($content);
+
+        if ($this->model->rootcomposerextendrepositorieskey)
+        {
+            $blnModified = true;
+            if (!isset($objJSON->repositories))
+            {
+                $objJSON->repositories = [];
+            }
+
+            $objRepositories = new \stdClass();
+            $objRepositories->type = 'path';
+            $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+
+            // Prevent duplicate entries
+            if (!\in_array($objRepositories, $objJSON->repositories))
+            {
+                $objJSON->repositories[] = $objRepositories;
+            }
+            $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+        }
+
+        if ($this->model->rootcomposerextendrequirekey)
+        {
+            $blnModified = true;
+            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
+            $this->addInfoFlashMessage('Extended the require section in the root composer.json. Please check!');
+        }
+
+        if ($blnModified)
+        {
+            // Make a backup first
+            $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
+            Files::getInstance()->copy($objComposerFile->path, $strBackupPath);
+            $this->addInfoFlashMessage(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
+
+            // Append modifications
+            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $objComposerFile->truncate();
+            $objComposerFile->append($content);
+            $objComposerFile->close();
+        }
+    }
+
+    /**
      * Generate config files
+     * @throws \Exception
      */
     protected function copyFiles(): void
     {
@@ -471,10 +533,10 @@ class ExtensionGenerator
 
         $content = str_replace('#bundlename#', $this->model->bundlename, $content);
         $content = str_replace('#year#', date('Y'), $content);
-        $content = str_replace('#license#', $this->model->license, $content);
-        $content = str_replace('#authorname#', $this->model->authorname, $content);
-        $content = str_replace('#authoremail#', $this->model->authoremail, $content);
-        $content = str_replace('#authorwebsite#', $this->model->authorwebsite, $content);
+        $content = str_replace('#composerlicense#', $this->model->composerlicense, $content);
+        $content = str_replace('#composerauthorname#', $this->model->composerauthorname, $content);
+        $content = str_replace('#composerauthoremail#', $this->model->composerauthoremail, $content);
+        $content = str_replace('#composerauthorwebsite#', $this->model->composerauthorwebsite, $content);
         $content = str_replace('#vendorname#', $this->model->vendorname, $content);
         $content = str_replace('#repositoryname#', $this->model->repositoryname, $content);
 
@@ -483,6 +545,7 @@ class ExtensionGenerator
 
     /**
      * Replace tags and return content from partials
+     * @param string $strFilename
      * @return string
      * @throws \Exception
      */
@@ -540,7 +603,7 @@ class ExtensionGenerator
      */
     protected function addFlashMessage(string $msg, string $type): void
     {
-        // Get flash bag
+        /** @var Session $flashBag */
         $flashBag = $this->session->getFlashBag();
         $arrFlash = [];
         if ($flashBag->has($type))
@@ -687,9 +750,7 @@ class ExtensionGenerator
                 }
                 return $zip->close();
             }
-
-            return false;
         }
+        return false;
     }
-
 }

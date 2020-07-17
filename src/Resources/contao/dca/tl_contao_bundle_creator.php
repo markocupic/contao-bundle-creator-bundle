@@ -76,23 +76,23 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Palettes
     'palettes'    => [
-        '__selector__' => ['addDcaTable','addFrontendModule'],
-        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,license,authorname,authoremail,authorwebsite,composerpackageversion;{dcatable_settings_legend},addDcaTable;{frontendmodule_settings_legend},addFrontendModule'
+        '__selector__' => ['addDcaTable', 'addFrontendModule'],
+        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addDcaTable;{frontendmodule_settings_legend},addFrontendModule'
     ],
     // Subpalettes
     'subpalettes' => [
-        'addDcaTable' => 'dcatable',
+        'addDcaTable'       => 'dcatable',
         'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans'
     ],
     // Fields
     'fields'      => [
-        'id'                          => [
+        'id'                                => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
-        'tstamp'                      => [
+        'tstamp'                            => [
             'sql' => "int(10) unsigned NOT NULL default '0'"
         ],
-        'bundlename'                  => [
+        'bundlename'                        => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'vendorname'                  => [
+        'vendorname'                        => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -110,7 +110,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'repositoryname'              => [
+        'repositoryname'                    => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -119,21 +119,21 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'overwriteexisting'           => [
+        'overwriteexisting'                 => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'addDcaTable'                 => [
+        'addDcaTable'                       => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'composerdescription'         => [
+        'composerdescription'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -142,7 +142,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'composerpackageversion'      => [
+        'composerpackageversion'            => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 16, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(16) NOT NULL default ''"
         ],
-        'license'                     => [
+        'composerlicense'                   => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -160,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authorname'                  => [
+        'composerauthorname'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -169,7 +169,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alpha'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authoremail'                 => [
+        'composerauthoremail'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -178,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'email'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'authorwebsite'               => [
+        'composerauthorwebsite'             => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -187,13 +187,27 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'addDcaTable'                 => [
+        'rootcomposerextendrequirekey'      => [
+            'inputType' => 'checkbox',
+            'exclude'   => true,
+            'sorting'   => true,
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'rootcomposerextendrepositorieskey' => [
+            'inputType' => 'checkbox',
+            'exclude'   => true,
+            'sorting'   => true,
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'addDcaTable'                       => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'dcatable'                    => [
+        'dcatable'                          => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -202,13 +216,13 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'addFrontendModule'           => [
+        'addFrontendModule'                 => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'frontendmodulecategory'      => [
+        'frontendmodulecategory'            => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -217,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'frontendmoduletype'          => [
+        'frontendmoduletype'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -226,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'frontendmodulecategorytrans' => [
+        'frontendmodulecategorytrans'       => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -235,7 +249,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'frontendmoduletrans'         => [
+        'frontendmoduletrans'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'search'    => true,

@@ -21,6 +21,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle mit ID: %s an
  */
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundle_settings_legend'] = "Bundle Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composer_settings_legend'] = "composer.json Einstellungen";
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['rootcomposer_settings_legend'] = "(ROOT-)composer.json Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable_settings_legend'] = "DCA Tabellen Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodule_settings_legend'] = "Frontendmodul Einstellungen";
 
@@ -32,11 +33,13 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name (f.ex. \"hello-world-bundle\")", "Geben Sie den Repository Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamige Erweiterung überschreiben", "Soll eine gleichnamige, bereits bestehende Extension überschrieben werden?"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json: Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json: Paketversion (für Paketupload in Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['license'] = ["composer.json: Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorname'] = ["composer.json: Name des Autors", "Geben Sie den Namen des Entwicklers ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authoremail'] = ["composer.json: E-Mail-Adresse des Autors", "Geben Sie die E-Mail-Adresse des Autors an."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['authorwebsite'] = ["composer.json: Webseite", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json: Paketversion (Nötig für Paketupload mit Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein. (Nur nötig wenn bundle über Paketupload in Contao Manager bereitgestellt wird)"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['rootcomposerextendrepositorieskey'] = ["composer.json (ROOT): Den Repositories-Key erweitern?", "Soll der Repositories-Key in der composer.json im ROOT-Verzeichnis erweitert werden?"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['rootcomposerextendrequirekey'] = ["composer.json (ROOT): Den Require-Key erweitern?", "Soll der Require-Key in der composer.json im ROOT-Verzeichnis erweitert werden?"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerlicense'] = ["composer.json: Lizenz", "Geben Sie die Lizenz an. z.B. MIT."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerauthorname'] = ["composer.json: Name des Autors", "Geben Sie den Namen des Entwicklers ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerauthoremail'] = ["composer.json: E-Mail-Adresse des Autors", "Geben Sie die E-Mail-Adresse des Autors an."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerauthorwebsite'] = ["composer.json: Webseite", "Geben Sie die Webseite des Autors an. z.B. https://github.com/vendorname"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addDcaTable'] = ["DCA Tabelle hinzufügen", "Geben Sie an, ob eine DCA Tabelle generiert werden soll."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname", "Geben Sie den Namen der Tabelle an: z.B. tl_sample_table"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addFrontendModule'] = ["Frontendmodul hinzufügen", "Fügen Sie dem Package ein Frontendmodul hinzu."];

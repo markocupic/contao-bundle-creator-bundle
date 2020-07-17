@@ -23,7 +23,9 @@
     "source": "https://github.com/markocupic/contao-bundle-creator-bundle"
   },
   "require": {
-    "contao/core-bundle": "^4.9"
+    "contao/core-bundle": "^4.9",
+    "ext-json": "*",
+    "ext-zip": "*"
   },
   "autoload": {
     "psr-4": {

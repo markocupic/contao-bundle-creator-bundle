@@ -1,8 +1,8 @@
 /**
- * @copyright  #authorname# 2020 <#authoremail#>
- * @author     #authorname#
+ * @copyright  #composerauthorname# 2020 <#composerauthoremail#>
+ * @author     #composerauthorname#
  * @package    #bundlename#
- * @license    #license#
+ * @license    #composerlicense#
  * @see        https://github.com/#vendorname#/#repositoryname#
  *
  */
