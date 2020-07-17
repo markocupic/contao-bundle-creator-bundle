@@ -8,5 +8,11 @@ services:
     Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator:
         arguments:
         - '@session'
+        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\FileStorage'
+        - '%kernel.project_dir%'
+        public: true
+
+    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\FileStorage:
+        arguments:
         - '%kernel.project_dir%'
         public: true

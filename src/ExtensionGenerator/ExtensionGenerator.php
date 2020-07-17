@@ -30,6 +30,9 @@ class ExtensionGenerator
     /** @var Session */
     protected $session;
 
+    /** @var FileStorage */
+    protected $fileStorage;
+
     /** @var string */
     protected $projectDir;
 
@@ -45,15 +48,18 @@ class ExtensionGenerator
     /** @var string */
     const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
 
+
     /**
      * ExtensionGenerator constructor.
      *
      * @param Session $session
+     * @param FileStorage $fileStorage
      * @param string $projectDir
      */
-    public function __construct(Session $session, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, string $projectDir)
     {
         $this->session = $session;
+        $this->fileStorage = $fileStorage;
         $this->projectDir = $projectDir;
     }
 
