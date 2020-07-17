@@ -30,7 +30,7 @@ In der composer.json folgende 2 Einträge machen:
     }
   ],
 ```
-In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben. Dieser Schritt kann, wenn so eingestellt von der Erweiterung auch automatisch erledigt werden.
+In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 ```
   "require": {
     ....
@@ -38,7 +38,7 @@ In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis ang
     "dirtyharrycoding/hello-world-bundle": "dev-master"
   },
 ```
-und im require-Teil das neu erstellte Bundle registrieren. Dieser Schritt kann, wenn so eingestellt von der Erweiterung auch automatisch erledigt werden.
+und im require-Teil das neu erstellte Bundle registrieren. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
