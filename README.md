@@ -20,7 +20,7 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
 ## Inbetriebsetzung des Bundles
 Das Bundle, nachdem alle Eingaben im Backend gemacht wurden, ganz einfach per Knopfdruck generieren lassen. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
 
-### Variante A 
+### Variante A (Auch ohne eigenen github-Account möglich)
 In der composer.json folgende 2 Einträge machen:
 ```
 "repositories": [
@@ -89,8 +89,8 @@ Die Erweiterung via github auf packagist.org hochladen und dann via Contao Manag
 Installtool aufrufen. Fertig!
 
 ## Anmerkungen
-* Falls die root composer.json durch die Anwendung manipuliert wird, speichert das Skript ein Backup der composer.json in system/tmp
-* Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package abgelegt. Das Package kann per Knopfdruck heruntergeladen werden kann, erstellt.
+* Falls man in den Einstellungen definiert, dass das Skript während der Erstellung des Bundles auch die die root composer.json anpasst, speichert das Skript zur Sicherheit ein Backup der composer.json in system/tmp ab.
+* Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package mit dem generierten Bundle abgelegt. Das Package kann per Knopfdruck heruntergeladen werden.
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)
