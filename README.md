@@ -90,7 +90,7 @@ Installtool aufrufen. Fertig!
 
 ## Anmerkungen
 * Falls die root composer.json durch die Anwendung manipuliert wird, speichert das Skript ein Backup der composer.json in system/tmp
-* Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package, das per Knopfdruck herutnergeladen werden kann, erstellt.
+* Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package abgelegt. Das Package kann per Knopfdruck heruntergeladen werden kann, erstellt.
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)
