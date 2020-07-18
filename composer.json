@@ -1,12 +1,13 @@
 {
   "name": "markocupic/contao-bundle-creator-bundle",
-  "description": "Create a contao bundle boilerplate from the backend",
+  "description": "Create a contao bundle boilerplate/skeleton from the contao backend",
   "keywords": [
     "contao",
     "bundle",
     "creator",
     "extension",
-    "boilerplate"
+    "boilerplate",
+    "skeleton"
   ],
   "type": "contao-bundle",
   "license": "MIT",
@@ -45,5 +46,4 @@
   "extra": {
     "contao-manager-plugin": "Markocupic\\ContaoBundleCreatorBundle\\ContaoManager\\Plugin"
   }
-
 }
