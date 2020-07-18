@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 
-use Contao\Controller;
 use Contao\Date;
 use Contao\File;
 use Contao\Files;
@@ -251,13 +250,18 @@ class ExtensionGenerator
         $this->fileStorage->addFile($source, $target);
 
         // Add/remove version keyword from composer.json file content
+        $content = $this->fileStorage->getContent();
         if ($this->model->composerpackageversion == '')
         {
-            $content = preg_replace('/(.*)version(.*)###composerpackageversion###(.*),[\r\n|\n]/', '', $this->fileStorage->getContent());
+            $pattern = '/(.*)version(.*)###composerpackageversion###(.*),[\r\n|\n]/';
+            if (preg_match($pattern, $content))
+            {
+                $content = preg_replace($pattern, '', $content);
+            }
         }
         else
         {
-            $content = preg_replace('/###composerpackageversion###/', $this->model->composerpackageversion, $this->fileStorage->getContent());
+            $content = str_replace('###composerpackageversion###', '', $content);
         }
         $this->fileStorage->truncate()->appendContent($content);
     }
@@ -421,12 +425,17 @@ class ExtensionGenerator
             {
                 $content = str_replace('###backendmodulecategorytrans###', $this->model->backendmodulecategorytrans, $content);
                 $content = str_replace('###backendmodulecategory###', $this->model->backendmodulecategory, $content);
-                $content = preg_replace('/(###modcatstart###|###modcatend###)/', '', $content);
+                $content = str_replace('###modcatstart###', '', $content);
+                $content = str_replace('###modcatend###', '', $content);
             }
             else
             {
                 // Remove obsolete backend module category label
-                $content = preg_replace('/([\r\n|\n])###modcatstart###(.*)###modcatend###([\r\n|\n])/', '', $content);
+                $pattern = '/([\r\n|\n])###modcatstart###(.*)###modcatend###([\r\n|\n])/';
+                if (preg_match($pattern, $content))
+                {
+                    $content = preg_replace($pattern, '', $content);
+                }
             }
         }
 
@@ -437,39 +446,48 @@ class ExtensionGenerator
             {
                 $content = str_replace('###frontendmodulecategorytrans###', $this->model->frontendmodulecategorytrans, $content);
                 $content = str_replace('###frontendmodulecategory###', $this->model->frontendmodulecategory, $content);
-                $content = preg_replace('/(###fmdcatstart###|###fmdcatend###)/', '', $content);
+                $content = str_replace('###fmdcatstart###', '', $content);
+                $content = str_replace('###fmdcatend###', '', $content);
             }
             else
             {
                 // Remove obsolete frontend module category label
-                $content = preg_replace('/([\r\n|\n])###fmdcatstart###(.*)###fmdcatend###([\r\n|\n])/', '', $content);
+                $pattern = '/([\r\n|\n])###fmdcatstart###(.*)###fmdcatend###([\r\n|\n])/';
+                if (preg_match($pattern, $content))
+                {
+                    $content = preg_replace($pattern, '', $content);
+                }
             }
         }
 
         $arrTags = $this->tagStorage->getAll();
         $message = $this->message;
         $arrModel = $this->model->row();
+        $pattern = '/###([a-zA-Z0-9_\-]{1,})###/';
 
-        $replacedContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrModel, $sourceFile, $message) {
-            if (isset($arrTags[$matches[1]]))
-            {
-                // Try to replace the tag with a value the tag storage
-                return $arrTags[$matches[1]];
-            }
-            // Try to replace the tag with a value from the model
-            elseif (isset($arrModel[$matches[1]]))
-            {
-                return $arrModel[$matches[1]];
-            }
-            else
-            {
-                // Do not replace the tag
-                $message->addError(sprintf('Could not replace tag "%s", because there is no definition.', $matches[0]));
-                return $matches[0];
-            }
-        }, $content);
+        if (preg_match($pattern, $content))
+        {
+            $content = preg_replace_callback($pattern, function ($matches) use ($arrTags, $arrModel, $sourceFile, $message) {
+                if (isset($arrTags[$matches[1]]))
+                {
+                    // Try to replace the tag with a value the tag storage
+                    return $arrTags[$matches[1]];
+                }
+                // Try to replace the tag with a value from the model
+                elseif (isset($arrModel[$matches[1]]))
+                {
+                    return $arrModel[$matches[1]];
+                }
+                else
+                {
+                    // Do not replace the tag
+                    $message->addError(sprintf('Could not replace tag "%s", because there is no definition.', $matches[0]));
+                    return $matches[0];
+                }
+            }, $content);
+        }
 
-        return $replacedContent;
+        return $content;
     }
 
     /**
@@ -519,8 +537,17 @@ class ExtensionGenerator
     {
         $str = $this->toSnakecase((string) $this->model->frontendmoduletype);
 
-        $str = preg_replace('/^(module_|module|mod_|mod)/', '', $str);
-        $str = preg_replace('/(_module|module)$/', '', $str);
+        $pattern = '/^(module_|module|mod_|mod)/';
+        if (preg_match($pattern, $str))
+        {
+            $str = preg_replace($pattern, '', $str);
+        }
+
+        $pattern = '/(_module|module)$/';
+        if (preg_match($pattern, $str))
+        {
+            $str = preg_replace($pattern, '', $str);
+        }
 
         // Add postfix
         $str = $str . $postfix;
@@ -714,38 +741,43 @@ class ExtensionGenerator
 
         foreach ($arrFiles as $arrFile)
         {
+            $content = $arrFile['content'];
+
             if ($blnReplaceTags)
             {
                 // Replace tags
-                $content = $arrFile['content'];
                 $message = $this->message;
                 $arrModel = $this->model->row();
+                $pattern = '/###([a-zA-Z0-9_\-]{1,})###/';
 
-                $replacedContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrModel, $arrFile, $message) {
-                    if (isset($arrTags[$matches[1]]))
-                    {
-                        // Try to replace the tag with a value the tag storage
-                        return $arrTags[$matches[1]];
-                    }
-                    // Try to replace the tag with a value from the model
-                    elseif (isset($arrModel[$matches[1]]))
-                    {
-                        return $arrModel[$matches[1]];
-                    }
-                    else
-                    {
-                        // Do not replace the tag
-                        $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
-                        return $matches[0];
-                    }
-                }, $content);
+                if (preg_match($pattern, $content))
+                {
+                    $content = preg_replace_callback($pattern, function ($matches) use ($arrTags, $arrModel, $arrFile, $message) {
+                        if (isset($arrTags[$matches[1]]))
+                        {
+                            // Try to replace the tag with a value the tag storage
+                            return $arrTags[$matches[1]];
+                        }
+                        // Try to replace the tag with a value from the model
+                        elseif (isset($arrModel[$matches[1]]))
+                        {
+                            return $arrModel[$matches[1]];
+                        }
+                        else
+                        {
+                            // Do not replace the tag
+                            $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
+                            return $matches[0];
+                        }
+                    }, $content);
+                }
             }
             // Create file
             $objNewFile = new File($arrFile['target']);
 
             // Overwrite content if file already exists
             $objNewFile->truncate();
-            $objNewFile->append($replacedContent);
+            $objNewFile->append($content);
             $objNewFile->close();
 
             // Display message in the backend
