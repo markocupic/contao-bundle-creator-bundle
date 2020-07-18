@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 
+use Contao\Controller;
 use Contao\Date;
 use Contao\File;
 use Contao\Files;
@@ -114,9 +115,9 @@ class ExtensionGenerator
         $this->addMiscFiles();
 
         // Generate dca table
-        if ($this->model->addDcaTable && $this->model->dcatable != '')
+        if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
-            $this->generateDcaTable();
+            $this->generateBackendModule();
         }
 
         // Generate frontend module
@@ -146,6 +147,7 @@ class ExtensionGenerator
 
         // Optionally extend the composer.json file located in the root directory
         $this->extendRootComposerJson();
+
     }
 
     /**
@@ -162,6 +164,21 @@ class ExtensionGenerator
      */
     protected function sanitizeModel(): void
     {
+
+         if ($this->model->backendmoduletype != '')
+         {
+             // Get the backend module type and sanitize it to the contao backend module convention
+             $this->model->backendmoduletype = $this->getSanitizedBackendModuleType();
+             $this->model->save();
+         }
+
+        if ($this->model->backendmodulecategory != '')
+        {
+            // Get the backend module category and sanitize it to the contao backend module convention
+            $this->model->backendmodulecategory = $this->toSnakecase((string) $this->model->backendmodulecategory);
+            $this->model->save();
+        }
+
         if ($this->model->frontendmoduletype != '')
         {
             // Get the frontend module type and sanitize it to the contao frontend module convention
@@ -206,10 +223,14 @@ class ExtensionGenerator
         $this->tags->add('year', date('Y'));
 
         // Dca table and backend module
-        if ($this->model->addDcaTable && $this->model->dcatable != '')
+        if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tags->add('dcatable', (string) $this->model->dcatable);
-            $this->tags->add('bemodule', (string) str_replace('tl_', '', $this->model->dcatable));
+            $this->tags->add('backendmoduletype', (string) $this->model->backendmoduletype);
+            $this->tags->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
+            $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
+            $this->tags->add('backendmoduletrans_0', $arrLabel[0]);
+            $this->tags->add('backendmoduletrans_1', $arrLabel[1]);
         }
 
         // Frontend module
@@ -219,8 +240,6 @@ class ExtensionGenerator
             $this->tags->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tags->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
             $this->tags->add('frontendmoduletemplate', $this->getFrontendModuleTemplateName());
-
-            // Handle frontend module
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
             $this->tags->add('frontendmoduletrans_0', $arrLabel[0]);
             $this->tags->add('frontendmoduletrans_1', $arrLabel[1]);
@@ -280,7 +299,7 @@ class ExtensionGenerator
      *
      * @throws \Exception
      */
-    protected function generateDcaTable(): void
+    protected function generateBackendModule(): void
     {
         // Add dca table file
         $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.php';
@@ -476,6 +495,22 @@ class ExtensionGenerator
         $content = $objPartialFile->getContent();
 
         // Special treatment for src/Resources/contao/languages/modules.php
+        if ($this->model->addBackendModule)
+        {
+            if (strlen((string) $this->model->backendmodulecategorytrans))
+            {
+                $content = str_replace('###backendmodulecategorytrans###', $this->model->backendmodulecategorytrans, $content);
+                $content = str_replace('###backendmodulecategory###', $this->model->backendmodulecategory, $content);
+                $content = preg_replace('/(###modcatstart###|###modcatend###)/', '', $content);
+            }
+            else
+            {
+                // Remove obsolete backend module category label
+                $content = preg_replace('/([\r\n|\n])###modcatstart###(.*)###modcatend###([\r\n|\n])/', '', $content);
+            }
+        }
+
+        // Special treatment for src/Resources/contao/languages/modules.php
         if ($this->model->addFrontendModule)
         {
             if (strlen((string) $this->model->frontendmodulecategorytrans))
@@ -558,6 +593,19 @@ class ExtensionGenerator
 
         return $str;
     }
+
+    /**
+     * Get the backend module type (f.ex. my_custom_module)
+     * Convention => snakecase
+     *     *
+     * @return string
+     */
+    protected function getSanitizedBackendModuleType(): string
+    {
+        $str = $this->toSnakecase((string) $this->model->backendmoduletype);
+        return $str;
+    }
+
 
     /**
      * Get the frontend module classname from module type and add the "Controller" postfix

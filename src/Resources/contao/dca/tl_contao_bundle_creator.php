@@ -76,12 +76,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Palettes
     'palettes'    => [
-        '__selector__' => ['addDcaTable', 'addFrontendModule'],
-        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addDcaTable;{frontendmodule_settings_legend},addFrontendModule'
+        '__selector__' => ['addBackendModule', 'addFrontendModule'],
+        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addBackendModule;{frontendmodule_settings_legend},addFrontendModule'
     ],
     // Subpalettes
     'subpalettes' => [
-        'addDcaTable'       => 'dcatable',
+        'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
         'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans'
     ],
     // Fields
@@ -126,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'addDcaTable'                       => [
+        'addBackendModule'                  => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
@@ -202,7 +202,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'addDcaTable'                       => [
+        'addBackendModule'                  => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
@@ -214,7 +214,43 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'backendmodulecategory'            => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'backendmoduletype'                => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'backendmodulecategorytrans'       => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'backendmoduletrans'               => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'search'    => true,
+            'filter'    => true,
+            'sorting'   => true,
+            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'clr'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'addFrontendModule'                 => [
