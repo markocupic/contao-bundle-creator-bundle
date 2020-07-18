@@ -16,10 +16,13 @@ namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
 use Contao\Date;
 use Contao\File;
 use Contao\Files;
-use Contao\Folder;
 use Contao\StringUtil;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\Tags;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ExtensionGenerator
@@ -27,11 +30,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class ExtensionGenerator
 {
-    /** @var Session */
+    /** @var SessionInterface */
     protected $session;
 
     /** @var FileStorage */
     protected $fileStorage;
+
+    /** @var Tags */
+    protected $tags;
+
+    /** @var Message */
+    protected $message;
 
     /** @var string */
     protected $projectDir;
@@ -48,18 +57,21 @@ class ExtensionGenerator
     /** @var string */
     const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
 
-
     /**
      * ExtensionGenerator constructor.
      *
      * @param Session $session
      * @param FileStorage $fileStorage
+     * @param Tags $tags
+     * @param Message $message
      * @param string $projectDir
      */
-    public function __construct(Session $session, FileStorage $fileStorage, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, Tags $tags, Message $message, string $projectDir)
     {
         $this->session = $session;
         $this->fileStorage = $fileStorage;
+        $this->tags = $tags;
+        $this->message = $message;
         $this->projectDir = $projectDir;
     }
 
@@ -75,14 +87,18 @@ class ExtensionGenerator
 
         if ($this->bundleExists() && !$this->model->overwriteexisting)
         {
-            $this->addErrorFlashMessage('An extension with the same name already exists. Please set the "override extension flag".');
+            $this->message->addError('An extension with the same name already exists. Please set the "override extension flag".');
             return;
         }
 
-        $this->addInfoFlashMessage(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
+        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
 
-        // Generate the folders
-        $this->generateFolders();
+        // Sanitize model (frontendmoduletype, frontendmodulecategory)
+        // Don't move the position it has to be called first!
+        $this->sanitizeModel();
+
+        // Set the tags (#****#)
+        $this->setTags();
 
         // Generate the composer.json file
         $this->generateComposerJsonFile();
@@ -94,7 +110,7 @@ class ExtensionGenerator
         $this->generateContaoManagerPluginClass();
 
         // Config files, assets, etc.
-        $this->copyFiles();
+        $this->addMiscFiles();
 
         // Generate dca table
         if ($this->model->addDcaTable && $this->model->dcatable != '')
@@ -115,6 +131,8 @@ class ExtensionGenerator
             $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
         }
 
+        $this->copyFilesFromStorageToDestination();
+
         // Optionally extend the composer.json file located in the root directory
         $this->extendRootComposerJson();
     }
@@ -129,30 +147,67 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate the plugiin folder structure
-     *
-     * @throws \Exception
+     * Sanitize model
      */
-    protected function generateFolders(): void
+    protected function sanitizeModel(): void
     {
-        $arrFolders = [];
-
-        $arrFolders[] = sprintf('vendor/%s/%s/src/ContaoManager', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/config', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/public', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/config', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/dca', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/languages/en', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/templates', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/EventListener/ContaoHooks', $this->model->vendorname, $this->model->repositoryname);
-
-        foreach ($arrFolders as $strFolder)
+        if ($this->model->frontendmoduletype != '')
         {
-            new Folder($strFolder);
+            // Get the frontend module type and sanitize it to the contao frontend module convention
+            $this->model->frontendmoduletype = $this->getSanitizedFrontendModuleType();
+            $this->model->save();
         }
 
-        // Add message
-        $this->addInfoFlashMessage(sprintf('Generating folder structure in  "vendor/%s/%s".', $this->model->vendorname, $this->model->repositoryname));
+        if ($this->model->frontendmodulecategory != '')
+        {
+            // Get the frontend module category and sanitize it to the contao frontend module convention
+            $this->model->frontendmodulecategory = $this->toSnakecase((string) $this->model->frontendmodulecategory);
+            $this->model->save();
+        }
+    }
+
+    /**
+     * Set all the tags here
+     *
+     * @todo add a hook
+     * @throws \Exception
+     */
+    protected function setTags(): void
+    {
+        // Tags
+        $this->tags->add('vendorname', (string) $this->model->vendorname);
+        $this->tags->add('repositoryname', (string) $this->model->repositoryname);
+
+        // Namespaces
+        $this->tags->add('toplevelnamespace', $this->namespaceify((string) $this->model->vendorname));
+        $this->tags->add('sublevelnamespace', $this->namespaceify((string) $this->model->repositoryname));
+
+        // Composer
+        $this->tags->add('composerdescription', (string) $this->model->composerdescription);
+        $this->tags->add('composerlicense', (string) $this->model->composerlicense);
+        $this->tags->add('composerauthorname', (string) $this->model->composerauthorname);
+        $this->tags->add('composerauthoremail', (string) $this->model->composerauthoremail);
+        $this->tags->add('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
+
+        // Phpdoc
+        $this->tags->add('phpdoc', (string) $this->model->bundlename);
+        $this->tags->add('bundlename', $this->getPhpDoc());
+        $this->tags->add('year', date('Y'));
+
+        // Dca table
+        if ($this->model->addDcaTable && $this->model->dcatable != '')
+        {
+            $this->tags->add('dcatable', (string) $this->model->dcatable);
+        }
+
+        // Frontend module
+        if ($this->model->addFrontendModule)
+        {
+            $this->tags->add('frontendmoduleclassname', $this->getSanitizedFrontendModuleClassname());
+            $this->tags->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
+            $this->tags->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
+            $this->tags->add('frontendmoduletemplate', $this->getFrontendModuleTemplateName());
+        }
     }
 
     /**
@@ -163,41 +218,19 @@ class ExtensionGenerator
     protected function generateComposerJsonFile(): void
     {
         $source = self::SAMPLE_DIR . '/composer.json';
+        $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
 
-        /** @var File $sourceFile */
-        $sourceFile = new File($source);
-        $content = $sourceFile->getContent();
-
-        $content = str_replace('#vendorname#', $this->model->vendorname, $content);
-        $content = str_replace('#repositoryname#', $this->model->repositoryname, $content);
-        $content = str_replace('#composerdescription#', $this->model->composerdescription, $content);
-        $content = str_replace('#composerlicense#', $this->model->composerlicense, $content);
-        $content = str_replace('#composerauthorname#', $this->model->composerauthorname, $content);
-        $content = str_replace('#composerauthoremail#', $this->model->composerauthoremail, $content);
-        $content = str_replace('#composerauthorwebsite#', $this->model->composerauthorwebsite, $content);
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
-
-        // Add/remove version keyword
+        // Add/remove version keyword from composer.json file content
         if ($this->model->composerpackageversion == '')
         {
-            $content = preg_replace('/(.*)version(.*)#composerpackageversion#(.*),[\r\n|\n]/', '', $content);
+            $content = preg_replace('/(.*)version(.*)#composerpackageversion#(.*),[\r\n|\n]/', '', $this->fileStorage->getContent());
         }
         else
         {
-            $content = preg_replace('/#composerpackageversion#/', $this->model->composerpackageversion, $content);
+            $content = preg_replace('/#composerpackageversion#/', $this->model->composerpackageversion, $this->fileStorage->getContent());
         }
-
-        $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
-
-        /** @var File $objTarget */
-        $objTarget = new File($target);
-        $objTarget->truncate();
-        $objTarget->append($content);
-        $objTarget->close();
-
-        // Add message
-        $this->addInfoFlashMessage('Generating composer.json file.');
+        $this->fileStorage->truncate()->appendContent($content);
     }
 
     /**
@@ -208,27 +241,8 @@ class ExtensionGenerator
     protected function generateBundleClass(): void
     {
         $source = self::SAMPLE_DIR . '/src/BundleFile.php';
-
-        /** @var File $sourceFile */
-        $sourceFile = new File($source);
-        $content = $sourceFile->getContent();
-
-        $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-        // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
-        // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
-
         $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify((string) $this->model->vendorname), $this->namespaceify((string) $this->model->repositoryname));
-
-        /** @var File $objTarget */
-        $objTarget = new File($target);
-        $objTarget->truncate();
-        $objTarget->append($content);
-        $objTarget->close();
-
-        // Add message
-        $this->addInfoFlashMessage('Generating bundle class.');
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
@@ -239,74 +253,27 @@ class ExtensionGenerator
     protected function generateContaoManagerPluginClass(): void
     {
         $source = self::SAMPLE_DIR . '/src/ContaoManager/Plugin.php';
-
-        /** @var File $sourceFile */
-        $sourceFile = new File($source);
-        $content = $sourceFile->getContent();
-
-        $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-        // Top-level namespace
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
-        // Sub-level namespace
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
-
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
-
-        /** @var File $objTarget */
-        $objTarget = new File($target);
-        $objTarget->truncate();
-        $objTarget->append($content);
-        $objTarget->close();
-
-        // Add message
-        $this->addInfoFlashMessage('Generating Contao Manager Plugin class.');
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
      * Generate the dca table and
-     *
      * the corresponding language file
+     *
      * @throws \Exception
      */
     protected function generateDcaTable(): void
     {
-        $arrFiles = [
-            // dca table
-            self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.php'          => sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable),
-            // lang file
-            self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.php' => sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable),
-        ];
+        // Add dca table file
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.php';
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $this->fileStorage->addFile($source, $target);
 
-        foreach ($arrFiles as $source => $target)
-        {
-            /** @var File $sourceFile */
-            $sourceFile = new File($source);
-            $content = $sourceFile->getContent();
-
-            $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-            $content = str_replace('#dcatable#', $this->model->dcatable, $content);
-            /** @var File $objTarget */
-            $objTarget = new File($target);
-            $objTarget->truncate();
-            $objTarget->append($content);
-            $objTarget->close();
-
-            // Show message in the backend
-            $msg = sprintf('Created file "%s".', $target);
-            $this->addInfoFlashMessage($msg);
-        }
-
-        // Append backend module string to contao/config.php
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
-        $objFile = new File($target);
-        $objFile->append($this->getContentFromPartialFile('contao_config_be_mod.txt'));
-        $objFile->close();
-
-        // Append backend module string to contao/languages/en/modules.php
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
-        $objFile = new File($target);
-        $objFile->append($this->getContentFromPartialFile('contao_lang_en_be_modules.txt'));
-        $objFile->close();
+        // Add dca table translation file
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.php';
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
@@ -316,95 +283,41 @@ class ExtensionGenerator
      */
     protected function generateFrontendModule(): void
     {
-        // Create folders
-        $arrFolders = [];
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Controller/FrontendModule', $this->model->vendorname, $this->model->repositoryname);
-        $arrFolders[] = sprintf('vendor/%s/%s/src/Resources/contao/templates', $this->model->vendorname, $this->model->repositoryname);
-        foreach ($arrFolders as $strFolder)
-        {
-            new Folder($strFolder);
-        }
-
-        // Get sample content for the frontend module class
-        $objFile = new File(self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php');
-        $content = $objFile->getContent();
-
-        // Replace #phpdoc# with the phpdoc block in the frontend module class
-        $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-
-        // Replace #toplevelnamespace# with top-level namespace in the frontend module class
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
-
-        // Replace #sublevelnamespace# with sub-level namespace in the frontend module class
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
-
-        // Get the frontend module type and sanitize it to the contao frontend module convention
-        $strFrontendModuleType = $this->getFrontendModuleType();
-        $this->model->frontendmoduletype = $strFrontendModuleType;
-        $this->model->save();
-
-        // Get the frontend module category and sanitize it to the contao frontend module convention
-        $strFrontendModuleCategory = $this->toSnakecase((string) $this->model->frontendmodulecategory);
-        $this->model->frontendmodulecategory = $strFrontendModuleCategory;
-        $this->model->save();
-
         // Get the frontend module template name
         $strFrontenModuleTemplateName = $this->getFrontendModuleTemplateName();
 
-        // Replace #frontendmoduleclassname# with frontend module classname
-        $strFrontendModuleClassname = $this->getFrontendModuleClassname();
-        $content = str_replace('#frontendmoduleclassname#', $strFrontendModuleClassname, $content);
+        // Get the frontend module classname
+        $strFrontendModuleClassname = $this->getSanitizedFrontendModuleClassname();
 
-        // Add new frontend class to src/Controller/FrontendController
-        $strNewFile = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
-        $objNewFile = new File($strNewFile);
-        $objNewFile->truncate();
-        $objNewFile->append($content);
-        $objNewFile->close();
+        // Add frontend module class
+        $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
+        $this->fileStorage->addFile($source, $target);
+
+        // Add frontend module class to src/Controller/FrontendController
+        $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
+        $this->fileStorage->addFile($source, $target);
 
         // Add src/Resources/contao/dca/tl_module.php
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->model->vendorname, $this->model->repositoryname);
-        $objNewFile = new File($target);
-        $objNewFile->truncate();
-        $objSource = new File(self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.php');
-        $content = $objSource->getContent();
-
-        // Add phpdoc to src/Resources/contao/dca/tl_module.php
-        $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-        $objNewFile->append($content);
-
-        // Add module palette to src/Resources/contao/dca/tl_module.php
-        $content = str_replace('#frontendmoduletype#', $strFrontendModuleType, $this->getContentFromPartialFile('contao_tl_module.txt'));
-        $objNewFile->append($content);
-        $objNewFile->close();
-
-        // Replace tags in src/Resources/config/services.yml
-        $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
-        $objNewFile = new File($target);
-        $content = $this->getContentFromPartialFile('config_services_frontend_modules.txt');
-        $content = str_replace('#toplevelnamespace#', $this->namespaceify((string) $this->model->vendorname), $content);
-        $content = str_replace('#sublevelnamespace#', $this->namespaceify((string) $this->model->repositoryname), $content);
-        $content = str_replace('#frontendmoduleclassname#', $strFrontendModuleClassname, $content);
-        $content = str_replace('#frontendmodulecategory#', $strFrontendModuleCategory, $content);
-        $content = str_replace('#frontendmoduletemplate#', $strFrontenModuleTemplateName, $content);
-        $content = str_replace('#frontendmoduletype#', $strFrontendModuleType, $content);
-
-        $objNewFile->append($content);
-        $objNewFile->close();
+        $this->fileStorage->addFile($source, $target);
 
         // Add frontend module template
         $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.html5';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
-        Files::getInstance()->copy($source, $target);
+        $this->fileStorage->addFile($source, $target);
 
-        // Append language array to contao/languages/en/modules.php
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
-        $objFile = new File($target);
-        $objFile->append($this->getContentFromPartialFile('contao_lang_en_fe_modules.txt'));
-        $objFile->close();
+        // Add src/Resources/config/services.yml
+        $content = $this->getContentFromPartialFile('config_services_frontend_modules.txt');
+        $source = self::SAMPLE_DIR . '/src/Resources/config/services.yml';
+        $this->fileStorage->getFile($source)->appendContent($content);
 
-        // Add message in the backend
-        $this->addInfoFlashMessage(sprintf('Created frontend module "%s".', $strFrontendModuleClassname));
+        // Add language array to contao/languages/en/modules.php
+        $content = $this->getContentFromPartialFile('contao_lang_en_fe_modules.txt');
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/modules.php';
+        $this->fileStorage->getFile($source)->appendContent($content);
     }
 
     /**
@@ -438,7 +351,7 @@ class ExtensionGenerator
                 {
                     $blnModified = true;
                     $objJSON->repositories[] = $objRepositories;
-                    $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
                 }
             }
 
@@ -452,7 +365,7 @@ class ExtensionGenerator
                 {
                     $blnModified = true;
                     $objJSON->repositories[] = $objRepositories;
-                    $this->addInfoFlashMessage('Extended the repositories section in the root composer.json. Please check!');
+                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
                 }
             }
         }
@@ -461,7 +374,7 @@ class ExtensionGenerator
         {
             $blnModified = true;
             $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
-            $this->addInfoFlashMessage('Extended the require section in the root composer.json. Please check!');
+            $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
         }
 
         if ($blnModified)
@@ -469,7 +382,7 @@ class ExtensionGenerator
             // Make a backup first
             $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
             Files::getInstance()->copy($objComposerFile->path, $strBackupPath);
-            $this->addInfoFlashMessage(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
+            $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
 
             // Append modifications
             $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -480,75 +393,40 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate config files
+     * Add miscellaneous files
      *
      * @throws \Exception
      */
-    protected function copyFiles(): void
+    protected function addMiscFiles(): void
     {
-        // Config files
+        // src/Resources/config/*.yml config files
         $arrFiles = ['listener.yml', 'parameters.yml', 'services.yml'];
         foreach ($arrFiles as $file)
         {
             $source = sprintf('%s/src/Resources/config/%s', self::SAMPLE_DIR, $file);
             $target = sprintf('vendor/%s/%s/src/Resources/config/%s', $this->model->vendorname, $this->model->repositoryname, $file);
-
-            Files::getInstance()->copy($source, $target);
-
-            // Add message
-            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
+            $this->fileStorage->addFile($source, $target);
         }
 
-        // Contao config/config.php && languages/en/modules.php
-        $arrFiles = [
-            // Contao config.php
-            sprintf('%s/src/Resources/contao/config/config.php', self::SAMPLE_DIR)        => sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname),
-            // Contao languages/en/modules.php
-            sprintf('%s/src/Resources/contao/languages/en/modules.php', self::SAMPLE_DIR) => sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname),
+        // src/Resource/contao/config/config.php
+        $source = sprintf('%s/src/Resources/contao/config/config.php', self::SAMPLE_DIR);
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
 
-        ];
+        // src/Resource/contao/languages/en/modules.php
+        $source = sprintf('%s/src/Resources/contao/languages/en/modules.php', self::SAMPLE_DIR);
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
 
-        foreach ($arrFiles as $source => $target)
-        {
-            Files::getInstance()->copy($source, $target);
+        // Add logo
+        $source = sprintf('%s/src/Resources/public/logo.png', self::SAMPLE_DIR);
+        $target = sprintf('vendor/%s/%s/src/Resources/public/logo.png', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
 
-            // Add phpdoc
-            $objFile = new File($target);
-            $content = $objFile->getContent();
-            $content = str_replace('#phpdoc#', $this->getPhpDoc(), $content);
-            $objFile->truncate();
-            $objFile->append($content);
-            $objFile->close();
-
-            // Add message
-            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
-        }
-
-        // Assets in src/Resources/public
-        $arrFiles = ['logo.png'];
-        foreach ($arrFiles as $file)
-        {
-            $source = sprintf('%s/src/Resources/public/%s', self::SAMPLE_DIR, $file);
-            $target = sprintf('vendor/%s/%s/src/Resources/public/%s', $this->model->vendorname, $this->model->repositoryname, $file);
-
-            Files::getInstance()->copy($source, $target);
-
-            // Add message
-            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
-        }
-
-        // README.md
-        $arrFiles = ['README.md'];
-        foreach ($arrFiles as $file)
-        {
-            $source = sprintf('%s/%s', self::SAMPLE_DIR, $file);
-            $target = sprintf('vendor/%s/%s/%s', $this->model->vendorname, $this->model->repositoryname, $file);
-
-            Files::getInstance()->copy($source, $target);
-
-            // Add message
-            $this->addInfoFlashMessage(sprintf('Created file "%s".', $target));
-        }
+        // Readme.md
+        $source = sprintf('%s/README.md', self::SAMPLE_DIR);
+        $target = sprintf('vendor/%s/%s/README.md', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
@@ -564,16 +442,6 @@ class ExtensionGenerator
         /** @var File $sourceFile */
         $sourceFile = new File($source);
         $content = $sourceFile->getContent();
-
-        $content = str_replace('#bundlename#', $this->model->bundlename, $content);
-        $content = str_replace('#year#', date('Y'), $content);
-        $content = str_replace('#composerlicense#', $this->model->composerlicense, $content);
-        $content = str_replace('#composerauthorname#', $this->model->composerauthorname, $content);
-        $content = str_replace('#composerauthoremail#', $this->model->composerauthoremail, $content);
-        $content = str_replace('#composerauthorwebsite#', $this->model->composerauthorwebsite, $content);
-        $content = str_replace('#vendorname#', $this->model->vendorname, $content);
-        $content = str_replace('#repositoryname#', $this->model->repositoryname, $content);
-
         return $content;
     }
 
@@ -614,47 +482,6 @@ class ExtensionGenerator
         }
 
         return $content;
-    }
-
-    /**
-     * Add an info message to the contao backend
-     *
-     * @param string $msg
-     */
-    protected function addInfoFlashMessage(string $msg): void
-    {
-        $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
-    }
-
-    /**
-     * Add an error message to the contao backend
-     *
-     * @param string $msg
-     */
-    protected function addErrorFlashMessage(string $msg): void
-    {
-        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
-    }
-
-    /**
-     * Add a message to the contao backend
-     *
-     * @param string $msg
-     * @param string $type
-     */
-    protected function addFlashMessage(string $msg, string $type): void
-    {
-        /** @var Session $flashBag */
-        $flashBag = $this->session->getFlashBag();
-        $arrFlash = [];
-        if ($flashBag->has($type))
-        {
-            $arrFlash = $flashBag->get($type);
-        }
-
-        $arrFlash[] = $msg;
-
-        $flashBag->set($type, $arrFlash);
     }
 
     /**
@@ -700,7 +527,7 @@ class ExtensionGenerator
      * @param string $postfix
      * @return string
      */
-    protected function getFrontendModuleType($postfix = '_module'): string
+    protected function getSanitizedFrontendModuleType($postfix = '_module'): string
     {
         $str = $this->toSnakecase((string) $this->model->frontendmoduletype);
 
@@ -720,9 +547,9 @@ class ExtensionGenerator
      * @param string $postfix
      * @return string
      */
-    protected function getFrontendModuleClassname(string $postfix = 'Controller'): string
+    protected function getSanitizedFrontendModuleClassname(string $postfix = 'Controller'): string
     {
-        $str = $this->getFrontendModuleType();
+        $str = $this->getSanitizedFrontendModuleType();
         $str = $this->namespaceify($str);
         return $str . $postfix;
     }
@@ -735,7 +562,7 @@ class ExtensionGenerator
      */
     protected function getFrontendModuleTemplateName($strPrefix = 'mod_'): string
     {
-        $str = $this->getFrontendModuleType();
+        $str = $this->getSanitizedFrontendModuleType();
         return $strPrefix . $str;
     }
 
@@ -797,5 +624,43 @@ class ExtensionGenerator
             }
         }
         return false;
+    }
+
+    /**
+     * Create files from storage and replace tags
+     *
+     * @param bool $blnReplaceTags
+     * @throws \Exception
+     */
+    protected function copyFilesFromStorageToDestination(bool $blnReplaceTags = true)
+    {
+        $arrTags = $this->tags->getAll();
+        $arrFiles = $this->fileStorage->getAll();
+        foreach ($arrFiles as $arrFile)
+        {
+            if ($blnReplaceTags)
+            {
+                // Replace tags
+                $content = $arrFile['content'];
+                $message = $this->message;
+                $newContent = preg_replace_callback('/\#([a-zA-Z0-9_\-]{1,})\#/', function ($matches) use ($arrTags, $arrFile, $message) {
+                    if (!isset($arrTags[$matches[1]]))
+                    {
+                        $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
+                    }
+                    return isset($arrTags[$matches[1]]) ? $arrTags[$matches[1]] : $matches[0];
+                }, $content);
+            }
+            // Create file
+            $objNewFile = new File($arrFile['target']);
+
+            // Overwrite content if file already exists
+            $objNewFile->truncate();
+            $objNewFile->append($newContent);
+            $objNewFile->close();
+
+            // Display message in the backend
+            $this->message->addInfo(sprintf('Created file "%s".', $objNewFile->path));
+        }
     }
 }
