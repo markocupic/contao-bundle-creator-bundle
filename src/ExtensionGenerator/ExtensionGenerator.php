@@ -21,6 +21,7 @@ use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\Tags;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -97,7 +98,7 @@ class ExtensionGenerator
         // Don't move the position it has to be called first!
         $this->sanitizeModel();
 
-        // Set the tags (#****#)
+        // Set the tags (###****###)
         $this->setTags();
 
         // Generate the composer.json file
@@ -124,14 +125,24 @@ class ExtensionGenerator
             $this->generateFrontendModule();
         }
 
+        // Create a backup of the old bundle that will be overwritten now
+        if ($this->bundleExists())
+        {
+            $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
+            $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
+            $this->zipData($zipSource, $zipTarget);
+        }
+
+        // Create files from storage in the destination directory vendor/vendorname/bundlename
+        $this->createFilesFromStorage();
+
+        // Store new extension for downloading in system/tmp
         $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
         $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname);
         if ($this->zipData($zipSource, $zipTarget))
         {
             $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
         }
-
-        $this->copyFilesFromStorageToDestination();
 
         // Optionally extend the composer.json file located in the root directory
         $this->extendRootComposerJson();
@@ -190,14 +201,15 @@ class ExtensionGenerator
         $this->tags->add('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
 
         // Phpdoc
-        $this->tags->add('phpdoc', (string) $this->model->bundlename);
-        $this->tags->add('bundlename', $this->getPhpDoc());
+        $this->tags->add('bundlename', (string) $this->model->bundlename);
+        $this->tags->add('phpdoc', $this->getContentFromPartialFile('phpdoc.txt'));
         $this->tags->add('year', date('Y'));
 
-        // Dca table
+        // Dca table and backend module
         if ($this->model->addDcaTable && $this->model->dcatable != '')
         {
             $this->tags->add('dcatable', (string) $this->model->dcatable);
+            $this->tags->add('bemodule', (string) str_replace('tl_', '', $this->model->dcatable));
         }
 
         // Frontend module
@@ -207,6 +219,11 @@ class ExtensionGenerator
             $this->tags->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tags->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
             $this->tags->add('frontendmoduletemplate', $this->getFrontendModuleTemplateName());
+
+            // Handle frontend module
+            $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
+            $this->tags->add('frontendmoduletrans_0', $arrLabel[0]);
+            $this->tags->add('frontendmoduletrans_1', $arrLabel[1]);
         }
     }
 
@@ -224,11 +241,11 @@ class ExtensionGenerator
         // Add/remove version keyword from composer.json file content
         if ($this->model->composerpackageversion == '')
         {
-            $content = preg_replace('/(.*)version(.*)#composerpackageversion#(.*),[\r\n|\n]/', '', $this->fileStorage->getContent());
+            $content = preg_replace('/(.*)version(.*)###composerpackageversion###(.*),[\r\n|\n]/', '', $this->fileStorage->getContent());
         }
         else
         {
-            $content = preg_replace('/#composerpackageversion#/', $this->model->composerpackageversion, $this->fileStorage->getContent());
+            $content = preg_replace('/###composerpackageversion###/', $this->model->composerpackageversion, $this->fileStorage->getContent());
         }
         $this->fileStorage->truncate()->appendContent($content);
     }
@@ -274,6 +291,15 @@ class ExtensionGenerator
         $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
         $this->fileStorage->addFile($source, $target);
+
+        // Append data to src/Resources/contao/config/config.php
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/config/config.php';
+        $this->fileStorage->getFile($source)->appendContent($this->getContentFromPartialFile('contao_config_be_mod.txt'));
+
+        // Add language array to contao/languages/en/modules.php
+        $content = $this->getContentFromPartialFile('contao_lang_en_be_modules.txt');
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/modules.php';
+        $this->fileStorage->getFile($source)->appendContent($content);
     }
 
     /**
@@ -302,7 +328,7 @@ class ExtensionGenerator
         // Add src/Resources/contao/dca/tl_module.php
         $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->appendContent($this->getContentFromPartialFile('contao_tl_module.txt'));
 
         // Add frontend module template
         $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.html5';
@@ -430,23 +456,7 @@ class ExtensionGenerator
     }
 
     /**
-     * Get the php doc from the partial file
-     *
-     * @return string
-     * @throws \Exception
-     */
-    protected function getPhpDoc(): string
-    {
-        $source = self::SAMPLE_DIR . '/partials/phpdoc.txt';
-
-        /** @var File $sourceFile */
-        $sourceFile = new File($source);
-        $content = $sourceFile->getContent();
-        return $content;
-    }
-
-    /**
-     * Replace tags and return content from partials
+     * Replace some special tags and return content from partials
      *
      * @param string $strFilename
      * @return string
@@ -454,34 +464,43 @@ class ExtensionGenerator
      */
     protected function getContentFromPartialFile(string $strFilename): string
     {
-        $source = self::SAMPLE_DIR . '/partials/' . $strFilename;
+        $sourceFile = self::SAMPLE_DIR . '/partials/' . $strFilename;
 
-        /** @var File $sourceFile */
-        $sourceFile = new File($source);
-        $content = $sourceFile->getContent();
-
-        // Handle dca table
-        $content = str_replace('#dcatable#', $this->model->dcatable, $content);
-        $content = str_replace('#bemodule#', str_replace('tl_', '', $this->model->dcatable), $content);
-
-        // Handle frontend module
-        $content = str_replace('#frontendmoduletype#', $this->model->frontendmoduletype, $content);
-        $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
-        $content = str_replace('#frontendmoduletrans_0#', $arrLabel[0], $content);
-        $content = str_replace('#frontendmoduletrans_1#', $arrLabel[1], $content);
-        if (strlen((string) $this->model->frontendmodulecategorytrans))
+        if (!is_file($this->projectDir . '/' . $sourceFile))
         {
-            $content = str_replace('#frontendmodulecategorytrans#', $this->model->frontendmodulecategorytrans, $content);
-            $content = str_replace('#frontendmodulecategory#', $this->model->frontendmodulecategory, $content);
-            $content = preg_replace('/(#fmdcatstart#|#fmdcatend#)/', '', $content);
-        }
-        else
-        {
-            // Remove obsolete frontend module category label
-            $content = preg_replace('/([\r\n|\n])#fmdcatstart#(.*)#fmdcatend#([\r\n|\n])/', '', $content);
+            throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
         }
 
-        return $content;
+        /** @var File $objPartialFile */
+        $objPartialFile = new File($sourceFile);
+        $content = $objPartialFile->getContent();
+
+        // Special treatment for src/Resources/contao/languages/modules.php
+        if ($this->model->addFrontendModule)
+        {
+            if (strlen((string) $this->model->frontendmodulecategorytrans))
+            {
+                $content = str_replace('###frontendmodulecategorytrans###', $this->model->frontendmodulecategorytrans, $content);
+                $content = str_replace('###frontendmodulecategory###', $this->model->frontendmodulecategory, $content);
+                $content = preg_replace('/(###fmdcatstart###|###fmdcatend###)/', '', $content);
+            }
+            else
+            {
+                // Remove obsolete frontend module category label
+                $content = preg_replace('/([\r\n|\n])###fmdcatstart###(.*)###fmdcatend###([\r\n|\n])/', '', $content);
+            }
+        }
+
+        $arrTags = $this->tags->getAll();
+        $message = $this->message;
+        $newContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $sourceFile, $message) {
+            if (!isset($arrTags[$matches[1]]))
+            {
+                $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $sourceFile));
+            }
+            return isset($arrTags[$matches[1]]) ? $arrTags[$matches[1]] : $matches[0];
+        }, $content);
+        return $newContent;
     }
 
     /**
@@ -627,12 +646,12 @@ class ExtensionGenerator
     }
 
     /**
-     * Create files from storage and replace tags
+     * Write files from storage to the filesystem and replace tags
      *
      * @param bool $blnReplaceTags
      * @throws \Exception
      */
-    protected function copyFilesFromStorageToDestination(bool $blnReplaceTags = true)
+    protected function createFilesFromStorage(bool $blnReplaceTags = true)
     {
         $arrTags = $this->tags->getAll();
         $arrFiles = $this->fileStorage->getAll();
@@ -643,7 +662,8 @@ class ExtensionGenerator
                 // Replace tags
                 $content = $arrFile['content'];
                 $message = $this->message;
-                $newContent = preg_replace_callback('/\#([a-zA-Z0-9_\-]{1,})\#/', function ($matches) use ($arrTags, $arrFile, $message) {
+
+                $newContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrFile, $message) {
                     if (!isset($arrTags[$matches[1]]))
                     {
                         $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));

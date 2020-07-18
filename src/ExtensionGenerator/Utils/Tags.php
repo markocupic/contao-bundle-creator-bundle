@@ -23,9 +23,6 @@ class Tags
     /** @var array */
     private $arrTags = [];
 
-    /** @var string */
-    public const ENVELOPPE = '#%s#';
-
     /**
      * @param string $strKey
      * @param string $strValue
