@@ -214,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmodulecategory'            => [
@@ -341,10 +341,10 @@ class tl_contao_bundle_creator extends Contao\Backend
         {
             /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
             $session = Contao\System::getContainer()->get('session');
-            if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
+            if ($session->has('CONTAO-BUNDLE-CREATOR.LAST-ZIP'))
             {
-                $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR-LAST-ZIP');
-                $session->remove('CONTAO-BUNDLE-CREATOR-LAST-ZIP');
+                $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
+                $session->remove('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
 
                 $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -372,7 +372,7 @@ class tl_contao_bundle_creator extends Contao\Backend
 
             /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
             $session = Contao\System::getContainer()->get('session');
-            if ($session->has('CONTAO-BUNDLE-CREATOR-LAST-ZIP'))
+            if ($session->has('CONTAO-BUNDLE-CREATOR.LAST-ZIP'))
             {
                 $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="javascript:this.style.display = \'none\'">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] . '</button>';
             }

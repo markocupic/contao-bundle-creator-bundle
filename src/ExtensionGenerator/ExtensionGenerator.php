@@ -19,7 +19,7 @@ use Contao\File;
 use Contao\Files;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\Tags;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -38,8 +38,8 @@ class ExtensionGenerator
     /** @var FileStorage */
     protected $fileStorage;
 
-    /** @var Tags */
-    protected $tags;
+    /** @var TagStorage */
+    protected $tagStorage;
 
     /** @var Message */
     protected $message;
@@ -53,32 +53,26 @@ class ExtensionGenerator
     /** @var string */
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Samples/sample-repository';
 
-    /** @var string */
-    const STR_INFO_FLASH_TYPE = 'contao.BE.info';
-
-    /** @var string */
-    const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
-
     /**
      * ExtensionGenerator constructor.
      *
      * @param Session $session
      * @param FileStorage $fileStorage
-     * @param Tags $tags
+     * @param TagStorage $tagStorage
      * @param Message $message
      * @param string $projectDir
      */
-    public function __construct(Session $session, FileStorage $fileStorage, Tags $tags, Message $message, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, string $projectDir)
     {
         $this->session = $session;
         $this->fileStorage = $fileStorage;
-        $this->tags = $tags;
+        $this->tagStorage = $tagStorage;
         $this->message = $message;
         $this->projectDir = $projectDir;
     }
 
     /**
-     * Run bundle creator
+     * Run contao bundle creator
      *
      * @param ContaoBundleCreatorModel $model
      * @throws \Exception
@@ -95,35 +89,35 @@ class ExtensionGenerator
 
         $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
 
-        // Sanitize model (frontendmoduletype, frontendmodulecategory)
-        // Don't move the position it has to be called first!
+        // Sanitize model (backendmoduletype, backendmodulecategory, frontendmoduletype, frontendmodulecategory)
+        // Don't move the position, this has to be called first!
         $this->sanitizeModel();
 
         // Set the tags (###****###)
         $this->setTags();
 
-        // Generate the composer.json file
-        $this->generateComposerJsonFile();
+        // Add the composer.json file to file storage
+        $this->addComposerJsonFileToFileStorage();
 
-        // Generate the bundle class
-        $this->generateBundleClass();
+        // Add the bundle class to file storage
+        $this->addBundleClassToFileStorage();
 
-        // Generate the Contao Manager Plugin class
-        $this->generateContaoManagerPluginClass();
+        // Add the Contao Manager Plugin class to file storage
+        $this->addContaoManagerPluginClassToFileStorage();
 
         // Config files, assets, etc.
-        $this->addMiscFiles();
+        $this->addMiscFilesToFileStorage();
 
-        // Generate dca table
+        // Add backend module files to file storage
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
-            $this->generateBackendModule();
+            $this->addBackendModuleFilesToFileStorage();
         }
 
-        // Generate frontend module
+        // Add frontend module files to file storage
         if ($this->model->addFrontendModule)
         {
-            $this->generateFrontendModule();
+            $this->addFrontendModuleFilesToFileStorage();
         }
 
         // Create a backup of the old bundle that will be overwritten now
@@ -134,24 +128,24 @@ class ExtensionGenerator
             $this->zipData($zipSource, $zipTarget);
         }
 
-        // Create files from storage in the destination directory vendor/vendorname/bundlename
-        $this->createFilesFromStorage();
+        // Create all the bundle files in vendor/vendorname/bundlename
+        $this->createFilesFromFileStorage();
 
-        // Store new extension for downloading in system/tmp
+        // Store new bundle also as a zip-package for downloading it from system/tmp
         $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
         $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname);
         if ($this->zipData($zipSource, $zipTarget))
         {
-            $this->session->set('CONTAO-BUNDLE-CREATOR-LAST-ZIP', $zipTarget);
+            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', $zipTarget);
         }
 
         // Optionally extend the composer.json file located in the root directory
-        $this->extendRootComposerJson();
-
+        $this->editRootComposerJson();
     }
 
     /**
-     * Check if extension with same name already exists
+     * Check if an extension with the same name already exists
+     *
      * @return bool
      */
     protected function bundleExists(): bool
@@ -164,13 +158,12 @@ class ExtensionGenerator
      */
     protected function sanitizeModel(): void
     {
-
-         if ($this->model->backendmoduletype != '')
-         {
-             // Get the backend module type and sanitize it to the contao backend module convention
-             $this->model->backendmoduletype = $this->getSanitizedBackendModuleType();
-             $this->model->save();
-         }
+        if ($this->model->backendmoduletype != '')
+        {
+            // Get the backend module type and sanitize it to the contao backend module convention
+            $this->model->backendmoduletype = $this->getSanitizedBackendModuleType();
+            $this->model->save();
+        }
 
         if ($this->model->backendmodulecategory != '')
         {
@@ -197,61 +190,61 @@ class ExtensionGenerator
     /**
      * Set all the tags here
      *
-     * @todo add a hook
+     * @todo add a contao hook
      * @throws \Exception
      */
     protected function setTags(): void
     {
         // Tags
-        $this->tags->add('vendorname', (string) $this->model->vendorname);
-        $this->tags->add('repositoryname', (string) $this->model->repositoryname);
+        $this->tagStorage->add('vendorname', (string) $this->model->vendorname);
+        $this->tagStorage->add('repositoryname', (string) $this->model->repositoryname);
 
         // Namespaces
-        $this->tags->add('toplevelnamespace', $this->namespaceify((string) $this->model->vendorname));
-        $this->tags->add('sublevelnamespace', $this->namespaceify((string) $this->model->repositoryname));
+        $this->tagStorage->add('toplevelnamespace', $this->namespaceify((string) $this->model->vendorname));
+        $this->tagStorage->add('sublevelnamespace', $this->namespaceify((string) $this->model->repositoryname));
 
         // Composer
-        $this->tags->add('composerdescription', (string) $this->model->composerdescription);
-        $this->tags->add('composerlicense', (string) $this->model->composerlicense);
-        $this->tags->add('composerauthorname', (string) $this->model->composerauthorname);
-        $this->tags->add('composerauthoremail', (string) $this->model->composerauthoremail);
-        $this->tags->add('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
+        $this->tagStorage->add('composerdescription', (string) $this->model->composerdescription);
+        $this->tagStorage->add('composerlicense', (string) $this->model->composerlicense);
+        $this->tagStorage->add('composerauthorname', (string) $this->model->composerauthorname);
+        $this->tagStorage->add('composerauthoremail', (string) $this->model->composerauthoremail);
+        $this->tagStorage->add('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
 
         // Phpdoc
-        $this->tags->add('bundlename', (string) $this->model->bundlename);
-        $this->tags->add('phpdoc', $this->getContentFromPartialFile('phpdoc.txt'));
-        $this->tags->add('year', date('Y'));
+        $this->tagStorage->add('bundlename', (string) $this->model->bundlename);
+        $this->tagStorage->add('phpdoc', $this->getContentFromPartialFile('phpdoc.txt'));
+        $this->tagStorage->add('year', date('Y'));
 
         // Dca table and backend module
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
-            $this->tags->add('dcatable', (string) $this->model->dcatable);
-            $this->tags->add('backendmoduletype', (string) $this->model->backendmoduletype);
-            $this->tags->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
+            $this->tagStorage->add('dcatable', (string) $this->model->dcatable);
+            $this->tagStorage->add('backendmoduletype', (string) $this->model->backendmoduletype);
+            $this->tagStorage->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
-            $this->tags->add('backendmoduletrans_0', $arrLabel[0]);
-            $this->tags->add('backendmoduletrans_1', $arrLabel[1]);
+            $this->tagStorage->add('backendmoduletrans_0', $arrLabel[0]);
+            $this->tagStorage->add('backendmoduletrans_1', $arrLabel[1]);
         }
 
         // Frontend module
         if ($this->model->addFrontendModule)
         {
-            $this->tags->add('frontendmoduleclassname', $this->getSanitizedFrontendModuleClassname());
-            $this->tags->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
-            $this->tags->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
-            $this->tags->add('frontendmoduletemplate', $this->getFrontendModuleTemplateName());
+            $this->tagStorage->add('frontendmoduleclassname', $this->getSanitizedFrontendModuleClassname());
+            $this->tagStorage->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
+            $this->tagStorage->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
+            $this->tagStorage->add('frontendmoduletemplate', $this->getFrontendModuleTemplateName());
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
-            $this->tags->add('frontendmoduletrans_0', $arrLabel[0]);
-            $this->tags->add('frontendmoduletrans_1', $arrLabel[1]);
+            $this->tagStorage->add('frontendmoduletrans_0', $arrLabel[0]);
+            $this->tagStorage->add('frontendmoduletrans_1', $arrLabel[1]);
         }
     }
 
     /**
-     * Generate the composer.json file
+     * Add composer.json file to file storage
      *
      * @throws \Exception
      */
-    protected function generateComposerJsonFile(): void
+    protected function addComposerJsonFileToFileStorage(): void
     {
         $source = self::SAMPLE_DIR . '/composer.json';
         $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
@@ -270,11 +263,11 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate the bundle class
+     * Add the bundle class to file storage
      *
      * @throws \Exception
      */
-    protected function generateBundleClass(): void
+    protected function addBundleClassToFileStorage(): void
     {
         $source = self::SAMPLE_DIR . '/src/BundleFile.php';
         $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify((string) $this->model->vendorname), $this->namespaceify((string) $this->model->repositoryname));
@@ -282,11 +275,11 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate the Contao Manager plugin class
+     * Add the Contao Manager plugin class to file storage
      *
      * @throws \Exception
      */
-    protected function generateContaoManagerPluginClass(): void
+    protected function addContaoManagerPluginClassToFileStorage(): void
     {
         $source = self::SAMPLE_DIR . '/src/ContaoManager/Plugin.php';
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
@@ -294,12 +287,11 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate the dca table and
-     * the corresponding language file
+     * Add backend module files to file storage
      *
      * @throws \Exception
      */
-    protected function generateBackendModule(): void
+    protected function addBackendModuleFilesToFileStorage(): void
     {
         // Add dca table file
         $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.php';
@@ -322,11 +314,11 @@ class ExtensionGenerator
     }
 
     /**
-     * Generate frontend module
+     * Add frontend module files to file storage
      *
      * @throws \Exception
      */
-    protected function generateFrontendModule(): void
+    protected function addFrontendModuleFilesToFileStorage(): void
     {
         // Get the frontend module template name
         $strFrontenModuleTemplateName = $this->getFrontendModuleTemplateName();
@@ -366,83 +358,11 @@ class ExtensionGenerator
     }
 
     /**
-     * Optionally extend the composer.json file located in the root directory
+     * Add miscellaneous files to file storage
      *
      * @throws \Exception
      */
-    protected function extendRootComposerJson(): void
-    {
-        $blnModified = false;
-        $objComposerFile = new File('composer.json');
-        $content = $objComposerFile->getContent();
-        $objJSON = json_decode($content);
-
-        if ($this->model->rootcomposerextendrepositorieskey !== '')
-        {
-            if (!isset($objJSON->repositories))
-            {
-                $objJSON->repositories = [];
-            }
-
-            $objRepositories = new \stdClass();
-
-            if ($this->model->rootcomposerextendrequirekey === 'path')
-            {
-                $objRepositories->type = 'path';
-                $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-
-                // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories))
-                {
-                    $blnModified = true;
-                    $objJSON->repositories[] = $objRepositories;
-                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
-                }
-            }
-
-            if ($this->model->rootcomposerextendrequirekey === 'vcs-github')
-            {
-                $objRepositories->type = 'vcs';
-                $objRepositories->url = sprintf('https://github.com/%s/%s', $this->model->vendorname, $this->model->repositoryname);
-
-                // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories))
-                {
-                    $blnModified = true;
-                    $objJSON->repositories[] = $objRepositories;
-                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
-                }
-            }
-        }
-
-        if ($this->model->rootcomposerextendrequirekey)
-        {
-            $blnModified = true;
-            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
-            $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
-        }
-
-        if ($blnModified)
-        {
-            // Make a backup first
-            $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
-            Files::getInstance()->copy($objComposerFile->path, $strBackupPath);
-            $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
-
-            // Append modifications
-            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-            $objComposerFile->truncate();
-            $objComposerFile->append($content);
-            $objComposerFile->close();
-        }
-    }
-
-    /**
-     * Add miscellaneous files
-     *
-     * @throws \Exception
-     */
-    protected function addMiscFiles(): void
+    protected function addMiscFilesToFileStorage(): void
     {
         // src/Resources/config/*.yml config files
         $arrFiles = ['listener.yml', 'parameters.yml', 'services.yml'];
@@ -526,20 +446,34 @@ class ExtensionGenerator
             }
         }
 
-        $arrTags = $this->tags->getAll();
+        $arrTags = $this->tagStorage->getAll();
         $message = $this->message;
-        $newContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $sourceFile, $message) {
-            if (!isset($arrTags[$matches[1]]))
+        $arrModel = $this->model->row();
+
+        $replacedContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrModel, $sourceFile, $message) {
+            if (isset($arrTags[$matches[1]]))
             {
-                $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $sourceFile));
+                // Try to replace the tag with a value the tag storage
+                return $arrTags[$matches[1]];
             }
-            return isset($arrTags[$matches[1]]) ? $arrTags[$matches[1]] : $matches[0];
+            // Try to replace the tag with a value from the model
+            elseif (isset($arrModel[$matches[1]]))
+            {
+                return $arrModel[$matches[1]];
+            }
+            else
+            {
+                // Do not replace the tag
+                $message->addError(sprintf('Could not replace tag "%s", because there is no definition.', $matches[0]));
+                return $matches[0];
+            }
         }, $content);
-        return $newContent;
+
+        return $replacedContent;
     }
 
     /**
-     * Convert string to namespace
+     * Converts a string to namespace
      * "my_custom name-space" will become "MyCustomNameSpace"
      *
      * @param string $strName
@@ -577,7 +511,7 @@ class ExtensionGenerator
     /**
      * Get the frontend module type (f.ex. my_custom_module)
      * Convention => snakecase with postfix "_module"
-     *     *
+     *
      * @param string $postfix
      * @return string
      */
@@ -597,7 +531,7 @@ class ExtensionGenerator
     /**
      * Get the backend module type (f.ex. my_custom_module)
      * Convention => snakecase
-     *     *
+     *
      * @return string
      */
     protected function getSanitizedBackendModuleType(): string
@@ -605,7 +539,6 @@ class ExtensionGenerator
         $str = $this->toSnakecase((string) $this->model->backendmoduletype);
         return $str;
     }
-
 
     /**
      * Get the frontend module classname from module type and add the "Controller" postfix
@@ -694,15 +627,91 @@ class ExtensionGenerator
     }
 
     /**
-     * Write files from storage to the filesystem and replace tags
+     * Optionally edit the composer.json file located in the root directory
      *
+     * @throws \Exception
+     */
+    protected function editRootComposerJson(): void
+    {
+        $blnModified = false;
+        $objComposerFile = new File('composer.json');
+        $content = $objComposerFile->getContent();
+        $objJSON = json_decode($content);
+
+        if ($this->model->rootcomposerextendrepositorieskey !== '')
+        {
+            if (!isset($objJSON->repositories))
+            {
+                $objJSON->repositories = [];
+            }
+
+            $objRepositories = new \stdClass();
+
+            if ($this->model->rootcomposerextendrequirekey === 'path')
+            {
+                $objRepositories->type = 'path';
+                $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+
+                // Prevent duplicate entries
+                if (!\in_array($objRepositories, $objJSON->repositories))
+                {
+                    $blnModified = true;
+                    $objJSON->repositories[] = $objRepositories;
+                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
+                }
+            }
+
+            if ($this->model->rootcomposerextendrequirekey === 'vcs-github')
+            {
+                $objRepositories->type = 'vcs';
+                $objRepositories->url = sprintf('https://github.com/%s/%s', $this->model->vendorname, $this->model->repositoryname);
+
+                // Prevent duplicate entries
+                if (!\in_array($objRepositories, $objJSON->repositories))
+                {
+                    $blnModified = true;
+                    $objJSON->repositories[] = $objRepositories;
+                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
+                }
+            }
+        }
+
+        if ($this->model->rootcomposerextendrequirekey)
+        {
+            $blnModified = true;
+            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
+            $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
+        }
+
+        if ($blnModified)
+        {
+            // Make a backup first
+            $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
+            Files::getInstance()->copy($objComposerFile->path, $strBackupPath);
+            $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
+
+            // Append modifications
+            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $objComposerFile->truncate();
+            $objComposerFile->append($content);
+            $objComposerFile->close();
+        }
+    }
+
+    /**
+     * Write files from the file storage to the filesystem and replace tags
+     *
+     * @todo add a contao hook
      * @param bool $blnReplaceTags
      * @throws \Exception
      */
-    protected function createFilesFromStorage(bool $blnReplaceTags = true)
+    protected function createFilesFromFileStorage(bool $blnReplaceTags = true): void
     {
-        $arrTags = $this->tags->getAll();
+        $arrTags = $this->tagStorage->getAll();
         $arrFiles = $this->fileStorage->getAll();
+
+        // @todo add a contao hook here
+
         foreach ($arrFiles as $arrFile)
         {
             if ($blnReplaceTags)
@@ -710,13 +719,25 @@ class ExtensionGenerator
                 // Replace tags
                 $content = $arrFile['content'];
                 $message = $this->message;
+                $arrModel = $this->model->row();
 
-                $newContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrFile, $message) {
-                    if (!isset($arrTags[$matches[1]]))
+                $replacedContent = preg_replace_callback('/###([a-zA-Z0-9_\-]{1,})###/', function ($matches) use ($arrTags, $arrModel, $arrFile, $message) {
+                    if (isset($arrTags[$matches[1]]))
                     {
-                        $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
+                        // Try to replace the tag with a value the tag storage
+                        return $arrTags[$matches[1]];
                     }
-                    return isset($arrTags[$matches[1]]) ? $arrTags[$matches[1]] : $matches[0];
+                    // Try to replace the tag with a value from the model
+                    elseif (isset($arrModel[$matches[1]]))
+                    {
+                        return $arrModel[$matches[1]];
+                    }
+                    else
+                    {
+                        // Do not replace the tag
+                        $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
+                        return $matches[0];
+                    }
                 }, $content);
             }
             // Create file
@@ -724,7 +745,7 @@ class ExtensionGenerator
 
             // Overwrite content if file already exists
             $objNewFile->truncate();
-            $objNewFile->append($newContent);
+            $objNewFile->append($replacedContent);
             $objNewFile->close();
 
             // Display message in the backend

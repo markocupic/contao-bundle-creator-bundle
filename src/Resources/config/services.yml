@@ -9,7 +9,7 @@ services:
         arguments:
         - '@session'
         - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage'
-        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\Tags'
+        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage'
         - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message'
         - '%kernel.project_dir%'
         public: true
@@ -19,6 +19,6 @@ services:
         - '%kernel.project_dir%'
         public: true
 
-    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\Tags: ~
+    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage: ~
 
     Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message: ~

@@ -3,7 +3,7 @@
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-Das Modul ist für Entwickler gedacht, und generiert ein Grundgerüst (Boilerplate) für ein Contao Bundle.
+Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einige Parameter ein Grundgerüst (Boilerplate) für ein Contao 4 Bundle. Es können je ein sofort insetzbares Frontend- und Backend-Modul generiert werden. Alle nötigen Konfigurationsdaten sind bereits enthalten. Falls gewünscht, werden sogar die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt. Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten.
 
 
 ## Via Contao Backend das Bundle konfigurieren
@@ -12,13 +12,13 @@ Das Modul ist für Entwickler gedacht, und generiert ein Grundgerüst (Boilerpla
 
 
 ## Verzeichnisstruktur
-Folgende Verzeichnisstruktur wird im vendor Vezeichnis abgelegt.
+Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
 ![Alt text](src/Resources/public/file-tree.png?raw=true "Verzeichnisstruktur")
 
 
-## Inbetriebsetzung des Bundles
-Das Bundle, nachdem alle Eingaben im Backend gemacht wurden, ganz einfach per Knopfdruck generieren lassen. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
+## Inbetriebnahme des Bundles
+Nachdem alle Eingaben im Backend gemacht wurden, das Bundle ganz einfach per Knopfdruck generieren lassen. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
 
 ### Variante A (Auch ohne eigenen github-Account möglich)
 In der composer.json folgende 2 Einträge machen:

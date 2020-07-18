@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils;
 
 /**
- * Class Tags
+ * Class TagStorage
  * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils
  */
-class Tags
+class TagStorage
 {
 
     /** @var array */
