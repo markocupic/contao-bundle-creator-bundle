@@ -245,25 +245,41 @@ class ExtensionGenerator
      */
     protected function addComposerJsonFileToFileStorage(): void
     {
+        $blnModified = false;
+
         $source = self::SAMPLE_DIR . '/composer.json';
         $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // Add/remove version keyword from composer.json file content
+        // Add/remove version keyword from composer.json
         $content = $this->fileStorage->getContent();
+        $composer = json_decode($content);
+
+        if (isset($composer->version))
+        {
+            unset($composer->version);
+            $blnModified = true;
+        }
+
         if ($this->model->composerpackageversion == '')
         {
-            $pattern = '/(.*)version(.*)###composerpackageversion###(.*),[\r\n|\n]/';
-            if (preg_match($pattern, $content))
+            if (isset($composer->version))
             {
-                $content = preg_replace($pattern, '', $content);
+                unset($composer->version);
+                $blnModified = true;
             }
         }
         else
         {
-            $content = str_replace('###composerpackageversion###', '', $content);
+            $composer->version = $this->model->composerpackageversion;
+            $blnModified = true;
         }
-        $this->fileStorage->truncate()->appendContent($content);
+
+        if ($blnModified)
+        {
+            $content = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $this->fileStorage->truncate()->appendContent($content);
+        }
     }
 
     /**
@@ -718,7 +734,7 @@ class ExtensionGenerator
             $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
 
             // Append modifications
-            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $objComposerFile->truncate();
             $objComposerFile->append($content);
             $objComposerFile->close();

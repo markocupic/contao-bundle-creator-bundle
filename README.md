@@ -3,8 +3,8 @@
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate) für ein Contao 4 Bundle. 
-Es können ein sofort insetzbares Frontend- und Backend-Modul generiert werden. 
+Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate/Skeleton) für ein Contao 4 Bundle. 
+Es können ein sofort einsetzbares Frontend- und Backend-Modul generiert werden. 
 Alle nötigen Konfigurationsdaten werden automatisch erstellt. 
 Falls gewünscht, werden auch die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt. 
 Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten.
@@ -47,7 +47,7 @@ Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch e
 Im require-Teil das neu erstellte Bundle registrieren. 
 Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 
-Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
+Danach via Contao Manager ein vollständiges Update durchführen und das Installtool aufrufen. Fertig!
 
 ___
 
