@@ -3,7 +3,11 @@
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einige Parameter ein Grundgerüst (Boilerplate) für ein Contao 4 Bundle. Es können je ein sofort insetzbares Frontend- und Backend-Modul generiert werden. Alle nötigen Konfigurationsdaten sind bereits enthalten. Falls gewünscht, werden sogar die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt. Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten.
+Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate) für ein Contao 4 Bundle. 
+Es können ein sofort insetzbares Frontend- und Backend-Modul generiert werden. 
+Alle nötigen Konfigurationsdaten werden automatisch erstellt. 
+Falls gewünscht, werden auch die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt. 
+Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten.
 
 
 ## Via Contao Backend das Bundle konfigurieren
@@ -18,7 +22,8 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
 
 ## Inbetriebnahme des Bundles
-Nachdem alle Eingaben im Backend gemacht wurden, das Bundle ganz einfach per Knopfdruck generieren lassen. Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
+Nachdem alle Eingaben im Backend gemacht wurden, das Bundle ganz einfach per Knopfdruck generieren lassen. 
+Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
 
 ### Variante A (Auch ohne eigenen github-Account möglich)
 In der composer.json folgende 2 Einträge machen:
@@ -30,7 +35,8 @@ In der composer.json folgende 2 Einträge machen:
     }
   ],
 ```
-In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
+In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben. 
+Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 ```
   "require": {
     ....
@@ -38,7 +44,8 @@ In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis ang
     "dirtyharrycoding/hello-world-bundle": "dev-master"
   },
 ```
-Im require-Teil das neu erstellte Bundle registrieren. Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
+Im require-Teil das neu erstellte Bundle registrieren. 
+Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
@@ -66,8 +73,10 @@ Im require-Teil das neu erstellte Bundle registrieren.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
-Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. Die Erstellung eines **Oauth-Access-Tokens** kann hier Abhilfe schaffen.
-Das Access Token muss dann in der **config section** der composer.json im Root eingesetzt werden. [Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. 
+Die Erstellung eines **Oauth-Access-Tokens** kann hier Abhilfe schaffen.
+Das Access Token muss dann in der **config section** der composer.json im Root eingesetzt werden. 
+[Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
 ```
    "config": {
      "github-oauth": {
