@@ -7,7 +7,6 @@
     "tag 1",
     "tag 2"
   ],
-  "version": "###composerpackageversion###",
   "type": "contao-bundle",
   "license": "###composerlicense###",
   "authors": [

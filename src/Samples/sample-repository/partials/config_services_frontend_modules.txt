@@ -1,6 +1,0 @@
-  # Contao frontend module ###toplevelnamespace###\###sublevelnamespace###\Controller\FrontendModule\###frontendmoduleclassname###
-  ###toplevelnamespace###\###sublevelnamespace###\Controller\FrontendModule\###frontendmoduleclassname###:
-    tags:
-    - { name: contao.frontend_module, category: ###frontendmodulecategory###, template: ###frontendmoduletemplate###, type: ###frontendmoduletype### }
-    - { name: container.service_subscriber }
-    public: true

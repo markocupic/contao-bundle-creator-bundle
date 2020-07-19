@@ -16,6 +16,7 @@ services:
 
     Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage:
         arguments:
+        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message'
         - '%kernel.project_dir%'
         public: true
 

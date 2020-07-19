@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils;
 
 use Contao\File;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
@@ -49,6 +50,9 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 class FileStorage
 {
 
+    /** @var Message */
+    private $message;
+
     /**
      * @var string
      */
@@ -62,10 +66,12 @@ class FileStorage
 
     /**
      * FileStorage constructor.
+     * @param Message $message
      * @param string $projectDir
      */
-    public function __construct(string $projectDir)
+    public function __construct(Message $message, string $projectDir)
     {
+        $this->message = $message;
         $this->projectDir = $projectDir;
     }
 
@@ -221,6 +227,45 @@ class FileStorage
     public function getAll()
     {
         return $this->arrStorrage;
+    }
+
+    /**
+     * Replace tags
+     *
+     * @param TagStorage $tagStorage
+     * @return FileStorage
+     * @throws \Exception
+     */
+    public function replaceTags(TagStorage $tagStorage): self
+    {
+        if (!isset($this->_current))
+        {
+            $this->sendFilePointerNotSetException();
+        }
+
+        $content = $this->arrStorrage[$this->_current]['content'];
+        $arrTags = $tagStorage->getAll();
+        $message = $this->message;
+        $arrFile = $this->arrStorrage[$this->_current];
+
+        if (preg_match(TagStorage::REGEXP, $content))
+        {
+            $this->arrStorrage[$this->_current]['content'] = preg_replace_callback(TagStorage::REGEXP, function ($matches) use ($arrTags, $arrFile, $message) {
+                if (isset($arrTags[$matches[1]]))
+                {
+                    // Try to replace the tag with a value the tag storage
+                    return $arrTags[$matches[1]];
+                }
+                else
+                {
+                    // Do not replace the tag
+                    $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition set in the tag storrage.', $matches[0], $arrFile['target']));
+                    return $matches[0];
+                }
+            }, $content);
+        }
+
+        return $this;
     }
 
     /**

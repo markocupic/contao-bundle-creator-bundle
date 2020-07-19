@@ -23,6 +23,9 @@ class TagStorage
     /** @var array */
     private $arrTags = [];
 
+    /** @var string */
+    public const REGEXP = '/###([a-zA-Z0-9_\-]{1,})###/';
+
     /**
      * @param string $strKey
      * @param string $strValue
