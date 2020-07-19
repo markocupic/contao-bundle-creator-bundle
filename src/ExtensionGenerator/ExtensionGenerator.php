@@ -249,7 +249,7 @@ class ExtensionGenerator
 
         $source = self::SAMPLE_DIR . '/composer.json';
         $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add/remove version keyword from composer.json
         $content = $this->fileStorage->getContent();
@@ -291,7 +291,7 @@ class ExtensionGenerator
     {
         $source = self::SAMPLE_DIR . '/src/BundleFile.php';
         $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify((string) $this->model->vendorname), $this->namespaceify((string) $this->model->repositoryname));
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
     }
 
     /**
@@ -303,7 +303,7 @@ class ExtensionGenerator
     {
         $source = self::SAMPLE_DIR . '/src/ContaoManager/Plugin.php';
         $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
     }
 
     /**
@@ -316,21 +316,21 @@ class ExtensionGenerator
         // Add dca table file
         $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add dca table translation file
         $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Append data to src/Resources/contao/config/config.php
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/config/config.php';
-        $this->fileStorage->getFile($source)->appendContent($this->getContentFromPartialFile('contao_config_be_mod.txt'));
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_be_mod.txt'));
 
         // Add language array to contao/languages/en/modules.php
         $content = $this->getContentFromPartialFile('contao_lang_en_be_modules.txt');
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/modules.php';
-        $this->fileStorage->getFile($source)->appendContent($content);
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($content);
     }
 
     /**
@@ -349,32 +349,32 @@ class ExtensionGenerator
         // Add frontend module class
         $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php';
         $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add frontend module class to src/Controller/FrontendController
         $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.php';
         $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/dca/tl_module.php
         $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.php';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target)->appendContent($this->getContentFromPartialFile('contao_tl_module.txt'));
+        $this->fileStorage->createFile($source, $target)->appendContent($this->getContentFromPartialFile('contao_tl_module.txt'));
 
         // Add frontend module template
         $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.html5';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/config/services.yml
         $content = $this->getContentFromPartialFile('config_services_frontend_modules.txt');
-        $source = self::SAMPLE_DIR . '/src/Resources/config/services.yml';
-        $this->fileStorage->getFile($source)->appendContent($content);
+        $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($content);
 
         // Add language array to contao/languages/en/modules.php
         $content = $this->getContentFromPartialFile('contao_lang_en_fe_modules.txt');
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/modules.php';
-        $this->fileStorage->getFile($source)->appendContent($content);
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($content);
     }
 
     /**
@@ -390,28 +390,28 @@ class ExtensionGenerator
         {
             $source = sprintf('%s/src/Resources/config/%s', self::SAMPLE_DIR, $file);
             $target = sprintf('vendor/%s/%s/src/Resources/config/%s', $this->model->vendorname, $this->model->repositoryname, $file);
-            $this->fileStorage->addFile($source, $target);
+            $this->fileStorage->createFile($source, $target);
         }
 
         // src/Resource/contao/config/config.php
         $source = sprintf('%s/src/Resources/contao/config/config.php', self::SAMPLE_DIR);
         $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // src/Resource/contao/languages/en/modules.php
         $source = sprintf('%s/src/Resources/contao/languages/en/modules.php', self::SAMPLE_DIR);
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Add logo
         $source = sprintf('%s/src/Resources/public/logo.png', self::SAMPLE_DIR);
         $target = sprintf('vendor/%s/%s/src/Resources/public/logo.png', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
 
         // Readme.md
         $source = sprintf('%s/README.md', self::SAMPLE_DIR);
         $target = sprintf('vendor/%s/%s/README.md', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->createFile($source, $target);
     }
 
     /**

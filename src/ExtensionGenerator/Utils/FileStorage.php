@@ -22,8 +22,17 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  * $fileStorage = new FileStorage();
  *
  * $fileStorage
- * ->addFile('somefolder/somefile.txt', 'destination/somefile.txt')
+ * ->createFile('somefolder/somefile.txt', 'destination/somefile.txt')
  * ->appendContent('bla,bla');
+ *
+ * or:
+ *
+ * $fileStorage = new FileStorage();
+ *
+ * $fileStorage
+ * ->createFileFromString('destination/somefile.txt', 'Lorem ipsum');
+ *
+ * or:
  *
  * if($fileStorage->hasFile('somefolder/someotherfile.txt'))
  * {
@@ -62,11 +71,11 @@ class FileStorage
 
     /**
      * @param string $sourcePath
-     * @param string $destinationPath
+     * @param string $targetPath
      * @return FileStorage
      * @throws \Exception
      */
-    public function addFile(string $sourcePath, string $destinationPath): self
+    public function createFile(string $sourcePath, string $targetPath): self
     {
         if (!is_file($this->projectDir . '/' . $sourcePath))
         {
@@ -75,41 +84,65 @@ class FileStorage
 
         $objFile = new File($sourcePath);
 
-        $this->arrStorrage[$sourcePath] = [
+        $this->arrStorrage[$targetPath] = [
             'source'  => $sourcePath,
-            'target'  => $destinationPath,
+            'target'  => $targetPath,
             'content' => $objFile->getContent(),
         ];
 
-        $this->_current = $sourcePath;
+        $this->_current = $targetPath;
 
         return $this;
     }
 
     /**
-     * @param string $sourcePath
+     * @param string $targetPath
+     * @param string $stringContent
      * @return FileStorage
      * @throws \Exception
      */
-    public function getFile(string $sourcePath): self
+    public function createFileFromString(string $targetPath, string $stringContent = ''): self
     {
-        if (!isset($this->arrStorrage[$sourcePath]))
+        if (isset($this->arrStorrage[$targetPath]))
         {
-            throw new \Exception(sprintf('File "%s" not found in the storage', $sourcePath));
+            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->truncate()->appendContent($strContent) instead.', $targetPath));
         }
 
-        $this->_current = $sourcePath;
+        $this->arrStorrage[$targetPath] = [
+            'source'  => null,
+            'target'  => $targetPath,
+            'content' => $stringContent,
+        ];
+
+        $this->_current = $targetPath;
 
         return $this;
     }
 
     /**
-     * @param string $sourcePath
+     * @param string $targetPath
+     * @return FileStorage
+     * @throws \Exception
+     */
+    public function getFile(string $targetPath): self
+    {
+        if (!isset($this->arrStorrage[$targetPath]))
+        {
+            throw new \Exception(sprintf('File "%s" not found in the storage', $targetPath));
+        }
+
+        $this->_current = $targetPath;
+
+        return $this;
+    }
+
+    /**
+     * @param string $targetPath
      * @return bool
      */
-    public function hasFile(string $sourcePath): bool
+    public function hasFile(string $targetPath): bool
     {
-        if (!isset($this->arrStorrage[$sourcePath]))
+        if (!isset($this->arrStorrage[$targetPath]))
         {
             return false;
         }
@@ -195,7 +228,7 @@ class FileStorage
      */
     private function sendFilePointerNotSetException()
     {
-        throw new \Exception('There is no pointer to a file. Please use FileStorage::getFile($sourceFile) or FileStorage::addFile($sourceFile, $targetFile)');
+        throw new \Exception('There is no pointer to a file. Please use FileStorage::getFile($sourceFile) or FileStorage::createFile($sourceFile, $targetFile) or FileStorage::createFileFromString($targetFile, $strContent)');
     }
 
 }
