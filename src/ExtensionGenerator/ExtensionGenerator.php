@@ -377,6 +377,11 @@ class ExtensionGenerator
         try
         {
             // Validate yaml file
+            $arrYaml = Yaml::parse($this->fileStorage->getContent());
+            if (!array_key_exists('services', $arrYaml))
+            {
+                throw new ParseException('Key "services" not found. Please check the indents.');
+            }
         } catch (ParseException $exception)
         {
             throw new ParseException(sprintf('Unable to parse the YAML string un %s: %s', $target, $exception->getMessage()));
@@ -411,15 +416,15 @@ class ExtensionGenerator
                 {
                     if (!array_key_exists('services', $arrYaml))
                     {
-                        throw new ParseException( 'Key "services" not found. Please check the indents.');
+                        throw new ParseException('Key "services" not found. Please check the indents.');
                     }
                 }
-                
+
                 if ($file === 'parameters.tpl.yml')
                 {
                     if (!array_key_exists('parameters', $arrYaml))
                     {
-                        throw new ParseException( 'Key "parameters" not found. Please check the indents.');
+                        throw new ParseException('Key "parameters" not found. Please check the indents.');
                     }
                 }
             } catch (ParseException $exception)
