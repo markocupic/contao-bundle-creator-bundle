@@ -384,7 +384,7 @@ class ExtensionGenerator
             }
         } catch (ParseException $exception)
         {
-            throw new ParseException(sprintf('Unable to parse the YAML string un %s: %s', $target, $exception->getMessage()));
+            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
         }
 
         // Add language array to contao/languages/en/modules.php
@@ -429,7 +429,7 @@ class ExtensionGenerator
                 }
             } catch (ParseException $exception)
             {
-                throw new ParseException(sprintf('Unable to parse the YAML string un %s: %s', $target, $exception->getMessage()));
+                throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
             }
         }
 
