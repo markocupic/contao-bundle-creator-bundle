@@ -331,8 +331,8 @@ class ExtensionGenerator
     protected function addCustomRouteToFileStorage(): void
     {
         // Add controller
-        $source = self::SAMPLE_DIR . '/src/Controller/CustomController.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Controller/CustomController.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = self::SAMPLE_DIR . '/src/Controller/MyCustomController.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/MyCustomController.php', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add twig template

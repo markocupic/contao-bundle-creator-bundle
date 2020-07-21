@@ -7,13 +7,12 @@ declare(strict_types=1);
 namespace ###toplevelnamespace###\###sublevelnamespace###\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment as TwigEnvironment;
 
 /**
- * Class CustomController
+ * Class MyCustomController
  * @package Symfony
  *
  * @Route("/my_custom",
@@ -24,13 +23,13 @@ use Twig\Environment as TwigEnvironment;
  *     }
  * )
  */
-class CustomController extends AbstractController
+class MyCustomController extends AbstractController
 {
     /** @var TwigEnvironment */
     private $twig;
 
     /**
-     * CustomController constructor.
+     * MyCustomController constructor.
      * @param TwigEnvironment $twig
      */
     public function __construct(TwigEnvironment $twig)
