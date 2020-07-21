@@ -1,0 +1,4 @@
+# config/routing.yml
+###vendornametolower###.###repositorynametolower###.controller:
+    resource: ../../../src/Controller
+    type: annotation

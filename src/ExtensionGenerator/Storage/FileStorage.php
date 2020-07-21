@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils;
+namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage;
 
 use Contao\File;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
@@ -45,7 +45,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *
  *
  * Class FileStorage
- * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils
+ * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage
  */
 class FileStorage
 {

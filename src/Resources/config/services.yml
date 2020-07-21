@@ -8,18 +8,18 @@ services:
     Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator:
         arguments:
         - '@session'
-        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage'
-        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage'
+        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage'
+        - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage'
         - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message'
         - '%kernel.project_dir%'
         public: true
 
-    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage:
+    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage:
         arguments:
         - '@Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message'
         - '%kernel.project_dir%'
         public: true
 
-    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage: ~
+    Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage: ~
 
     Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message: ~

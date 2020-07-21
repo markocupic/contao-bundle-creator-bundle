@@ -17,8 +17,8 @@ use Contao\Date;
 use Contao\File;
 use Contao\Files;
 use Contao\StringUtil;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\FileStorage;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils\TagStorage;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -52,7 +52,7 @@ class ExtensionGenerator
     protected $model;
 
     /** @var string */
-    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Skeleton/sample-repository';
+    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton/sample-repository';
 
     /**
      * ExtensionGenerator constructor.
@@ -108,6 +108,9 @@ class ExtensionGenerator
 
         // Config files, assets, etc.
         $this->addMiscFilesToFileStorage();
+
+        // Add a custom route to the file storage
+        $this->addCustomRouteToFileStorage();
 
         // Add backend module files to file storage
         if ($this->model->addBackendModule && $this->model->dcatable != '')
@@ -206,10 +209,15 @@ class ExtensionGenerator
         // Tags
         $this->tagStorage->add('vendorname', (string) $this->model->vendorname);
         $this->tagStorage->add('repositoryname', (string) $this->model->repositoryname);
+        $this->tagStorage->add('vendornametolower', (string) str_replace('-', '_', strtolower($this->model->vendorname)));
+        $this->tagStorage->add('repositorynametolower', (string) preg_replace('/\-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
         $this->tagStorage->add('toplevelnamespace', $this->namespaceify((string) $this->model->vendorname));
         $this->tagStorage->add('sublevelnamespace', $this->namespaceify((string) $this->model->repositoryname));
+
+        // Twig namespace @Vendor/Bundlename
+        $this->tagStorage->add('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->namespaceify((string) $this->model->vendorname) . $this->namespaceify((string) $this->model->repositoryname)));
 
         // Composer
         $this->tagStorage->add('composerdescription', (string) $this->model->composerdescription);
@@ -316,6 +324,41 @@ class ExtensionGenerator
     }
 
     /**
+     * Add custom route to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addCustomRouteToFileStorage(): void
+    {
+        // Add controller
+        $source = self::SAMPLE_DIR . '/src/Controller/CustomController.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/CustomController.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add twig template
+        $source = self::SAMPLE_DIR . '/src/Resources/views/my_custom_route.html.tpl.twig';
+        $target = sprintf('vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add src/Resources/config/services.yml
+        $content = $this->getContentFromPartialFile('config_services_custom_frontend_route.tpl.yml');
+        $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($content);
+        try
+        {
+            // Validate yaml file
+            $arrYaml = Yaml::parse($this->fileStorage->getContent());
+            if (!array_key_exists('services', $arrYaml))
+            {
+                throw new ParseException('Key "services" not found. Please check the indents.');
+            }
+        } catch (ParseException $exception)
+        {
+            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
+        }
+    }
+
+    /**
      * Add backend module files to file storage
      *
      * @throws \Exception
@@ -401,7 +444,7 @@ class ExtensionGenerator
     protected function addMiscFilesToFileStorage(): void
     {
         // src/Resources/config/*.yml yaml config files
-        $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml'];
+        $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml', 'routing.tpl.yml'];
         foreach ($arrFiles as $file)
         {
             $source = sprintf('%s/src/Resources/config/%s', self::SAMPLE_DIR, $file);

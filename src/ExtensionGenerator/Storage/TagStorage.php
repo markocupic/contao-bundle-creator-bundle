@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils;
+namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage;
 
 /**
  * Class TagStorage
- * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Utils
+ * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage
  */
 class TagStorage
 {
