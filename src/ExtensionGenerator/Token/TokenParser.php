@@ -24,7 +24,11 @@ class TokenParser
 {
 
     /**
-     * Parse simple tokens
+     * Parse simple tokens extended from \Contao\StringUtil::parseSimpleTokens()
+     *
+     * Use {{{if addcustomroute=="1"}}}##sometoken##{{{endif}}}
+     * instead of:
+     * {if addcustomroute=="1"}##sometoken##{endif}
      *
      * @param string $strString The string to be parsed
      * @param array $arrData The replacement data
