@@ -10,22 +10,22 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
-{if addcustomroute=="1"}
+{{{if addcustomroute=="1"}}}
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-{endif}
+{{{endif}}}
 use Symfony\Component\Config\Loader\LoaderInterface;
-{if addcustomroute=="1"}
+{{{if addcustomroute=="1"}}}
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-{endif}
-{if addcustomroute=="1"}
+{{{endif}}}
+{{{if addcustomroute=="1"}}}
 use Symfony\Component\HttpKernel\KernelInterface;
-{endif}
+{{{endif}}}
 
 /**
  * Class Plugin
  * @package ##toplevelnamespace##\##sublevelnamespace##\ContaoManager
  */
-class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPluginInterface, {endif}ConfigPluginInterface
+class Plugin implements BundlePluginInterface, {{{if addcustomroute=="1"}}}RoutingPluginInterface, {{{endif}}}ConfigPluginInterface
 {
     /**
      * @param ParserInterface $parser
@@ -51,7 +51,7 @@ class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPl
         $loader->load(__DIR__ . '/../Resources/config/listener.yml');
     }
 
-{if addcustomroute=="1"}
+{{{if addcustomroute=="1"}}}
 
     /**
      * @param LoaderResolverInterface $resolver
@@ -66,6 +66,8 @@ class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPl
             ->load(__DIR__ . '/../Resources/config/routing.yml');
     }
 
-{endif}
+{{{endif}}}
+
+
 }
 

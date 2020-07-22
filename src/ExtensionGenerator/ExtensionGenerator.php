@@ -20,6 +20,7 @@ use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Token\TokenParser;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -563,7 +564,7 @@ class ExtensionGenerator
         }
 
         $arrTags = $this->tagStorage->getAll();
-        $content = StringUtil::parseSimpleTokens($content,$arrTags);
+        $content = TokenParser::parseSimpleTokens($content,$arrTags);
 
         return $content;
     }
@@ -823,7 +824,7 @@ class ExtensionGenerator
 
             if ($blnReplaceTags)
             {
-                $content = StringUtil::parseSimpleTokens($content, $arrTags);
+                $content = TokenParser::parseSimpleTokens($content, $arrTags);
             }
 
             // Create file
