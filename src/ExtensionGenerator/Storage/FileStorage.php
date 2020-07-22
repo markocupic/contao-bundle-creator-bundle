@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage;
 
 use Contao\File;
+use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
@@ -245,25 +246,7 @@ class FileStorage
 
         $content = $this->arrStorrage[$this->_current]['content'];
         $arrTags = $tagStorage->getAll();
-        $message = $this->message;
-        $arrFile = $this->arrStorrage[$this->_current];
-
-        if (preg_match(TagStorage::REGEXP, $content))
-        {
-            $this->arrStorrage[$this->_current]['content'] = preg_replace_callback(TagStorage::REGEXP, function ($matches) use ($arrTags, $arrFile, $message) {
-                if (isset($arrTags[$matches[1]]))
-                {
-                    // Try to replace the tag with a value the tag storage
-                    return $arrTags[$matches[1]];
-                }
-                else
-                {
-                    // Do not replace the tag
-                    $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition set in the tag storrage.', $matches[0], $arrFile['target']));
-                    return $matches[0];
-                }
-            }, $content);
-        }
+        $this->arrStorrage[$this->_current]['content'] = StringUtil::parseSimpleTokens($content, $arrTags);
 
         return $this;
     }

@@ -94,7 +94,7 @@ class ExtensionGenerator
         // Don't move the position, this has to be called first!
         $this->sanitizeModel();
 
-        // Set the tags (###****###)
+        // Set the tags (##****##)
         $this->setTags();
 
         // Add the composer.json file to file storage
@@ -199,6 +199,9 @@ class ExtensionGenerator
      */
     protected function setTags(): void
     {
+        //@todo dev
+        $this->tagStorage->add('addcustomroute', '1');
+
         // Add model values to tags
         $arrModel = $this->model->row();
         foreach ($arrModel as $fieldname => $value)
@@ -522,15 +525,15 @@ class ExtensionGenerator
         {
             if (strlen((string) $this->model->backendmodulecategorytrans))
             {
-                $content = str_replace('###backendmodulecategorytrans###', $this->model->backendmodulecategorytrans, $content);
-                $content = str_replace('###backendmodulecategory###', $this->model->backendmodulecategory, $content);
-                $content = str_replace('###modcatstart###', '', $content);
-                $content = str_replace('###modcatend###', '', $content);
+                $content = str_replace('##backendmodulecategorytrans##', $this->model->backendmodulecategorytrans, $content);
+                $content = str_replace('##backendmodulecategory##', $this->model->backendmodulecategory, $content);
+                $content = str_replace('##modcatstart##', '', $content);
+                $content = str_replace('##modcatend##', '', $content);
             }
             else
             {
                 // Remove obsolete backend module category label
-                $pattern = '/([\r\n|\n])###modcatstart###(.*)###modcatend###([\r\n|\n])/';
+                $pattern = '/([\r\n|\n])##modcatstart##(.*)##modcatend##([\r\n|\n])/';
                 if (preg_match($pattern, $content))
                 {
                     $content = preg_replace($pattern, '', $content);
@@ -543,15 +546,15 @@ class ExtensionGenerator
         {
             if (strlen((string) $this->model->frontendmodulecategorytrans))
             {
-                $content = str_replace('###frontendmodulecategorytrans###', $this->model->frontendmodulecategorytrans, $content);
-                $content = str_replace('###frontendmodulecategory###', $this->model->frontendmodulecategory, $content);
-                $content = str_replace('###fmdcatstart###', '', $content);
-                $content = str_replace('###fmdcatend###', '', $content);
+                $content = str_replace('##frontendmodulecategorytrans##', $this->model->frontendmodulecategorytrans, $content);
+                $content = str_replace('##frontendmodulecategory##', $this->model->frontendmodulecategory, $content);
+                $content = str_replace('##fmdcatstart##', '', $content);
+                $content = str_replace('##fmdcatend##', '', $content);
             }
             else
             {
                 // Remove obsolete frontend module category label
-                $pattern = '/([\r\n|\n])###fmdcatstart###(.*)###fmdcatend###([\r\n|\n])/';
+                $pattern = '/([\r\n|\n])##fmdcatstart##(.*)##fmdcatend##([\r\n|\n])/';
                 if (preg_match($pattern, $content))
                 {
                     $content = preg_replace($pattern, '', $content);
@@ -560,25 +563,7 @@ class ExtensionGenerator
         }
 
         $arrTags = $this->tagStorage->getAll();
-        $message = $this->message;
-        $pattern = TagStorage::REGEXP;
-
-        if (preg_match($pattern, $content))
-        {
-            $content = preg_replace_callback($pattern, function ($matches) use ($arrTags, $sourceFile, $message) {
-                if (isset($arrTags[$matches[1]]))
-                {
-                    // Try to replace the tag with a value the tag storage
-                    return $arrTags[$matches[1]];
-                }
-                else
-                {
-                    // Do not replace the tag
-                    $message->addError(sprintf('Could not replace tag "%s", because there is no definition.', $matches[0]));
-                    return $matches[0];
-                }
-            }, $content);
-        }
+        $content = StringUtil::parseSimpleTokens($content,$arrTags);
 
         return $content;
     }
@@ -838,27 +823,9 @@ class ExtensionGenerator
 
             if ($blnReplaceTags)
             {
-                // Replace tags
-                $message = $this->message;
-                $pattern = TagStorage::REGEXP;
-
-                if (preg_match($pattern, $content))
-                {
-                    $content = preg_replace_callback($pattern, function ($matches) use ($arrTags, $arrFile, $message) {
-                        if (isset($arrTags[$matches[1]]))
-                        {
-                            // Try to replace the tag with a value the tag storage
-                            return $arrTags[$matches[1]];
-                        }
-                        else
-                        {
-                            // Do not replace the tag
-                            $message->addError(sprintf('Could not replace tag "%s" in "%s", because there is no definition.', $matches[0], $arrFile['target']));
-                            return $matches[0];
-                        }
-                    }, $content);
-                }
+                $content = StringUtil::parseSimpleTokens($content, $arrTags);
             }
+
             // Create file
             $objNewFile = new File($arrFile['target']);
 

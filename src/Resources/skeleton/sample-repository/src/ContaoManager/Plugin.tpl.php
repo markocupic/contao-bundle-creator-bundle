@@ -1,34 +1,40 @@
 <?php
 
-###phpdoc###
+##phpdoc##
 
 declare(strict_types=1);
 
-namespace ###toplevelnamespace###\###sublevelnamespace###\ContaoManager;
+namespace ##toplevelnamespace##\##sublevelnamespace##\ContaoManager;
 
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+{if addcustomroute=="1"}
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+{endif}
 use Symfony\Component\Config\Loader\LoaderInterface;
+{if addcustomroute=="1"}
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+{endif}
+{if addcustomroute=="1"}
 use Symfony\Component\HttpKernel\KernelInterface;
-
+{endif}
 
 /**
  * Class Plugin
- * @package ###toplevelnamespace###\###sublevelnamespace###\ContaoManager
+ * @package ##toplevelnamespace##\##sublevelnamespace##\ContaoManager
  */
-class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPluginInterface
+class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPluginInterface, {endif}ConfigPluginInterface
 {
     /**
-     * {@inheritdoc}
+     * @param ParserInterface $parser
+     * @return array
      */
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('###toplevelnamespace###\###sublevelnamespace###\###toplevelnamespace######sublevelnamespace###')
+            BundleConfig::create('##toplevelnamespace##\##sublevelnamespace##\##toplevelnamespace####sublevelnamespace##')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
     }
@@ -45,6 +51,8 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPlu
         $loader->load(__DIR__ . '/../Resources/config/listener.yml');
     }
 
+{if addcustomroute=="1"}
+
     /**
      * @param LoaderResolverInterface $resolver
      * @param KernelInterface $kernel
@@ -57,5 +65,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPlu
             ->resolve(__DIR__ . '/../Resources/config/routing.yml')
             ->load(__DIR__ . '/../Resources/config/routing.yml');
     }
+
+{endif}
 }
 

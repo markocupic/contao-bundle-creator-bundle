@@ -1,6 +1,6 @@
 /**
  * Backend modules
  */
-$GLOBALS['BE_MOD']['###backendmodulecategory###']['###backendmoduletype###'] = array(
-    'tables' => ['###dcatable###']
+$GLOBALS['BE_MOD']['##backendmodulecategory##']['##backendmoduletype##'] = array(
+    'tables' => ['##dcatable##']
 );
