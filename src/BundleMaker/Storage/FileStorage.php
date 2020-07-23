@@ -119,7 +119,7 @@ class FileStorage
     {
         if (isset($this->arrStorrage[$targetPath]))
         {
-            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->truncate()->appendContent($strContent) instead.', $targetPath));
+            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile($targetPath)->replaceContent($strContent) instead.', $targetPath));
         }
 
         $arrData = [
@@ -204,6 +204,23 @@ class FileStorage
         }
 
         $this->arrStorrage[$this->intIndex]['content'] .= $strContent;
+
+        return $this;
+    }
+
+    /**
+     * @param string $strContent
+     * @return FileStorage
+     * @throws \Exception
+     */
+    public function replaceContent(string $strContent): self
+    {
+        if ($this->intIndex < 0)
+        {
+            $this->sendFilePointerNotSetException();
+        }
+
+        $this->arrStorrage[$this->intIndex]['content'] = $strContent;
 
         return $this;
     }

@@ -343,7 +343,7 @@ class BundleMaker
         if ($blnModified)
         {
             $content = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            $this->fileStorage->truncate()->appendContent($content);
+            $this->fileStorage->replaceContent($content);
         }
     }
 
@@ -849,7 +849,7 @@ class BundleMaker
         foreach ($arrFiles as $arrFile)
         {
             $content = SimpleTokenParser::parseSimpleTokens($arrFile['content'], $arrTags);
-            $this->fileStorage->getFile($arrFile['target'])->truncate()->appendContent($content);
+            $this->fileStorage->getFile($arrFile['target'])->replaceContent($content);
         }
     }
 
