@@ -539,49 +539,6 @@ class ExtensionGenerator
         /** @var File $objPartialFile */
         $objPartialFile = new File($sourceFile);
         $content = $objPartialFile->getContent();
-
-        // Special treatment for src/Resources/contao/languages/modules.php
-        if ($this->model->addBackendModule)
-        {
-            if (strlen((string) $this->model->backendmodulecategorytrans))
-            {
-                $content = str_replace('##backendmodulecategorytrans##', $this->model->backendmodulecategorytrans, $content);
-                $content = str_replace('##backendmodulecategory##', $this->model->backendmodulecategory, $content);
-                $content = str_replace('##modcatstart##', '', $content);
-                $content = str_replace('##modcatend##', '', $content);
-            }
-            else
-            {
-                // Remove obsolete backend module category label
-                $pattern = '/([\r\n|\n])##modcatstart##(.*)##modcatend##([\r\n|\n])/';
-                if (preg_match($pattern, $content))
-                {
-                    $content = preg_replace($pattern, '', $content);
-                }
-            }
-        }
-
-        // Special treatment for src/Resources/contao/languages/modules.php
-        if ($this->model->addFrontendModule)
-        {
-            if (strlen((string) $this->model->frontendmodulecategorytrans))
-            {
-                $content = str_replace('##frontendmodulecategorytrans##', $this->model->frontendmodulecategorytrans, $content);
-                $content = str_replace('##frontendmodulecategory##', $this->model->frontendmodulecategory, $content);
-                $content = str_replace('##fmdcatstart##', '', $content);
-                $content = str_replace('##fmdcatend##', '', $content);
-            }
-            else
-            {
-                // Remove obsolete frontend module category label
-                $pattern = '/([\r\n|\n])##fmdcatstart##(.*)##fmdcatend##([\r\n|\n])/';
-                if (preg_match($pattern, $content))
-                {
-                    $content = preg_replace($pattern, '', $content);
-                }
-            }
-        }
-
         $arrTags = $this->tagStorage->getAll();
         $content = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
 
