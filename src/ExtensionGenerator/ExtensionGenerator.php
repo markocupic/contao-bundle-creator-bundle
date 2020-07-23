@@ -884,6 +884,6 @@ class ExtensionGenerator
             $i++;
         }
         // Display message in the backend
-        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have make changes to the root composer.json.');
+        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
 }
