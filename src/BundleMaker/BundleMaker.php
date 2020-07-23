@@ -11,16 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator;
+namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
 use Contao\Date;
 use Contao\File;
 use Contao\Files;
 use Contao\StringUtil;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken\SimpleTokenParser;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SimpleToken\SimpleTokenParser;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -29,10 +29,10 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class ExtensionGenerator
- * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator
+ * Class BundleMaker
+ * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker
  */
-class ExtensionGenerator
+class BundleMaker
 {
     /** @var SessionInterface */
     protected $session;
@@ -56,7 +56,7 @@ class ExtensionGenerator
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton/sample-repository';
 
     /**
-     * ExtensionGenerator constructor.
+     * BundleMaker constructor.
      *
      * @param Session $session
      * @param FileStorage $fileStorage
@@ -206,11 +206,11 @@ class ExtensionGenerator
      */
     protected function setTags(): void
     {
-        // Add model values to tags
+        // Store model values into the tag storage
         $arrModel = $this->model->row();
         foreach ($arrModel as $fieldname => $value)
         {
-            $this->tagStorage->add($fieldname, (string) $value);
+            $this->tagStorage->add((string) $fieldname, (string) $value);
         }
 
         // Tags

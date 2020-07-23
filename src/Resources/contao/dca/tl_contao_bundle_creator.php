@@ -126,13 +126,6 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'addBackendModule'                  => [
-            'inputType' => 'checkbox',
-            'exclude'   => true,
-            'sorting'   => true,
-            'eval'      => ['tl_class' => 'clr'],
-            'sql'       => "char(1) NOT NULL default ''"
-        ],
         'composerdescription'               => [
             'inputType' => 'text',
             'exclude'   => true,
@@ -320,8 +313,10 @@ class tl_contao_bundle_creator extends Contao\Backend
 
     /**
      * onsubmit callback
-     * Run the extension creator
-     * @param Contao\DataContainer $dc
+     * Run the bundle maker
+     *
+     * @param \Contao\DataContainer $dc
+     * @throws Exception
      */
     public function runCreator(Contao\DataContainer $dc)
     {
@@ -329,9 +324,9 @@ class tl_contao_bundle_creator extends Contao\Backend
         {
             if (null !== ($objModel = Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel::findByPk(Contao\Input::get('id'))))
             {
-                /** @var  Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator $objInit */
-                $objInit = Contao\System::getContainer()->get(Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\ExtensionGenerator::class);
-                $objInit->run($objModel);
+                /** @var  Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker $bundleMakerService */
+                $bundleMakerService = Contao\System::getContainer()->get(Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker::class);
+                $bundleMakerService->run($objModel);
             }
         }
     }
@@ -380,7 +375,7 @@ class tl_contao_bundle_creator extends Contao\Backend
             $session = Contao\System::getContainer()->get('session');
             if ($session->has('CONTAO-BUNDLE-CREATOR.LAST-ZIP'))
             {
-                $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="javascript:this.style.display = \'none\'">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] . '</button>';
+                $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="this.style.display = \'none\'">' . $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'] . '</button>';
             }
         }
 

@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage;
+namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
 use Contao\File;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken\SimpleTokenParser;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SimpleToken\SimpleTokenParser;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
@@ -46,7 +46,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *
  *
  * Class FileStorage
- * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage
+ * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage
  */
 class FileStorage
 {

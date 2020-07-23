@@ -32,7 +32,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['custom_route_settings_legend'] 
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundlename'] = ["Bundle Name", "Geben Sie einen Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "Geben Sie Ihren Vendornamen ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name (f.ex. \"hello-world-bundle\")", "Geben Sie den Repository Namen für das Bundle ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamige Erweiterung überschreiben", "Soll eine gleichnamige, bereits bestehende Extension überschrieben werden?"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamiges Bundle überschreiben", "Soll ein gleichnamiges, bereits bestehendes Bundle überschrieben werden?"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json: Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json: Paketversion (Nötig für Paketupload mit Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein. (Nur nötig wenn bundle über Paketupload in Contao Manager bereitgestellt wird)"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['rootcomposerextendrepositorieskey'] = ["composer.json (ROOT): Den Repositories-Key erweitern?", "Soll der Repositories-Key in der composer.json im ROOT-Verzeichnis erweitert werden?"];
