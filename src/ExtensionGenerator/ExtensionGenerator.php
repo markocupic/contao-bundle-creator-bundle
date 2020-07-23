@@ -465,7 +465,7 @@ class ExtensionGenerator
 
         if ($this->model->addCustomRoute)
         {
-            $arrFiles[] = 'routing.tpl.yml';
+            $arrFiles[] = 'routes.tpl.yml';
         }
 
         foreach ($arrFiles as $file)
