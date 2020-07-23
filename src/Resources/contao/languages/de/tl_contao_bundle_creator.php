@@ -24,6 +24,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composer_settings_legend'] = "c
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['rootcomposer_settings_legend'] = "(ROOT-)composer.json Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable_settings_legend'] = "DCA Tabellen Einstellungen";
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodule_settings_legend'] = "Frontendmodul Einstellungen";
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['custom_route_settings_legend'] = "Custom Route Einstellungen";
 
 /**
  * Fields
@@ -52,6 +53,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategory'] = ["Fr
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategorytrans'] = ["Frontendmodul-Kategorie-Übersetzung", "Bei bereits bestehenden Kategorien sollte das Feld leer gelassen werden."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletype'] = ["Frontendmodul-Typ (snakecase mit \"_module\" als postfix)", "Geben Sie den Namen des Modules in snakecase an. z.B. my_custom_module"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletrans'] = ["Frontendmodul-Name-Übersetzung und Beschreibung", "Geben Sie dem Modul einen Namen und eine Beschreibung."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addCustomRoute'] = ["Eine \"custom route\" hinzufügen", "Geben Sie an, ob Sie eine \"custom route\" hinzufügen möchten."];
 
 /**
  * Buttons

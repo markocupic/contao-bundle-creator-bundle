@@ -77,12 +77,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     // Palettes
     'palettes'    => [
         '__selector__' => ['addBackendModule', 'addFrontendModule'],
-        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addBackendModule;{frontendmodule_settings_legend},addFrontendModule'
+        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addBackendModule;{frontendmodule_settings_legend},addFrontendModule;{custom_route_settings_legend},addCustomRoute'
     ],
     // Subpalettes
     'subpalettes' => [
         'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
-        'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans'
+        'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
     ],
     // Fields
     'fields'      => [
@@ -217,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'backendmodulecategory'            => [
+        'backendmodulecategory'             => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'backendmoduletype'                => [
+        'backendmoduletype'                 => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -235,7 +235,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'backendmodulecategorytrans'       => [
+        'backendmodulecategorytrans'        => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
@@ -244,7 +244,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'backendmoduletrans'               => [
+        'backendmoduletrans'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'search'    => true,
@@ -294,6 +294,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'clr'],
             'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'addCustomRoute'                    => [
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => false, 'tl_class' => 'w50 clr'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
     ]
 ];

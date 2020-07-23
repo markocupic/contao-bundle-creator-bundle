@@ -25,10 +25,10 @@ class TokenParser
 
     /**
      * Parse simple tokens extended from \Contao\StringUtil::parseSimpleTokens()
-     *
-     * Use {{{if addcustomroute=="1"}}}##sometoken##{{{endif}}}
-     * instead of:
-     * {if addcustomroute=="1"}##sometoken##{endif}
+     * @author Marko Cupic, 23.07.2020
+     * Sole modification: line 165
+     * Original pattern moved from: '/({[^{}]+})\n?/'
+     * To: '/({if [^{}]+}|{elseif [^{}]+}|{else}|{endif})\n?/'
      *
      * @param string $strString The string to be parsed
      * @param array $arrData The replacement data
@@ -156,39 +156,44 @@ class TokenParser
         // The last item is true if any if/elseif at that level was true
         $arrIfStack = [true];
 
-        // Tokenize the string into tag and text blocks
-        $arrTags = preg_split('/({{{[^{}]+}}})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
+        /**
+         * @author Marko Cupic, 23.07.2020
+         * Modified line 165 from \Contao\StringUtil()
+         * Original pattern: '/({[^{}]+})\n?/'
+         * New preg_splt pattern: '/({if [^{}]+}|{elseif [^{}]+}|{else}|{endif})\n?/'
+         */
+        $arrTags = preg_split('/({if [^{}]+}|{elseif [^{}]+}|{else}|{endif})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // Parse the tokens
-        foreach ($arrTags as $k => $strTag)
+        // Parse the tokens
+        foreach ($arrTags as $strTag)
         {
             // True if it is inside a matching if-tag
             $blnCurrent = $arrStack[\count($arrStack) - 1];
             $blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
 
-            if (strncmp($strTag, '{{{if ', 6) === 0)
+            if (strncmp($strTag, '{if ', 4) === 0)
             {
-                $blnExpression = $evaluateExpression(substr($strTag, 6, -3));
+                $blnExpression = $evaluateExpression(substr($strTag, 4, -1));
                 $arrStack[] = $blnCurrent && $blnExpression;
                 $arrIfStack[] = $blnExpression;
             }
-            elseif (strncmp($strTag, '{{{elseif ', 10) === 0)
+            elseif (strncmp($strTag, '{elseif ', 8) === 0)
             {
-                $blnExpression = $evaluateExpression(substr($strTag, 10, -3));
+                $blnExpression = $evaluateExpression(substr($strTag, 8, -1));
                 array_pop($arrStack);
                 array_pop($arrIfStack);
                 $arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
                 $arrIfStack[] = $blnCurrentIf || $blnExpression;
             }
-            elseif (strncmp($strTag, '{{{else}}}', 10) === 0)
+            elseif (strncmp($strTag, '{else}', 6) === 0)
             {
                 array_pop($arrStack);
                 array_pop($arrIfStack);
                 $arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
                 $arrIfStack[] = true;
             }
-            elseif (strncmp($strTag, '{{{endif}}}', 11) === 0)
+            elseif (strncmp($strTag, '{endif}', 7) === 0)
             {
                 array_pop($arrStack);
                 array_pop($arrIfStack);

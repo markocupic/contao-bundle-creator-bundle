@@ -110,9 +110,6 @@ class ExtensionGenerator
         // Config files, assets, etc.
         $this->addMiscFilesToFileStorage();
 
-        // Add a custom route to the file storage
-        $this->addCustomRouteToFileStorage();
-
         // Add backend module files to file storage
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
@@ -125,6 +122,12 @@ class ExtensionGenerator
             $this->addFrontendModuleFilesToFileStorage();
         }
 
+        // Add a custom route to the file storage
+        if ($this->model->addCustomRoute)
+        {
+            $this->addCustomRouteToFileStorage();
+        }
+
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists())
         {
@@ -132,6 +135,9 @@ class ExtensionGenerator
             $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
             $this->zipData($zipSource, $zipTarget);
         }
+
+        // Replace if-tokens and replace simple tokens in file storage
+        $this->replaceTokens();
 
         // Create all the bundle files in vendor/vendorname/bundlename
         $this->createFilesFromFileStorage();
@@ -200,9 +206,6 @@ class ExtensionGenerator
      */
     protected function setTags(): void
     {
-        //@todo dev
-        $this->tagStorage->add('addcustomroute', '1');
-
         // Add model values to tags
         $arrModel = $this->model->row();
         foreach ($arrModel as $fieldname => $value)
@@ -256,6 +259,16 @@ class ExtensionGenerator
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
             $this->tagStorage->add('frontendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->add('frontendmoduletrans_1', $arrLabel[1]);
+        }
+
+        // Custom route
+        if ($this->model->addCustomRoute)
+        {
+            $this->tagStorage->add('addcustomroute', '1');
+        }
+        else
+        {
+            $this->tagStorage->add('addcustomroute', '0');
         }
     }
 
@@ -448,7 +461,13 @@ class ExtensionGenerator
     protected function addMiscFilesToFileStorage(): void
     {
         // src/Resources/config/*.yml yaml config files
-        $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml', 'routing.tpl.yml'];
+        $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml'];
+
+        if ($this->model->addCustomRoute)
+        {
+            $arrFiles[] = 'routing.tpl.yml';
+        }
+
         foreach ($arrFiles as $file)
         {
             $source = sprintf('%s/src/Resources/config/%s', self::SAMPLE_DIR, $file);
@@ -564,7 +583,7 @@ class ExtensionGenerator
         }
 
         $arrTags = $this->tagStorage->getAll();
-        $content = TokenParser::parseSimpleTokens($content,$arrTags);
+        $content = TokenParser::parseSimpleTokens($content, $arrTags);
 
         return $content;
     }
@@ -805,38 +824,66 @@ class ExtensionGenerator
     }
 
     /**
-     * Write files from the file storage to the filesystem and replace tags
+     * Replace tokens
      *
-     * @todo add a contao hook
-     * @param bool $blnReplaceTags
+     * Usage:
+     * {if addcustomroute=="1"}
+     *     use Symfony\Component\HttpKernel\KernelInterface;
+     * {endif}
+     *
+     * or (conditional simple token replacing):
+     *
+     * {if addcustomroute=="1"}
+     *     ##mytoken##
+     * {endif}
+     *
+     * or (replace a simple token):
+     *    ##myothertoken##
+     *
      * @throws \Exception
      */
-    protected function createFilesFromFileStorage(bool $blnReplaceTags = true): void
+    protected function replaceTokens(): void
     {
         $arrTags = $this->tagStorage->getAll();
         $arrFiles = $this->fileStorage->getAll();
 
-        // @todo add a contao hook here
-
         foreach ($arrFiles as $arrFile)
         {
-            $content = $arrFile['content'];
+            $content = TokenParser::parseSimpleTokens($arrFile['content'], $arrTags);
+            $this->fileStorage->getFile($arrFile['target'])->truncate()->appendContent($content);
+        }
+    }
 
-            if ($blnReplaceTags)
-            {
-                $content = TokenParser::parseSimpleTokens($content, $arrTags);
-            }
+    /**
+     * Write files from the file storage to the filesystem
+     *
+     * @todo add a contao hook
+     * @throws \Exception
+     */
+    protected function createFilesFromFileStorage(): void
+    {
+        $arrFiles = $this->fileStorage->getAll();
+        $i = 0;
 
+        /**
+         * @todo add a contao hook here
+         * Manipulate, remove or add files to the storage
+         */
+        foreach ($arrFiles as $arrFile)
+        {
             // Create file
             $objNewFile = new File($arrFile['target']);
 
             // Overwrite content if file already exists
             $objNewFile->truncate();
-            $objNewFile->append($content);
+            $objNewFile->append($arrFile['content']);
             $objNewFile->close();
 
             // Display message in the backend
             $this->message->addInfo(sprintf('Created file "%s".', $objNewFile->path));
+            $i++;
         }
+        // Display message in the backend
+        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have make changes to the root composer.json.');
     }
 }
