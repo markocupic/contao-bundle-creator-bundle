@@ -11,16 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Token;
+namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken;
 
 use Contao\System;
 use Psr\Log\LogLevel;
 
 /**
- * Class TagStorage
- * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage
+ * Class SimpleTokenParser
+ * @package Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken
  */
-class TokenParser
+class SimpleTokenParser
 {
 
     /**

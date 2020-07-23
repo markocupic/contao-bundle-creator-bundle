@@ -20,7 +20,7 @@ use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Token\TokenParser;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken\SimpleTokenParser;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -583,7 +583,7 @@ class ExtensionGenerator
         }
 
         $arrTags = $this->tagStorage->getAll();
-        $content = TokenParser::parseSimpleTokens($content, $arrTags);
+        $content = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
 
         return $content;
     }
@@ -849,7 +849,7 @@ class ExtensionGenerator
 
         foreach ($arrFiles as $arrFile)
         {
-            $content = TokenParser::parseSimpleTokens($arrFile['content'], $arrTags);
+            $content = SimpleTokenParser::parseSimpleTokens($arrFile['content'], $arrTags);
             $this->fileStorage->getFile($arrFile['target'])->truncate()->appendContent($content);
         }
     }

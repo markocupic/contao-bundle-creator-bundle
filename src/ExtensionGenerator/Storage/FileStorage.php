@@ -15,7 +15,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Storage;
 
 use Contao\File;
 use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\Token\TokenParser;
+use Markocupic\ContaoBundleCreatorBundle\ExtensionGenerator\SimpleToken\SimpleTokenParser;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
@@ -246,7 +246,7 @@ class FileStorage
 
         $content = $this->arrStorrage[$this->_current]['content'];
         $arrTags = $tagStorage->getAll();
-        $this->arrStorrage[$this->_current]['content'] = TokenParser::parseSimpleTokens($content, $arrTags);
+        $this->arrStorrage[$this->_current]['content'] = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
 
         return $this;
     }
