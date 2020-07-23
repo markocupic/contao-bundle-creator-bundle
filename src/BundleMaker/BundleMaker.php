@@ -169,10 +169,41 @@ class BundleMaker
      */
     protected function sanitizeModel(): void
     {
+        if ($this->model->vendorname != '')
+        {
+            // Sanitize vendorname (github restrictions)
+            // Do no allow: vendor_name, -vendorname, vendorname-, vendor--name
+            // But allow Vendor-Name, vendor-name
+            $this->model->vendorname = preg_replace('/[\-]{2,}/', '-', $this->model->vendorname);
+            $this->model->vendorname = preg_replace('/^\-+|_+|[^A-Za-z0-9\-]|\-+$/', '', $this->model->vendorname);
+            $this->model->save();
+        }
+
+        if ($this->model->repositoryname != '')
+        {
+            // Sanitize repositoryname
+            $this->model->repositoryname = preg_replace('/[^A-Za-z0-9_\-]/', '-', $this->model->repositoryname);
+            $this->model->save();
+        }
+
         if ($this->model->backendmoduletype != '')
         {
             // Get the backend module type and sanitize it to the contao backend module convention
             $this->model->backendmoduletype = $this->getSanitizedBackendModuleType();
+            $this->model->save();
+        }
+
+        if ($this->model->dcatable != '')
+        {
+            // Get the backend module type and sanitize it to the contao backend module convention
+            $this->model->dcatable = strtolower($this->model->dcatable);
+            $this->model->dcatable = preg_replace('/\-/', '_', $this->model->dcatable);
+            $this->model->dcatable = preg_replace('/_{2,}/', '_', $this->model->dcatable);
+            $this->model->dcatable = preg_replace('/[^A-Za-z0-9_]|_$/', '', $this->model->dcatable);
+            if (!preg_match('/^tl_/', $this->model->dcatable))
+            {
+                $this->model->dcatable = 'tl_' . $this->model->dcatable;
+            }
             $this->model->save();
         }
 
@@ -220,11 +251,11 @@ class BundleMaker
         $this->tagStorage->add('repositorynametolower', (string) preg_replace('/\-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
-        $this->tagStorage->add('toplevelnamespace', $this->namespaceify((string) $this->model->vendorname));
-        $this->tagStorage->add('sublevelnamespace', $this->namespaceify((string) $this->model->repositoryname));
+        $this->tagStorage->add('toplevelnamespace', $this->toPsr4Namespace((string) $this->model->vendorname));
+        $this->tagStorage->add('sublevelnamespace', $this->toPsr4Namespace((string) $this->model->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->add('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->namespaceify((string) $this->model->vendorname) . $this->namespaceify((string) $this->model->repositoryname)));
+        $this->tagStorage->add('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->toPsr4Namespace((string) $this->model->vendorname) . $this->toPsr4Namespace((string) $this->model->repositoryname)));
 
         // Composer
         $this->tagStorage->add('composerdescription', (string) $this->model->composerdescription);
@@ -324,7 +355,7 @@ class BundleMaker
     protected function addBundleClassToFileStorage(): void
     {
         $source = self::SAMPLE_DIR . '/src/BundleFile.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->namespaceify((string) $this->model->vendorname), $this->namespaceify((string) $this->model->repositoryname));
+        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->toPsr4Namespace((string) $this->model->vendorname), $this->toPsr4Namespace((string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -549,14 +580,20 @@ class BundleMaker
      * Converts a string to namespace
      * "my_custom name-space" will become "MyCustomNameSpace"
      *
-     * @param string $strName
+     * @param string $str
      * @return string
      */
-    protected function namespaceify(string $strName): string
+    protected function toPsr4Namespace(string $str): string
     {
-        $strName = str_replace('_', '-', $strName);
-        $strName = str_replace(' ', '-', $strName);
-        $arrNamespace = explode('-', $strName);
+        $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
+        $str = str_replace('-', '_', $str);
+        $str = str_replace(' ', '_', $str);
+        // Trim from underscores
+        $str = preg_replace('/^_|_$/', '', $str);
+        // Do not allow multiple underscores in series
+        $str = preg_replace('/_{2,}/', '_', $str);
+
+        $arrNamespace = explode('_', $str);
         $arrNamespace = array_filter($arrNamespace, 'strlen');
         $arrNamespace = array_map('strtolower', $arrNamespace);
         $arrNamespace = array_map('ucfirst', $arrNamespace);
@@ -574,8 +611,13 @@ class BundleMaker
      */
     protected function toSnakecase(string $str): string
     {
+        $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace(' ', '_', $str);
         $str = str_replace('-', ' ', $str);
+        // Trim from underscores
+        $str = preg_replace('/^_|_$/', '', $str);
+        // Do not allow multiple underscores in series
+        $str = preg_replace('/_{2,}/', '_', $str);
         $str = strtolower($str);
 
         return $str;
@@ -632,7 +674,7 @@ class BundleMaker
     protected function getSanitizedFrontendModuleClassname(string $postfix = 'Controller'): string
     {
         $str = $this->getSanitizedFrontendModuleType();
-        $str = $this->namespaceify($str);
+        $str = $this->toPsr4Namespace($str);
         return $str . $postfix;
     }
 
