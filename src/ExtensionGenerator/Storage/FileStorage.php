@@ -32,7 +32,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  * $fileStorage = new FileStorage();
  *
  * $fileStorage
- * ->createFileFromString('destination/somefile.txt', 'Lorem ipsum');
+ * ->createFileFromString('destination/somefile.txt', 'Lorem ipsum',);
  *
  * or:
  *
@@ -54,16 +54,14 @@ class FileStorage
     /** @var Message */
     private $message;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $projectDir;
 
     /** @var array */
     private $arrStorrage = [];
 
-    /** @var string */
-    private $_current;
+    /** @var int */
+    private $intIndex = -1;
 
     /**
      * FileStorage constructor.
@@ -91,13 +89,22 @@ class FileStorage
 
         $objFile = new File($sourcePath);
 
-        $this->arrStorrage[$targetPath] = [
+        $arrData = [
             'source'  => $sourcePath,
             'target'  => $targetPath,
             'content' => $objFile->getContent(),
         ];
 
-        $this->_current = $targetPath;
+        if (($index = $this->getIndexOf($targetPath)) < 0)
+        {
+            $this->arrStorrage[] = $arrData;
+        }
+        else
+        {
+            $this->arrStorrage[$index] = $arrData;
+        }
+
+        $this->intIndex = $this->getIndexOf($targetPath);
 
         return $this;
     }
@@ -115,13 +122,22 @@ class FileStorage
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->truncate()->appendContent($strContent) instead.', $targetPath));
         }
 
-        $this->arrStorrage[$targetPath] = [
+        $arrData = [
             'source'  => null,
             'target'  => $targetPath,
             'content' => $stringContent,
         ];
 
-        $this->_current = $targetPath;
+        if (($index = $this->getIndexOf($targetPath)) < 0)
+        {
+            $this->arrStorrage[] = $arrData;
+        }
+        else
+        {
+            $this->arrStorrage[$index] = $arrData;
+        }
+
+        $this->intIndex = $this->getIndexOf($targetPath);
 
         return $this;
     }
@@ -133,12 +149,12 @@ class FileStorage
      */
     public function getFile(string $targetPath): self
     {
-        if (!isset($this->arrStorrage[$targetPath]))
+        if (($index = $this->getIndexOf($targetPath)) < 0)
         {
             throw new \Exception(sprintf('File "%s" not found in the storage', $targetPath));
         }
 
-        $this->_current = $targetPath;
+        $this->intIndex = $index;
 
         return $this;
     }
@@ -149,7 +165,7 @@ class FileStorage
      */
     public function hasFile(string $targetPath): bool
     {
-        if (!isset($this->arrStorrage[$targetPath]))
+        if ($this->getIndexOf($targetPath) < 0)
         {
             return false;
         }
@@ -162,15 +178,15 @@ class FileStorage
      */
     public function removeFile(): self
     {
-        if ($this->_current)
+        if ($this->intIndex > -1)
         {
-            if (isset($this->arrStorrage[$this->_current]))
+            if (isset($this->arrStorrage[$this->intIndex]))
             {
-                unset($this->arrStorrage[$this->_current]);
+                unset($this->arrStorrage[$this->intIndex]);
             }
         }
 
-        $this->_current = null;
+        $this->intIndex = -1;
 
         return $this;
     }
@@ -182,12 +198,12 @@ class FileStorage
      */
     public function appendContent(string $strContent): self
     {
-        if (!isset($this->_current))
+        if ($this->intIndex < 0)
         {
             $this->sendFilePointerNotSetException();
         }
 
-        $this->arrStorrage[$this->_current]['content'] .= $strContent;
+        $this->arrStorrage[$this->intIndex]['content'] .= $strContent;
 
         return $this;
     }
@@ -198,12 +214,12 @@ class FileStorage
      */
     public function getContent(): string
     {
-        if (!isset($this->_current))
+        if ($this->intIndex < 0)
         {
             $this->sendFilePointerNotSetException();
         }
 
-        return $this->arrStorrage[$this->_current]['content'];
+        return (string) $this->arrStorrage[$this->intIndex]['content'];
     }
 
     /**
@@ -212,12 +228,12 @@ class FileStorage
      */
     public function truncate(): self
     {
-        if (!isset($this->_current))
+        if ($this->intIndex < 0)
         {
             $this->sendFilePointerNotSetException();
         }
 
-        $this->arrStorrage[$this->_current]['content'] = '';
+        $this->arrStorrage[$this->intIndex]['content'] = '';
 
         return $this;
     }
@@ -239,16 +255,33 @@ class FileStorage
      */
     public function replaceTags(TagStorage $tagStorage): self
     {
-        if (!isset($this->_current))
+        if ($this->intIndex < 0)
         {
             $this->sendFilePointerNotSetException();
         }
 
-        $content = $this->arrStorrage[$this->_current]['content'];
+        $content = $this->arrStorrage[$this->intIndex]['content'];
         $arrTags = $tagStorage->getAll();
-        $this->arrStorrage[$this->_current]['content'] = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
+        $this->arrStorrage[$this->intIndex]['content'] = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
 
         return $this;
+    }
+
+    /**
+     * @param string $targetPath
+     * @return int
+     */
+    private function getIndexOf(string $targetPath): int
+    {
+        foreach ($this->arrStorrage as $index => $arrFile)
+        {
+            if ($arrFile['target'] === $targetPath)
+            {
+                return $index;
+            }
+        }
+
+        return -1;
     }
 
     /**
