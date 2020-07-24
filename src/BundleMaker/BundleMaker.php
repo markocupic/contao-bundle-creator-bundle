@@ -613,7 +613,7 @@ class BundleMaker
     {
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace(' ', '_', $str);
-        $str = str_replace('-', ' ', $str);
+        $str = str_replace('-', '_', $str);
         // Trim from underscores
         $str = preg_replace('/^_|_$/', '', $str);
         // Do not allow multiple underscores in series
