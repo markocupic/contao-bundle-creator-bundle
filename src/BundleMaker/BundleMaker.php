@@ -687,6 +687,7 @@ class BundleMaker
     protected function getFrontendModuleTemplateName($strPrefix = 'mod_'): string
     {
         $str = $this->getSanitizedFrontendModuleType();
+        $str = preg_replace('/_module$/', '', $str);
         return $strPrefix . $str;
     }
 
