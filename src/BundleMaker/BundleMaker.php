@@ -166,6 +166,8 @@ class BundleMaker
 
     /**
      * Sanitize model
+     *
+     * @throws \Exception
      */
     protected function sanitizeModel(): void
     {
@@ -195,15 +197,7 @@ class BundleMaker
 
         if ($this->model->dcatable != '')
         {
-            // Get the backend module type and sanitize it to the contao backend module convention
-            $this->model->dcatable = strtolower($this->model->dcatable);
-            $this->model->dcatable = preg_replace('/\-/', '_', $this->model->dcatable);
-            $this->model->dcatable = preg_replace('/_{2,}/', '_', $this->model->dcatable);
-            $this->model->dcatable = preg_replace('/[^A-Za-z0-9_]|_$/', '', $this->model->dcatable);
-            if (!preg_match('/^tl_/', $this->model->dcatable))
-            {
-                $this->model->dcatable = 'tl_' . $this->model->dcatable;
-            }
+            $this->model->dcatable = $this->getSanitizedDcaTableName();
             $this->model->save();
         }
 
@@ -273,6 +267,7 @@ class BundleMaker
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tagStorage->add('dcatable', (string) $this->model->dcatable);
+            $this->tagStorage->add('modelclassname', (string) $this->getModelClassname());
             $this->tagStorage->add('backendmoduletype', (string) $this->model->backendmoduletype);
             $this->tagStorage->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
@@ -431,6 +426,14 @@ class BundleMaker
         $content = $this->getContentFromPartialFile('contao_lang_en_be_modules.tpl.php');
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->getFile($target)->appendContent($content);
+
+        // Add a sample model
+        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.php';
+        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->getModelClassname());
+        $this->fileStorage->createFile($source, $target);
+        // Append data to src/Resources/contao/config/config.php
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_model.tpl.php'));
     }
 
     /**
@@ -665,6 +668,30 @@ class BundleMaker
     }
 
     /**
+     * Get the sanitized dca tablename f.ex. tl_sample_table
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getSanitizedDcaTableName(): string
+    {
+        if (!strlen((string) $this->model->dcatable))
+        {
+            throw new \Exception('No dca tablename set.');
+        }
+
+        $str = strtolower($this->model->dcatable);
+        $str = preg_replace('/\-/', '_', $str);
+        $str = preg_replace('/_{2,}/', '_', $str);
+        $str = preg_replace('/[^A-Za-z0-9_]|_$/', '', $str);
+        if (!preg_match('/^tl_/', $str))
+        {
+            $str = 'tl_' . $str;
+        }
+        return $str;
+    }
+
+    /**
      * Get the frontend module classname from module type and add the "Controller" postfix
      * f.ex. my_custom_module => MyCustomModuleController
      *
@@ -674,6 +701,21 @@ class BundleMaker
     protected function getSanitizedFrontendModuleClassname(string $postfix = 'Controller'): string
     {
         $str = $this->getSanitizedFrontendModuleType();
+        $str = $this->toPsr4Namespace($str);
+        return $str . $postfix;
+    }
+
+    /**
+     * Get model classname f.ex. SampleTableModel
+     *
+     * @param string $postfix
+     * @return string
+     * @throws \Exception
+     */
+    protected function getModelClassname(string $postfix = 'Model'): string
+    {
+        $str = $this->getSanitizedDcaTableName();
+        $str = preg_replace('/^tl_/', '', $str);
         $str = $this->toPsr4Namespace($str);
         return $str . $postfix;
     }
