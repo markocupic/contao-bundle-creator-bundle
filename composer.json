@@ -1,9 +1,10 @@
 {
   "name": "markocupic/contao-bundle-creator-bundle",
-  "description": "Create a contao bundle boilerplate/skeleton from the contao backend",
+  "description": "This bundle provides a bundle maker for Contao 4.*. The extension will create a fully working backend- or/and frontend module after you have defined a few parameters in the contao backend.",
   "keywords": [
     "contao",
     "bundle",
+    "maker",
     "creator",
     "extension",
     "boilerplate",
