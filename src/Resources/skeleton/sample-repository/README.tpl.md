@@ -1,6 +1,6 @@
 ![Alt text](src/Resources/public/logo.png?raw=true "logo")
 
 
-# Welcome to my new extension
+# Welcome to ##bundlename##
 
-Dieses Modul befindet sich im Entwicklungsstadium.
+This bundle is still under construction.
