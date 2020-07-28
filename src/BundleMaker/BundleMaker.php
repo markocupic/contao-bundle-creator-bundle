@@ -268,7 +268,7 @@ class BundleMaker
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tagStorage->add('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->add('modelclassname', (string) SanitizeInput::getSanitizedModelClassname());
+            $this->tagStorage->add('modelclassname', (string) SanitizeInput::getSanitizedModelClassname((string) $this->model->dcatable));
             $this->tagStorage->add('backendmoduletype', (string) $this->model->backendmoduletype);
             $this->tagStorage->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
@@ -430,7 +430,7 @@ class BundleMaker
 
         // Add a sample model
         $source = self::SAMPLE_DIR . '/src/Model/SampleModel.php';
-        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, SanitizeInput::getSanitizedModelClassname());
+        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, SanitizeInput::getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
         // Append data to src/Resources/contao/config/config.php
         $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
