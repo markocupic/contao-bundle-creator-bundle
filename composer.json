@@ -29,6 +29,10 @@
     "ext-json": "*",
     "ext-zip": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^8.4",
+    "contao/test-case": "^4.0"
+  },
   "autoload": {
     "psr-4": {
       "Markocupic\\ContaoBundleCreatorBundle\\": "src/"
