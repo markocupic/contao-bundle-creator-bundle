@@ -1,25 +1,28 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: true
 
-
-    Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker:
+    markocupic.contaobundlecreatorbundle.bundlemaker.bundlemaker:
+        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker
         arguments:
         - '@session'
-        - '@Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage'
-        - '@Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage'
-        - '@Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message'
+        - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage'
+        - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage'
+        - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
         - '%kernel.project_dir%'
         public: true
 
-    Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage:
+    markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage:
+        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage
         arguments:
-        - '@Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message'
+        - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
         - '%kernel.project_dir%'
         public: true
 
-    Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage: ~
+    markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage:
+        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage
+        public: true
 
-    Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message: ~
+    markocupic.contaobundlecreatorbundle.bundlemaker.message.message:
+        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message
+        arguments:
+        - '@session'
+        public: true
