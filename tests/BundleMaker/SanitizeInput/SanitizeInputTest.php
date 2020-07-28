@@ -33,7 +33,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to psr4 namespace format
      */
-    public function testToPsr4Namespace()
+    public function testToPsr4Namespace(): void
     {
         $test = 'foo-Bar_foo__Bar--foo9';
         $actual = 'FooBarFooBarFoo9';
@@ -59,7 +59,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to snakecase format
      */
-    public function testToSnakecase()
+    public function testToSnakecase(): void
     {
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
@@ -69,7 +69,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to frontend module type format
      */
-    public function testGetSanitizedFrontendModuleType()
+    public function testGetSanitizedFrontendModuleType(): void
     {
         $test = 'my_ Custom_module';
         $actual = 'my_custom_module';
@@ -83,7 +83,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to backend module type format
      */
-    public function testGetSanitizedBackendModuleType()
+    public function testGetSanitizedBackendModuleType(): void
     {
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
@@ -93,7 +93,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to the dca table format
      */
-    public function testGetSanitizedDcaTableName()
+    public function testGetSanitizedDcaTableName(): void
     {
         $test = 'foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
@@ -105,24 +105,9 @@ class SanitizeInputTest extends ContaoTestCase
     }
 
     /**
-     * Get the frontend module classname from module type and add the "Controller" postfix
-     * f.ex. my_custom_module => MyCustomModuleController
-     *
-     * @param string $str (requires tl_contao_bundle_creator.frontendmoduletype)
-     * @param string $postfix
-     * @return string
-     */
-    public static function getSanitizedFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
-    {
-        $str = static::getSanitizedFrontendModuleType($str);
-        $str = static::toPsr4Namespace($str);
-        return $str . $postfix;
-    }
-
-    /**
      * Test if strings are correctly converted to frontend module classname format
      */
-    public function testGetSanitizedFrontendModuleClassname()
+    public function testGetSanitizedFrontendModuleClassname(): void
     {
         $test = 'my_ --ExtraCustom--99_Module';
         $actual = 'MyExtraCustom99ModuleController';
@@ -136,7 +121,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to model classname format
      */
-    public function testGetSanitizedModelClassname()
+    public function testGetSanitizedModelClassname(): void
     {
         $test = 'tl_my_ table';
         $actual = 'MyTableModel';
@@ -146,7 +131,7 @@ class SanitizeInputTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to frontend module template format
      */
-    public function testGetSanitizedFrontendModuleTemplateName()
+    public function testGetSanitizedFrontendModuleTemplateName(): void
     {
         $test = 'mod_my_ Custom_module';
         $actual = 'mod_my_custom';
