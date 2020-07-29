@@ -1,3 +1,6 @@
+![passed tests at travis-ci.org](https://travis-ci.org/markocupic/contao-bundle-creator-bundle.svg?branch=master "")
+
+
 ![Alt text](src/Resources/public/logo.png?raw=true "Marko Cupic")
 
 
