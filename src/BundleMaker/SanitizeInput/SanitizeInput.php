@@ -107,6 +107,20 @@ class SanitizeInput
     }
 
     /**
+     * Sanitize repository name (github restrictions)
+     * "vendor_name#" will be converted to "vendor_name-"
+     *
+     * @param string $str
+     * @return string
+     */
+    public function getSanitizedRepositoryname(string $str): string
+    {
+        return preg_replace('/[^A-Za-z0-9_\-]/', '-', $str);
+    }
+
+
+
+    /**
      * Get the frontend module type (f.ex. my_custom_module)
      * Convention => snakecase with postfix "_module"
      *

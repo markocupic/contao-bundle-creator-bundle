@@ -91,6 +91,18 @@ class SanitizeInputTest extends ContaoTestCase
     }
 
     /**
+     * Test if strings are correctly converted to github repository name format
+     */
+    public function testGetSanitizedRepositoryname(): void
+    {
+        $sanitizeInput = new SanitizeInput();
+
+        $test = 'repository_-name#?';
+        $actual = 'repository_-name--';
+        $this->assertSame($sanitizeInput->getSanitizedRepositoryname($test), $actual);
+    }
+
+    /**
      * Test if strings are correctly converted to frontend module type format
      */
     public function testGetSanitizedFrontendModuleType(): void

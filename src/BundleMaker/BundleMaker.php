@@ -186,7 +186,7 @@ class BundleMaker
         if ($this->model->repositoryname != '')
         {
             // Sanitize repositoryname
-            $this->model->repositoryname = preg_replace('/[^A-Za-z0-9_\-]/', '-', $this->model->repositoryname);
+            $this->model->repositoryname = $this->sanitizeInput->getSanitizedRepositoryname((string) $this->model->repositoryname);
             $this->model->save();
         }
 
