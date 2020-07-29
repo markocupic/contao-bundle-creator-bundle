@@ -35,25 +35,27 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testToPsr4Namespace(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'foo-Bar_foo__Bar--foo9';
         $actual = 'FooBarFooBarFoo9';
-        $this->assertSame(SanitizeInput::toPsr4Namespace($test), $actual);
+        $this->assertSame($sanitizeInput->toPsr4Namespace($test), $actual);
 
         $test = 'foo-BBar_foo__Bar--foo9';
         $actual = 'FooBBarFooBarFoo9';
-        $this->assertSame(SanitizeInput::toPsr4Namespace($test), $actual);
+        $this->assertSame($sanitizeInput->toPsr4Namespace($test), $actual);
 
         $test = 'FFFbF';
         $actual = 'FFFbF';
-        $this->assertSame(SanitizeInput::toPsr4Namespace($test), $actual);
+        $this->assertSame($sanitizeInput->toPsr4Namespace($test), $actual);
 
         $test = 'my_custom name-space';
         $actual = 'MyCustomNameSpace';
-        $this->assertSame(SanitizeInput::toPsr4Namespace($test), $actual);
+        $this->assertSame($sanitizeInput->toPsr4Namespace($test), $actual);
 
         $test = 'foo_Bar_fooBar99';
         $actual = 'FooBarFooBar99';
-        $this->assertSame(SanitizeInput::toPsr4Namespace($test), $actual);
+        $this->assertSame($sanitizeInput->toPsr4Namespace($test), $actual);
     }
 
     /**
@@ -61,9 +63,11 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testToSnakecase(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
-        $this->assertSame(SanitizeInput::toSnakecase($test), $actual);
+        $this->assertSame($sanitizeInput->toSnakecase($test), $actual);
     }
 
     /**
@@ -71,13 +75,15 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedFrontendModuleType(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'my_ Custom_module';
         $actual = 'my_custom_module';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleType($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleType($test), $actual);
 
         $test = 'my_ Custom99_';
         $actual = 'my_custom99_module';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleType($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleType($test), $actual);
     }
 
     /**
@@ -85,9 +91,11 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedBackendModuleType(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
-        $this->assertSame(SanitizeInput::getSanitizedBackendModuleType($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedBackendModuleType($test), $actual);
     }
 
     /**
@@ -95,13 +103,15 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedDcaTableName(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
-        $this->assertSame(SanitizeInput::getSanitizedDcaTableName($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedDcaTableName($test), $actual);
 
         $test = 'tl_foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
-        $this->assertSame(SanitizeInput::getSanitizedDcaTableName($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedDcaTableName($test), $actual);
     }
 
     /**
@@ -109,13 +119,15 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedFrontendModuleClassname(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'my_ --ExtraCustom--99_Module';
         $actual = 'MyExtraCustom99ModuleController';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleClassname($test, 'Controller'), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleClassname($test, 'Controller'), $actual);
 
         $test = 'my_ --ExtraCustom--99_';
         $actual = 'MyExtraCustom99ModuleController';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleClassname($test, 'Controller'), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleClassname($test, 'Controller'), $actual);
     }
 
     /**
@@ -123,9 +135,11 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedModelClassname(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'tl_my_ table';
         $actual = 'MyTableModel';
-        $this->assertSame(SanitizeInput::getSanitizedModelClassname($test), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedModelClassname($test), $actual);
     }
 
     /**
@@ -133,13 +147,15 @@ class SanitizeInputTest extends ContaoTestCase
      */
     public function testGetSanitizedFrontendModuleTemplateName(): void
     {
+        $sanitizeInput = new SanitizeInput();
+
         $test = 'mod_my_ Custom_module';
         $actual = 'mod_my_custom';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleTemplateName($test, 'mod_'), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleTemplateName($test, 'mod_'), $actual);
 
         $test = '_my_ Custom_module';
         $actual = 'mod_my_custom';
-        $this->assertSame(SanitizeInput::getSanitizedFrontendModuleTemplateName($test, 'mod_'), $actual);
+        $this->assertSame($sanitizeInput->getSanitizedFrontendModuleTemplateName($test, 'mod_'), $actual);
     }
 
 }

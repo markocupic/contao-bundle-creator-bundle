@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit 
-         
+<phpunit
+
     bootstrap                   = "vendor/autoload.php"
     backupGlobals               = "false"
     backupStaticAttributes      = "false"
@@ -11,7 +11,6 @@
     convertWarningsToExceptions = "true"
     processIsolation            = "false"
     stopOnFailure               = "false">
-    
 
     <testsuites>
         <testsuite name="Project Test Suite">

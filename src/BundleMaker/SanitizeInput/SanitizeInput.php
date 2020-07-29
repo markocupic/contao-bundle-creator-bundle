@@ -28,7 +28,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public static function toPsr4Namespace(string $str): string
+    public function toPsr4Namespace(string $str): string
     {
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace('-', '_', $str);
@@ -70,7 +70,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public static function toSnakecase(string $str): string
+    public function toSnakecase(string $str): string
     {
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace(' ', '_', $str);
@@ -100,9 +100,9 @@ class SanitizeInput
      * @param string $postfix
      * @return string
      */
-    public static function getSanitizedFrontendModuleType(string $str, $postfix = '_module'): string
+    public function getSanitizedFrontendModuleType(string $str, $postfix = '_module'): string
     {
-        $str = SanitizeInput::toSnakecase((string) $str);
+        $str = $this->toSnakecase((string) $str);
 
         $pattern = '/^(module_|module|mod_|mod)/';
         if (preg_match($pattern, $str))
@@ -136,9 +136,9 @@ class SanitizeInput
      * @param string $str (requires tl_contao_bundle_creator.backendmoduletype)
      * @return string
      */
-    public static function getSanitizedBackendModuleType(string $str): string
+    public function getSanitizedBackendModuleType(string $str): string
     {
-        $str = SanitizeInput::toSnakecase($str);
+        $str = $this->toSnakecase($str);
         return $str;
     }
 
@@ -149,7 +149,7 @@ class SanitizeInput
      * @return string
      * @throws \Exception
      */
-    public static function getSanitizedDcaTableName(string $str): string
+    public function getSanitizedDcaTableName(string $str): string
     {
         if (!strlen((string) $str))
         {
@@ -175,10 +175,10 @@ class SanitizeInput
      * @param string $postfix
      * @return string
      */
-    public static function getSanitizedFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
+    public function getSanitizedFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
     {
-        $str = static::getSanitizedFrontendModuleType($str);
-        $str = static::toPsr4Namespace($str);
+        $str = $this->getSanitizedFrontendModuleType($str);
+        $str = $this->toPsr4Namespace($str);
         return $str . $postfix;
     }
 
@@ -190,11 +190,11 @@ class SanitizeInput
      * @return string
      * @throws \Exception
      */
-    public static function getSanitizedModelClassname(string $str, string $postfix = 'Model'): string
+    public function getSanitizedModelClassname(string $str, string $postfix = 'Model'): string
     {
-        $str = static::getSanitizedDcaTableName($str);
+        $str = $this->getSanitizedDcaTableName($str);
         $str = preg_replace('/^tl_/', '', $str);
-        $str = static::toPsr4Namespace($str);
+        $str = $this->toPsr4Namespace($str);
         return $str . $postfix;
     }
 
@@ -205,9 +205,9 @@ class SanitizeInput
      * @return string $str (requires tl_contao_bundle_creator.frontendmoduletype)
      * @return string
      */
-    public static function getSanitizedFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
+    public function getSanitizedFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
     {
-        $str = static::getSanitizedFrontendModuleType($str);
+        $str = $this->getSanitizedFrontendModuleType($str);
         if ($strPrefix != '')
         {
             $str = preg_replace('/^' . $strPrefix . '/', '', $str);
