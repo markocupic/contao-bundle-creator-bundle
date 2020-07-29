@@ -71,6 +71,26 @@ class SanitizeInputTest extends ContaoTestCase
     }
 
     /**
+     * Test if strings are correctly converted to github vendorname format
+     */
+    public function testGetSanitizedVendorname(): void
+    {
+        $sanitizeInput = new SanitizeInput();
+
+        $test = 'vendor_Name8';
+        $actual = 'vendor-Name8';
+        $this->assertSame($sanitizeInput->getSanitizedVendorname($test), $actual);
+
+        $test = '-vendor--name-';
+        $actual = 'vendor-name';
+        $this->assertSame($sanitizeInput->getSanitizedVendorname($test), $actual);
+
+        $test = '--vendor_name--';
+        $actual = 'vendor-name';
+        $this->assertSame($sanitizeInput->getSanitizedVendorname($test), $actual);
+    }
+
+    /**
      * Test if strings are correctly converted to frontend module type format
      */
     public function testGetSanitizedFrontendModuleType(): void
@@ -100,6 +120,7 @@ class SanitizeInputTest extends ContaoTestCase
 
     /**
      * Test if strings are correctly converted to the dca table format
+     * @throws \Exception
      */
     public function testGetSanitizedDcaTableName(): void
     {
@@ -132,6 +153,7 @@ class SanitizeInputTest extends ContaoTestCase
 
     /**
      * Test if strings are correctly converted to model classname format
+     * @throws \Exception
      */
     public function testGetSanitizedModelClassname(): void
     {

@@ -15,7 +15,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
 use Contao\File;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SimpleToken\SimpleTokenParser;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
@@ -279,7 +279,7 @@ class FileStorage
 
         $content = $this->arrStorrage[$this->intIndex]['content'];
         $arrTags = $tagStorage->getAll();
-        $this->arrStorrage[$this->intIndex]['content'] = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
+        $this->arrStorrage[$this->intIndex]['content'] = ParsePhpToken::parsePhpTokens($content, $arrTags);
 
         return $this;
     }

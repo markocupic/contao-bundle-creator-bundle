@@ -18,8 +18,8 @@ use Contao\File;
 use Contao\Files;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput\SanitizeInput;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SimpleToken\SimpleTokenParser;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
@@ -65,6 +65,7 @@ class BundleMaker
      * @param Session $session
      * @param FileStorage $fileStorage
      * @param TagStorage $tagStorage
+     * @param SanitizeInput $sanitizeInput
      * @param Message $message
      * @param string $projectDir
      */
@@ -100,7 +101,7 @@ class BundleMaker
         // Don't move the position, this has to be called first!
         $this->sanitizeModel();
 
-        // Set the tags (##****##)
+        // Set the php template tags
         $this->setTags();
 
         // Add the composer.json file to file storage
@@ -142,7 +143,7 @@ class BundleMaker
         }
 
         // Replace if-tokens and replace simple tokens in file storage
-        $this->replaceTokens();
+        $this->parseTemplates();
 
         // Create all the bundle files in vendor/vendorname/bundlename
         $this->createFilesFromFileStorage();
@@ -178,11 +179,7 @@ class BundleMaker
     {
         if ($this->model->vendorname != '')
         {
-            // Sanitize vendorname (github restrictions)
-            // Do no allow: vendor_name, -vendorname, vendorname-, vendor--name
-            // But allow Vendor-Name, vendor-name
-            $this->model->vendorname = preg_replace('/[\-]{2,}/', '-', $this->model->vendorname);
-            $this->model->vendorname = preg_replace('/^\-+|_+|[^A-Za-z0-9\-]|\-+$/', '', $this->model->vendorname);
+            $this->model->vendorname = $this->sanitizeInput->getSanitizedVendorname((string) $this->model->vendorname);
             $this->model->save();
         }
 
@@ -247,7 +244,7 @@ class BundleMaker
         $this->tagStorage->add('vendorname', (string) $this->model->vendorname);
         $this->tagStorage->add('repositoryname', (string) $this->model->repositoryname);
         $this->tagStorage->add('vendornametolower', (string) str_replace('-', '_', strtolower($this->model->vendorname)));
-        $this->tagStorage->add('repositorynametolower', (string) preg_replace('/\-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
+        $this->tagStorage->add('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
         $this->tagStorage->add('toplevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname));
@@ -425,15 +422,15 @@ class BundleMaker
 
         // Append data to src/Resources/contao/config/config.php
         $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_be_mod.tpl.php'));
+        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_backend_modules.tpl.php'));
 
         // Add language array to contao/languages/en/modules.php
-        $content = $this->getContentFromPartialFile('contao_lang_en_be_modules.tpl.php');
+        $content = $this->getContentFromPartialFile('contao_lang_en_backend_modules.tpl.php');
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->getFile($target)->appendContent($content);
 
         // Add a sample model
-        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.php';
+        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.tpl.php';
         $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
         // Append data to src/Resources/contao/config/config.php
@@ -487,7 +484,7 @@ class BundleMaker
         }
 
         // Add language array to contao/languages/en/modules.php
-        $content = $this->getContentFromPartialFile('contao_lang_en_fe_modules.tpl.php');
+        $content = $this->getContentFromPartialFile('contao_lang_en_frontend_modules.tpl.php');
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->getFile($target)->appendContent($content);
     }
@@ -549,7 +546,7 @@ class BundleMaker
         $this->fileStorage->createFile($source, $target);
 
         // Add logo
-        $source = sprintf('%s/src/Resources/public/logo.tpl.png', self::SAMPLE_DIR);
+        $source = sprintf('%s/src/Resources/public/logo.png', self::SAMPLE_DIR);
         $target = sprintf('vendor/%s/%s/src/Resources/public/logo.png', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
@@ -575,11 +572,10 @@ class BundleMaker
             throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
         }
 
-        /** @var File $objPartialFile */
         $objPartialFile = new File($sourceFile);
         $content = $objPartialFile->getContent();
         $arrTags = $this->tagStorage->getAll();
-        $content = SimpleTokenParser::parseSimpleTokens($content, $arrTags);
+        $content = ParsePhpToken::parsePhpTokens($content, $arrTags);
 
         return $content;
     }
@@ -717,33 +713,23 @@ class BundleMaker
     }
 
     /**
-     * Replace tokens
-     *
-     * Usage:
-     * {if addcustomroute=="1"}
-     *     use Symfony\Component\HttpKernel\KernelInterface;
-     * {endif}
-     *
-     * or (conditional simple token replacing):
-     *
-     * {if addcustomroute=="1"}
-     *     ##mytoken##
-     * {endif}
-     *
-     * or (replace a simple token):
-     *    ##myothertoken##
+     * Parse templates
      *
      * @throws \Exception
      */
-    protected function replaceTokens(): void
+    protected function parseTemplates(): void
     {
-        $arrTags = $this->tagStorage->getAll();
         $arrFiles = $this->fileStorage->getAll();
 
         foreach ($arrFiles as $arrFile)
         {
-            $content = SimpleTokenParser::parseSimpleTokens($arrFile['content'], $arrTags);
-            $this->fileStorage->getFile($arrFile['target'])->replaceContent($content);
+            $this->fileStorage->getFile($arrFile['target']);
+
+            // Skip images...
+            if (isset($arrFile['source']) && !empty($arrFile['source']) && strpos(basename($arrFile['source']), '.tpl.') !== false)
+            {
+                $this->fileStorage->replaceTags($this->tagStorage);
+            }
         }
     }
 

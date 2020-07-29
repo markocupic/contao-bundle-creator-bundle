@@ -1,31 +1,30 @@
-<?php
+<?= "<?php\n" ?>
 
-##phpdoc##
-
+<?= $phpdoc ?>
 declare(strict_types=1);
 
-namespace ##toplevelnamespace##\##sublevelnamespace##\ContaoManager;
+namespace <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\ContaoManager;
 
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
-{if addcustomroute=="1"}
+<?php if($addcustomroute == "1"): ?>
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-{endif}
+<?php endif; ?>
 use Symfony\Component\Config\Loader\LoaderInterface;
-{if addcustomroute=="1"}
+<?php if($addcustomroute == "1"): ?>
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-{endif}
-{if addcustomroute=="1"}
+<?php endif; ?>
+<?php if($addcustomroute == "1"): ?>
 use Symfony\Component\HttpKernel\KernelInterface;
-{endif}
+<?php endif; ?>
 
 /**
  * Class Plugin
- * @package ##toplevelnamespace##\##sublevelnamespace##\ContaoManager
+ * @package <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\ContaoManager
  */
-class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPluginInterface, {endif}ConfigPluginInterface
+class Plugin implements BundlePluginInterface, <?php if($addcustomroute == "1"): ?>RoutingPluginInterface, <?php endif; ?>ConfigPluginInterface
 {
     /**
      * @param ParserInterface $parser
@@ -34,7 +33,7 @@ class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPl
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('##toplevelnamespace##\##sublevelnamespace##\##toplevelnamespace####sublevelnamespace##')
+            BundleConfig::create('<?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\<?= $toplevelnamespace ?><?= $sublevelnamespace ?>')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
     }
@@ -51,7 +50,7 @@ class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPl
         $loader->load(__DIR__ . '/../Resources/config/listener.yml');
     }
 
-{if addcustomroute=="1"}
+<?php if($addcustomroute == "1"): ?>
     /**
      * @param LoaderResolverInterface $resolver
      * @param KernelInterface $kernel
@@ -65,6 +64,6 @@ class Plugin implements BundlePluginInterface, {if addcustomroute=="1"}RoutingPl
             ->load(__DIR__ . '/../Resources/config/routes.yml');
     }
 
-{endif}
+<?php endif; ?>
 }
 

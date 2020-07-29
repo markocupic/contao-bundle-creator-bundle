@@ -1,6 +1,6 @@
 {
-  "name": "##vendorname##/##repositoryname##",
-  "description": "##composerdescription##",
+  "name": "<?= $vendorname ?>/<?= $repositoryname ?>",
+  "description": "<?= $composerdescription ?>",
   "keywords": [
     "contao",
     "bundle",
@@ -8,25 +8,25 @@
     "tag 2"
   ],
   "type": "contao-bundle",
-  "license": "##composerlicense##",
+  "license": "<?= $composerlicense ?>",
   "authors": [
     {
-      "name": "##composerauthorname##",
-      "email": "##composerauthoremail##",
-      "homepage": "##composerauthorwebsite##",
+      "name": "<?= $composerauthorname ?>",
+      "email": "<?= $composerauthoremail ?>",
+      "homepage": "<?= $composerauthorwebsite ?>",
       "role": "Developer"
     }
   ],
   "support": {
-    "issues": "https://github.com/##vendorname##/##repositoryname##/issues",
-    "source": "https://github.com/##vendorname##/##repositoryname##"
+    "issues": "https://github.com/<?= $vendorname ?>/<?= $repositoryname ?>/issues",
+    "source": "https://github.com/<?= $vendorname ?>/<?= $repositoryname ?>"
   },
   "require": {
     "contao/core-bundle": "^4.9"
   },
   "autoload": {
     "psr-4": {
-      "##toplevelnamespace##\\##sublevelnamespace##\\": "src/"
+      "<?= $toplevelnamespace ?>\\<?= $sublevelnamespace ?>\\": "src/"
     },
     "classmap": [
       "src/Resources/contao"
@@ -39,7 +39,7 @@
     ]
   },
   "extra": {
-    "contao-manager-plugin": "##toplevelnamespace##\\##sublevelnamespace##\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "<?= $toplevelnamespace ?>\\<?= $sublevelnamespace ?>\\ContaoManager\\Plugin"
   }
 
 }

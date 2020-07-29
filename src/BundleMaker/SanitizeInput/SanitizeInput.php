@@ -35,7 +35,7 @@ class SanitizeInput
         $str = str_replace(' ', '_', $str);
 
         // Split where Uppercase letter begins fooBar -> foo_Bar
-        $pieces = preg_split('/(?=[A-Z\s]{1,})/', $str);
+        $pieces = preg_split('/(?=[A-Z\s]+)/', $str);
         $pieces = array_map(function ($str) {
             return '_' . $str;
         }, $pieces);
@@ -58,9 +58,7 @@ class SanitizeInput
         $arrNamespace = array_filter($arrNamespace, 'strlen');
         $arrNamespace = array_map('strtolower', $arrNamespace);
         $arrNamespace = array_map('ucfirst', $arrNamespace);
-        $strBundleNamespace = implode('', $arrNamespace);
-
-        return $strBundleNamespace;
+        return implode('', $arrNamespace);
     }
 
     /**
@@ -89,6 +87,22 @@ class SanitizeInput
         $str = preg_replace('/_{2,}/', '_', $str);
         $str = strtolower($str);
 
+        return $str;
+    }
+
+    /**
+     * Sanitize vendorname (github restrictions)
+     * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name
+     * But allow Vendor-Name, vendor-name
+     *
+     * @param string $str
+     * @return string
+     */
+    public function getSanitizedVendorname(string $str): string
+    {
+        $str = preg_replace('/_/', '-', $str);
+        $str = preg_replace('/[\-]{2,}/', '-', $str);
+        $str = preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $str);
         return $str;
     }
 
@@ -157,7 +171,7 @@ class SanitizeInput
         }
 
         $str = strtolower($str);
-        $str = preg_replace('/\-|\s/', '_', $str);
+        $str = preg_replace('/-|\s/', '_', $str);
         $str = preg_replace('/_{2,}/', '_', $str);
         $str = preg_replace('/[^A-Za-z0-9_]|_$/', '', $str);
         if (!preg_match('/^tl_/', $str))
@@ -203,6 +217,12 @@ class SanitizeInput
      *
      * @param string $strPrefix
      * @return string $str (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @return string
+     */
+
+    /**
+     * @param string $str
+     * @param string $strPrefix
      * @return string
      */
     public function getSanitizedFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
