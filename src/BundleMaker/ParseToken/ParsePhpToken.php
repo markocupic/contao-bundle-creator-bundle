@@ -36,7 +36,15 @@ class ParsePhpToken
         $this->tagStorage = $tagStorage;
     }
 
-    public function __get(string $name)
+    /**
+     * Magic method: call tag storage properties in templates via $this->tokenname
+     * Throw exception, if there is a call for a undefined property
+     *
+     * @param string $name
+     * @return string
+     * @throws \Exception
+     */
+    public function __get(string $name): string
     {
         if (!$this->tagStorage->has($name))
         {
@@ -66,11 +74,17 @@ class ParsePhpToken
         $tmp->append($content);
         $tmp->close();
 
+        if (!is_file($projectDir . '/' . $tmp->path))
+        {
+            throw \Exception(sprintf('Can not read from temp file "%s".', $tmp->path));
+        }
+
+        // Parse template
         ob_start();
 
         include $projectDir . '/' . $tmp->path;
-
         $content = ob_get_clean();
+
         ob_end_flush();
 
         $tmp->delete();
