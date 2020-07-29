@@ -6,4 +6,4 @@ php:
 
 before_script:
   - composer self-update
-  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --prefer-dist --no-
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --prefer-dist --no-interaction
