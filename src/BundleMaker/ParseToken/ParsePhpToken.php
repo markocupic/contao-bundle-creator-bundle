@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken;
 use Contao\File;
 use Contao\Folder;
 use Contao\System;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
 /**
  * Class ParsePhpToken
@@ -23,18 +24,39 @@ use Contao\System;
  */
 class ParsePhpToken
 {
+    /** @var TagStorage */
+    public $tagStorage;
+
+    /**
+     * ParsePhpToken constructor.
+     * @param TagStorage $tagStorage
+     */
+    public function __construct(TagStorage $tagStorage)
+    {
+        $this->tagStorage = $tagStorage;
+    }
+
+    public function __get(string $name)
+    {
+        if (!$this->tagStorage->has($name))
+        {
+            throw new \Exception(sprintf('Tag "%s" not found.', $name));
+        }
+        else
+        {
+            return $this->tagStorage->get($name);
+        }
+    }
 
     /**
      * Save content to tmp file and parse content
      * (replace php tokens with tags from token storage)
      *
-     *
      * @param string $content
-     * @param array $arrTags
      * @return string
      * @throws \Exception
      */
-    public static function parsePhpTokens(string $content, array $arrTags): string
+    public function parsePhpTokens(string $content): string
     {
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -45,8 +67,9 @@ class ParsePhpToken
         $tmp->close();
 
         ob_start();
-        extract($arrTags, EXTR_SKIP);
+
         include $projectDir . '/' . $tmp->path;
+
         $content = ob_get_clean();
         ob_end_flush();
 

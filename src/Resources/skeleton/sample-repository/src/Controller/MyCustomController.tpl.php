@@ -1,9 +1,9 @@
 <?= "<?php\n" ?>
 
-<?= $phpdoc ?>
+<?= $this->phpdoc ?>
 declare(strict_types=1);
 
-namespace <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\Controller;
+namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +15,7 @@ use Twig\Environment as TwigEnvironment;
  * @package Symfony
  *
  * @Route("/my_custom",
- *     name="<?= $vendornametolower ?>.<?= $repositorynametolower ?>.mycustom",
+ *     name="<?= $this->vendornametolower ?>.<?= $this->repositorynametolower ?>.mycustom",
  *     defaults={
  *         "_scope" = "frontend",
  *         "_token_check" = true
@@ -63,7 +63,7 @@ class MyCustomController extends AbstractController
         ];
 
         return new Response($this->twig->render(
-            '<?= $toplevelnamespacetwig ?>/my_custom_route.html.twig',
+            '<?= $this->toplevelnamespacetwig ?>/my_custom_route.html.twig',
             ['animals' => $animals]
         ));
     }

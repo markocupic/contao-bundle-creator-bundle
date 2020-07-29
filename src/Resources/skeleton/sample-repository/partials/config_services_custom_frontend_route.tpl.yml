@@ -1,3 +1,0 @@
-    # Custom route
-    <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\Controller\MyCustomController: ~
-

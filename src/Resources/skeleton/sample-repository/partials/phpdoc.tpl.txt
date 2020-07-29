@@ -1,8 +1,8 @@
 /**
- * @copyright  <?= $composerauthorname ?> 2020 <<?= $composerauthoremail ?>>
- * @author     <?= $composerauthorname ?><?= "\n" ?>
- * @package    <?= $bundlename ?><?= "\n" ?>
- * @license    <?= $composerlicense ?><?= "\n" ?>
- * @see        https://github.com/<?= $vendorname ?>/<?= $repositoryname ?><?= "\n" ?>
+ * @copyright  <?= $this->composerauthorname ?> 2020 <<?= $this->composerauthoremail ?>>
+ * @author     <?= $this->composerauthorname ?><?= "\n" ?>
+ * @package    <?= $this->bundlename ?><?= "\n" ?>
+ * @license    <?= $this->composerlicense ?><?= "\n" ?>
+ * @see        https://github.com/<?= $this->vendorname ?>/<?= $this->repositoryname ?><?= "\n" ?>
  *
  */

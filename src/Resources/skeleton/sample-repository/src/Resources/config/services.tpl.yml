@@ -1,2 +1,16 @@
 services:
     _defaults: { autowire: true, autoconfigure: true, public: true }
+
+<?php if($this->addFrontendModule): ?>
+    # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
+    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
+        tags:
+            - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
+            - { name: container.service_subscriber }
+        public: true
+<?php endif; ?>
+
+<?php if($this->addCustomRoute): ?>
+    # Custom route
+    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\MyCustomController: ~
+<?php endif; ?>

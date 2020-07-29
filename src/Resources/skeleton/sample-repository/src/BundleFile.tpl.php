@@ -1,16 +1,16 @@
 <?= "<?php\n" ?>
 
-<?= $phpdoc ?>
+<?= $this->phpdoc ?>
 declare(strict_types=1);
 
-namespace <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>;
+namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class <?= $toplevelnamespace ?><?= $sublevelnamespace ?><?= "\n" ?>
- * @package <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?><?= "\n" ?>
+ * Class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?><?= "\n" ?>
+ * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?><?= "\n" ?>
  */
-class <?= $toplevelnamespace ?><?= $sublevelnamespace ?> extends Bundle
+class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?> extends Bundle
 {
 }

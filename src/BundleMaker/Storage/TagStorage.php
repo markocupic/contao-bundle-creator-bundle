@@ -26,14 +26,9 @@ class TagStorage
     /**
      * @param string $strKey
      * @param string $strValue
-     * @throws \Exception
      */
-    public function add(string $strKey, string $strValue)
+    public function set(string $strKey, string $strValue)
     {
-        if (in_array($strKey, $this->arrTags))
-        {
-            throw new \Exception(sprintf('Tag "%s" has already been set and can not be overwritten.'));
-        }
         $this->arrTags[$strKey] = $strValue;
     }
 
@@ -43,7 +38,7 @@ class TagStorage
      */
     public function has(string $strKey): bool
     {
-        if (in_array($strKey, $this->arrTags))
+        if (array_key_exists ($strKey, $this->arrTags))
         {
             return true;
         }
@@ -76,9 +71,9 @@ class TagStorage
      */
     public function get(string $strKey): string
     {
-        if (!in_array($strKey, $this->arrTags))
+        if (!array_key_exists ($strKey, $this->arrTags))
         {
-            throw new \Exception(sprintf('Tag "%s" not found.'));
+            throw new \Exception(sprintf('Tag "%s" not found.', $strKey));
         }
         return $this->arrTags[$strKey];
     }

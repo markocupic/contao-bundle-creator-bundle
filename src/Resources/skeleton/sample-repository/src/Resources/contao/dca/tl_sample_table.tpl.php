@@ -1,11 +1,10 @@
 <?= "<?php\n" ?>
 
-<?= $phpdoc ?>
-
+<?= $this->phpdoc ?>
 /**
- * Table <?= $dcatable ?>
+ * Table <?= $this->dcatable ?>
  */
-$GLOBALS['TL_DCA']['<?= $dcatable ?>'] = [
+$GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = [
 
     // Config
     'config'      => [
@@ -19,7 +18,7 @@ $GLOBALS['TL_DCA']['<?= $dcatable ?>'] = [
     ],
     'edit'        => [
         'buttons_callback' => [
-            ['<?= $dcatable ?>', 'buttonsCallback']
+            ['<?= $this->dcatable ?>', 'buttonsCallback']
         ]
     ],
     'list'        => [
@@ -94,7 +93,7 @@ $GLOBALS['TL_DCA']['<?= $dcatable ?>'] = [
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $dcatable ?>'],
+            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable ?>'],
             'options'   => ['firstoption', 'secondoption'],
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      => ['CLASS', 'METHOD'],
@@ -108,7 +107,7 @@ $GLOBALS['TL_DCA']['<?= $dcatable ?>'] = [
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $dcatable ?>'],
+            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable ?>'],
             'options'   => ['firstoption', 'secondoption'],
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      =>['CLASS', 'METHOD'],
@@ -144,9 +143,9 @@ $GLOBALS['TL_DCA']['<?= $dcatable ?>'] = [
 ];
 
 /**
- * Class <?= $dcatable ?>
+ * Class <?= $this->dcatable ?>
  */
-class <?= $dcatable ?> extends Contao\Backend
+class <?= $this->dcatable ?> extends Contao\Backend
 {
 
     /**
@@ -158,7 +157,7 @@ class <?= $dcatable ?> extends Contao\Backend
     {
         if (Contao\Input::get('act') === 'edit')
         {
-            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">' . $GLOBALS['TL_LANG']['<?= $dcatable ?>']['customButton'] . '</button>';
+            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">' . $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['customButton'] . '</button>';
         }
 
         return $arrButtons;

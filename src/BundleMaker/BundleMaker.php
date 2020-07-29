@@ -237,66 +237,66 @@ class BundleMaker
         $arrModel = $this->model->row();
         foreach ($arrModel as $fieldname => $value)
         {
-            $this->tagStorage->add((string) $fieldname, (string) $value);
+            $this->tagStorage->set((string) $fieldname, (string) $value);
         }
 
         // Tags
-        $this->tagStorage->add('vendorname', (string) $this->model->vendorname);
-        $this->tagStorage->add('repositoryname', (string) $this->model->repositoryname);
-        $this->tagStorage->add('vendornametolower', (string) str_replace('-', '_', strtolower($this->model->vendorname)));
-        $this->tagStorage->add('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
+        $this->tagStorage->set('vendorname', (string) $this->model->vendorname);
+        $this->tagStorage->set('repositoryname', (string) $this->model->repositoryname);
+        $this->tagStorage->set('vendornametolower', (string) str_replace('-', '_', strtolower($this->model->vendorname)));
+        $this->tagStorage->set('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
-        $this->tagStorage->add('toplevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname));
-        $this->tagStorage->add('sublevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname));
+        $this->tagStorage->set('sublevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->add('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname) . $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname)));
+        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname) . $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname)));
 
         // Composer
-        $this->tagStorage->add('composerdescription', (string) $this->model->composerdescription);
-        $this->tagStorage->add('composerlicense', (string) $this->model->composerlicense);
-        $this->tagStorage->add('composerauthorname', (string) $this->model->composerauthorname);
-        $this->tagStorage->add('composerauthoremail', (string) $this->model->composerauthoremail);
-        $this->tagStorage->add('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
+        $this->tagStorage->set('composerdescription', (string) $this->model->composerdescription);
+        $this->tagStorage->set('composerlicense', (string) $this->model->composerlicense);
+        $this->tagStorage->set('composerauthorname', (string) $this->model->composerauthorname);
+        $this->tagStorage->set('composerauthoremail', (string) $this->model->composerauthoremail);
+        $this->tagStorage->set('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
 
         // Phpdoc
-        $this->tagStorage->add('bundlename', (string) $this->model->bundlename);
-        $this->tagStorage->add('phpdoc', $this->getContentFromPartialFile('phpdoc.tpl.txt'));
-        $this->tagStorage->add('year', date('Y'));
+        $this->tagStorage->set('bundlename', (string) $this->model->bundlename);
+        $this->tagStorage->set('phpdoc', $this->getContentFromPartialFile('phpdoc.tpl.txt'));
+        $this->tagStorage->set('year', date('Y'));
 
         // Dca table and backend module
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
-            $this->tagStorage->add('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->add('modelclassname', (string) $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
-            $this->tagStorage->add('backendmoduletype', (string) $this->model->backendmoduletype);
-            $this->tagStorage->add('backendmodulecategory', (string) $this->model->backendmodulecategory);
+            $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
+            $this->tagStorage->set('modelclassname', (string) $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
+            $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
+            $this->tagStorage->set('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
-            $this->tagStorage->add('backendmoduletrans_0', $arrLabel[0]);
-            $this->tagStorage->add('backendmoduletrans_1', $arrLabel[1]);
+            $this->tagStorage->set('backendmoduletrans_0', $arrLabel[0]);
+            $this->tagStorage->set('backendmoduletrans_1', $arrLabel[1]);
         }
 
         // Frontend module
         if ($this->model->addFrontendModule)
         {
-            $this->tagStorage->add('frontendmoduleclassname', $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype));
-            $this->tagStorage->add('frontendmoduletype', (string) $this->model->frontendmoduletype);
-            $this->tagStorage->add('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
-            $this->tagStorage->add('frontendmoduletemplate', $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduleclassname', $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
+            $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
+            $this->tagStorage->set('frontendmoduletemplate', $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
-            $this->tagStorage->add('frontendmoduletrans_0', $arrLabel[0]);
-            $this->tagStorage->add('frontendmoduletrans_1', $arrLabel[1]);
+            $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
+            $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
         }
 
         // Custom route
         if ($this->model->addCustomRoute)
         {
-            $this->tagStorage->add('addcustomroute', '1');
+            $this->tagStorage->set('addcustomroute', '1');
         }
         else
         {
-            $this->tagStorage->add('addcustomroute', '0');
+            $this->tagStorage->set('addcustomroute', '0');
         }
     }
 
@@ -384,23 +384,6 @@ class BundleMaker
         $source = self::SAMPLE_DIR . '/src/Resources/views/my_custom_route.html.tpl.twig';
         $target = sprintf('vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
-
-        // Add src/Resources/config/services.yml
-        $content = $this->getContentFromPartialFile('config_services_custom_frontend_route.tpl.yml');
-        $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($content);
-        try
-        {
-            // Validate yaml file
-            $arrYaml = Yaml::parse($this->fileStorage->getContent());
-            if (!array_key_exists('services', $arrYaml))
-            {
-                throw new ParseException('Key "services" not found. Please check the indents.');
-            }
-        } catch (ParseException $exception)
-        {
-            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
-        }
     }
 
     /**
@@ -420,22 +403,10 @@ class BundleMaker
         $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
         $this->fileStorage->createFile($source, $target);
 
-        // Append data to src/Resources/contao/config/config.php
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_backend_modules.tpl.php'));
-
-        // Add language array to contao/languages/en/modules.php
-        $content = $this->getContentFromPartialFile('contao_lang_en_backend_modules.tpl.php');
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($content);
-
         // Add a sample model
         $source = self::SAMPLE_DIR . '/src/Model/SampleModel.tpl.php';
         $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
-        // Append data to src/Resources/contao/config/config.php
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($this->getContentFromPartialFile('contao_config_model.tpl.php'));
     }
 
     /**
@@ -456,37 +427,10 @@ class BundleMaker
         $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
         $this->fileStorage->createFile($source, $target);
 
-        // Add src/Resources/contao/dca/tl_module.php
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_module.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->createFile($source, $target)->appendContent($this->getContentFromPartialFile('contao_tl_module.tpl.php'));
-
         // Add frontend module template
         $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.tpl.html5';
         $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
         $this->fileStorage->createFile($source, $target);
-
-        // Add src/Resources/config/services.yml
-        $content = $this->getContentFromPartialFile('config_services_frontend_modules.tpl.yml');
-        $target = sprintf('vendor/%s/%s/src/Resources/config/services.yml', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($content);
-        try
-        {
-            // Validate yaml file
-            $arrYaml = Yaml::parse($this->fileStorage->getContent());
-            if (!array_key_exists('services', $arrYaml))
-            {
-                throw new ParseException('Key "services" not found. Please check the indents.');
-            }
-        } catch (ParseException $exception)
-        {
-            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
-        }
-
-        // Add language array to contao/languages/en/modules.php
-        $content = $this->getContentFromPartialFile('contao_lang_en_frontend_modules.tpl.php');
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->getFile($target)->appendContent($content);
     }
 
     /**
@@ -574,8 +518,8 @@ class BundleMaker
 
         $objPartialFile = new File($sourceFile);
         $content = $objPartialFile->getContent();
-        $arrTags = $this->tagStorage->getAll();
-        $content = ParsePhpToken::parsePhpTokens($content, $arrTags);
+        $templateParser = new ParsePhpToken($this->tagStorage);
+        $content = $templateParser->parsePhpTokens($content);
 
         return $content;
     }

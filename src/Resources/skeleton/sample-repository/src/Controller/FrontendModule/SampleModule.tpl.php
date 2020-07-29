@@ -1,9 +1,9 @@
 <?= "<?php\n" ?>
 
-<?= $phpdoc ?>
+<?= $this->phpdoc ?>
 declare(strict_types=1);
 
-namespace <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\Controller\FrontendModule;
+namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -21,10 +21,10 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class <?= $frontendmoduleclassname ?><?= "\n" ?>
- * @package <?= $toplevelnamespace ?>\<?= $sublevelnamespace ?>\Controller\FrontendModule
+ * Class <?= $this->frontendmoduleclassname ?><?= "\n" ?>
+ * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule
  */
-class <?= $frontendmoduleclassname ?> extends AbstractFrontendModuleController
+class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
 {
     /**
      * @var PageModel
@@ -32,7 +32,7 @@ class <?= $frontendmoduleclassname ?> extends AbstractFrontendModuleController
     protected $page;
 
     /**
-     * <?= $frontendmoduleclassname ?> constructor.
+     * <?= $this->frontendmoduleclassname ?> constructor.
      * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
