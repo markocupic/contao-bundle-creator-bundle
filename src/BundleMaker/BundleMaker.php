@@ -113,6 +113,9 @@ class BundleMaker
         // Add the Contao Manager Plugin class to file storage
         $this->addContaoManagerPluginClassToFileStorage();
 
+        // Add unit tests to file storage
+        $this->addUnitTestsToFileStorage();
+
         // Config files, assets, etc.
         $this->addMiscFilesToFileStorage();
 
@@ -179,6 +182,7 @@ class BundleMaker
     {
         if ($this->model->vendorname != '')
         {
+            // Sanitize vendorname
             $this->model->vendorname = $this->sanitizeInput->getSanitizedVendorname((string) $this->model->vendorname);
             $this->model->save();
         }
@@ -192,34 +196,35 @@ class BundleMaker
 
         if ($this->model->backendmoduletype != '')
         {
-            // Get the backend module type and sanitize it to the contao backend module convention
+            // Get the backend module type and sanitize it to contao backend module convention
             $this->model->backendmoduletype = $this->sanitizeInput->getSanitizedBackendModuleType((string) $this->model->backendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->dcatable != '')
         {
+            // Sanitize dca table name
             $this->model->dcatable = $this->sanitizeInput->getSanitizedDcaTableName((string) $this->model->dcatable);
             $this->model->save();
         }
 
         if ($this->model->backendmodulecategory != '')
         {
-            // Get the backend module category and sanitize it to the contao backend module convention
+            // Get the backend module category and sanitize it to contao backend module convention
             $this->model->backendmodulecategory = $this->sanitizeInput->toSnakecase((string) $this->model->backendmodulecategory);
             $this->model->save();
         }
 
         if ($this->model->frontendmoduletype != '')
         {
-            // Get the frontend module type and sanitize it to the contao frontend module convention
+            // Get the frontend module type and sanitize it to contao frontend module convention
             $this->model->frontendmoduletype = $this->sanitizeInput->getSanitizedFrontendModuleType((string) $this->model->frontendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->frontendmodulecategory != '')
         {
-            // Get the frontend module category and sanitize it to the contao frontend module convention
+            // Get the frontend module category and sanitize it to contao frontend module convention
             $this->model->frontendmodulecategory = $this->sanitizeInput->toSnakecase((string) $this->model->frontendmodulecategory);
             $this->model->save();
         }
@@ -345,7 +350,7 @@ class BundleMaker
     }
 
     /**
-     * Add the bundle class to file storage
+     * Add the bundle class to the file storage
      *
      * @throws \Exception
      */
@@ -357,7 +362,7 @@ class BundleMaker
     }
 
     /**
-     * Add the Contao Manager plugin class to file storage
+     * Add the Contao Manager plugin class to the file storage
      *
      * @throws \Exception
      */
@@ -369,7 +374,30 @@ class BundleMaker
     }
 
     /**
-     * Add custom route to the file storage
+     * Add unit tests to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addUnitTestsToFileStorage(): void
+    {
+        // Add phpunit.xml.dist
+        $source = self::SAMPLE_DIR . '/phpunit.xml.tpl.dist';
+        $target = sprintf('vendor/%s/%s/phpunit.xml.dist', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add plugin test
+        $source = self::SAMPLE_DIR . '/tests/ContaoManager/PluginTest.tpl.php';
+        $target = sprintf('vendor/%s/%s/tests/ContaoManager/PluginTest.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add .travis.yml
+        $source = self::SAMPLE_DIR . '/.travis.tpl.yml';
+        $target = sprintf('vendor/%s/%s/.travis.yml', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+    }
+
+    /**
+     * Add custom route to the the file storage
      *
      * @throws \Exception
      */
@@ -387,7 +415,7 @@ class BundleMaker
     }
 
     /**
-     * Add backend module files to file storage
+     * Add backend module files to the file storage
      *
      * @throws \Exception
      */
@@ -410,7 +438,7 @@ class BundleMaker
     }
 
     /**
-     * Add frontend module files to file storage
+     * Add frontend module files to the file storage
      *
      * @throws \Exception
      */
@@ -434,7 +462,7 @@ class BundleMaker
     }
 
     /**
-     * Add miscellaneous files to file storage
+     * Add miscellaneous files to the file storage
      *
      * @throws \Exception
      */
@@ -501,7 +529,7 @@ class BundleMaker
     }
 
     /**
-     * Replace some special tags and return content from partials
+     * Replace php tags and return content from partials
      *
      * @param string $strFilename
      * @return string
