@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
-use Contao\File;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -87,12 +86,10 @@ class FileStorage
             throw new FileNotFoundException(sprintf('File "%s" not found.', $this->projectDir . '/' . $sourcePath));
         }
 
-        $objFile = new File($sourcePath);
-
         $arrData = [
             'source'  => $sourcePath,
             'target'  => $targetPath,
-            'content' => $objFile->getContent(),
+            'content' => file_get_contents($this->projectDir . '/' . $sourcePath),
         ];
 
         if (($index = $this->getIndexOf($targetPath)) < 0)
