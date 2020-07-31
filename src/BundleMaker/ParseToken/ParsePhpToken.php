@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken;
 
-use Contao\File;
-use Contao\Folder;
-use Contao\System;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class ParsePhpToken
@@ -48,6 +46,14 @@ class ParsePhpToken
     {
         if (!$this->tagStorage->has($name))
         {
+            if (ob_get_status()['level'] > 0)
+            {
+                // Clean output buffer, otherwise unit test will fail
+                // Test code or tested code did not (only) close its own output buffers
+                // https://stackoverflow.com/questions/29122683/how-to-use-output-buffering-inside-phpunit-test
+                ob_get_clean();
+            }
+
             throw new \Exception(sprintf('Tag "%s" not found.', $name));
         }
         else
@@ -66,31 +72,29 @@ class ParsePhpToken
      */
     public function parsePhpTokens(string $content): string
     {
-        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+        $objFile = new Filesystem();
 
-        $folder = new Folder('system/tmp/bundle-creator-tmp');
-
-        $tmp = new File('system/tmp/bundle-creator-tmp' . md5($content . microtime()));
-        $tmp->append($content);
-        $tmp->close();
-
-        if (!is_file($projectDir . '/' . $tmp->path))
+        $tmpDir = sys_get_temp_dir();
+        if (!is_dir($tmpDir))
         {
-            throw \Exception(sprintf('Can not read from temp file "%s".', $tmp->path));
+            throw new \Exception(sprintf('Temporary directory not found.'));
+        }
+
+        $tmpFile = $tmpDir . '/' . md5($content . microtime()) . 'txt';
+        $objFile->dumpFile($tmpFile, $content);
+        if (!is_file($tmpFile))
+        {
+            throw new \Exception(sprintf('Can not read from temp file "%s".', $tmpFile));
         }
 
         // Parse template
         ob_start();
 
-        include $projectDir . '/' . $tmp->path;
+        include $tmpFile;
+
         $content = ob_get_clean();
 
-        ob_end_flush();
-
-        $tmp->delete();
-
-        $folder->purge();
-        $folder->delete();
+        $objFile->remove($tmpFile);
 
         return $content;
     }

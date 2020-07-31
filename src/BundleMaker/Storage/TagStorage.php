@@ -34,44 +34,12 @@ class TagStorage
 
     /**
      * @param string $strKey
-     * @return bool
-     */
-    public function has(string $strKey): bool
-    {
-        if (array_key_exists ($strKey, $this->arrTags))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param string $strKey
-     */
-    public function remove(string $strKey): void
-    {
-        if (isset($this->arrStorrage[$strKey]))
-        {
-            unset($this->arrTags[$strKey]);
-        }
-    }
-
-    /**
-     * Remove all tags
-     */
-    public function removeAll(): void
-    {
-        $this->arrStorrage = [];
-    }
-
-    /**
-     * @param string $strKey
      * @return string
      * @throws \Exception
      */
     public function get(string $strKey): string
     {
-        if (!array_key_exists ($strKey, $this->arrTags))
+        if (!array_key_exists($strKey, $this->arrTags))
         {
             throw new \Exception(sprintf('Tag "%s" not found.', $strKey));
         }
@@ -86,6 +54,38 @@ class TagStorage
     public function getAll(): array
     {
         return $this->arrTags;
+    }
+
+    /**
+     * @param string $strKey
+     * @return bool
+     */
+    public function has(string $strKey): bool
+    {
+        if (array_key_exists($strKey, $this->arrTags))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $strKey
+     */
+    public function remove(string $strKey): void
+    {
+        if (array_key_exists($strKey, $this->arrTags))
+        {
+            unset($this->arrTags[$strKey]);
+        }
+    }
+
+    /**
+     * Remove all tags
+     */
+    public function removeAll(): void
+    {
+        $this->arrTags = [];
     }
 
 }
