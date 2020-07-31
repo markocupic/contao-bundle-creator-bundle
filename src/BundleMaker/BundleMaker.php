@@ -636,7 +636,7 @@ class BundleMaker
             if ($this->model->rootcomposerextendrequirekey === 'path')
             {
                 $objRepositories->type = 'path';
-                $objRepositories->url = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+                $objRepositories->url = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
 
                 // Prevent duplicate entries
                 if (!\in_array($objRepositories, $objJSON->repositories))
