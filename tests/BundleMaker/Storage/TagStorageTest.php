@@ -38,9 +38,6 @@ class TagStorageTest extends ContaoTestCase
         $this->assertInstanceOf(TagStorage::class, $this->tagStorage);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testGetAll(): void
     {
         $this->assertSame([], $this->tagStorage->getAll());
@@ -67,23 +64,17 @@ class TagStorageTest extends ContaoTestCase
         $this->assertTrue(false === $this->tagStorage->has('bar'));
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testRemove(): void
     {
         $this->tagStorage->set('foo', 'bar');
         $this->tagStorage->set('Louis', 'XIV');
         $this->tagStorage->remove('Louis');
-        $this->assertTrue(['foo' => 'bar'] ===$this->tagStorage->getAll());
+        $this->assertTrue(['foo' => 'bar'] === $this->tagStorage->getAll());
         $this->assertTrue(false === $this->tagStorage->has('Louis'));
         $this->assertTrue(true === $this->tagStorage->has('foo'));
         $this->assertTrue(1 === count($this->tagStorage->getAll()));
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testRemoveAll(): void
     {
         $this->tagStorage->set('foo', 'bar');

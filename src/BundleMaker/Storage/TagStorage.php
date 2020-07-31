@@ -47,9 +47,7 @@ class TagStorage
     }
 
     /**
-     * @param string $strKey
-     * @return string
-     * @throws \Exception
+     * @return array
      */
     public function getAll(): array
     {
@@ -87,5 +85,4 @@ class TagStorage
     {
         $this->arrTags = [];
     }
-
 }
