@@ -11,7 +11,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="contao-bundle-cretor-bundle">
+        <testsuite name="contao-bundle-creator-bundle>">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
@@ -25,4 +25,9 @@
         </whitelist>
     </filter>
 
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+    </listeners>
+
 </phpunit>
+
