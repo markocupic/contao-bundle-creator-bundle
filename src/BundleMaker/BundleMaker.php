@@ -394,6 +394,11 @@ class BundleMaker
         $source = self::SAMPLE_DIR . '/.travis.tpl.yml';
         $target = sprintf('vendor/%s/%s/.travis.yml', $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
+
+        // Add .php_cs.dist
+        $source = self::SAMPLE_DIR . '/.php_cs.tpl.dist';
+        $target = sprintf('vendor/%s/%s/.php_cs.dist', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
     }
 
     /**
