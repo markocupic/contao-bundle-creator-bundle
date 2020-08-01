@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?><?= "\n" ?>
+ *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?><?= "\n" ?>
  */
 class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?> extends Bundle

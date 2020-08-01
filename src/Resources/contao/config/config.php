@@ -12,9 +12,9 @@
 /**
  * Backend modules
  */
-$GLOBALS['BE_MOD']['dev_tools']['contao_bundle_creator'] = array(
+$GLOBALS['BE_MOD']['dev_tools']['contao_bundle_creator'] = [
     'tables' => ['tl_contao_bundle_creator']
-);
+];
 
 /**
  * Models

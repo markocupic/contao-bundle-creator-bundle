@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class Plugin
+ *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\ContaoManager
  */
 class Plugin implements BundlePluginInterface, <?php if($this->addcustomroute == "1"): ?>RoutingPluginInterface, <?php endif; ?>ConfigPluginInterface

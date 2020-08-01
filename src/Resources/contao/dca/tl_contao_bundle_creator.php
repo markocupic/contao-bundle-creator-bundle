@@ -334,6 +334,7 @@ class tl_contao_bundle_creator extends Contao\Backend
     /**
      * onload callback
      * Download extension as zip file when clicking on the download button
+     *
      * @param Contao\DC_Table $dc
      */
     public function downloadZipFile(Contao\DC_Table $dc)

@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class MarkocupicContaoBundleCreatorBundle
+ *
  * @package Markocupic\ContaoBundleCreatorBundle
  */
 class MarkocupicContaoBundleCreatorBundle extends Bundle

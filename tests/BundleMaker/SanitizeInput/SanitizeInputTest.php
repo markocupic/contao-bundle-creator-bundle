@@ -13,12 +13,13 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\SanitizeInput;
 
-use Contao\TestCase\ContaoTestCase;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput\SanitizeInput;
 
 /**
  * Class SanitizeInputTest
+ *
  * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\SanitizeInput
  */
 class SanitizeInputTest extends ContaoTestCase
@@ -132,6 +133,7 @@ class SanitizeInputTest extends ContaoTestCase
 
     /**
      * Test if strings are correctly converted to the dca table format
+     *
      * @throws \Exception
      */
     public function testGetSanitizedDcaTableName(): void
@@ -165,6 +167,7 @@ class SanitizeInputTest extends ContaoTestCase
 
     /**
      * Test if strings are correctly converted to model classname format
+     *
      * @throws \Exception
      */
     public function testGetSanitizedModelClassname(): void

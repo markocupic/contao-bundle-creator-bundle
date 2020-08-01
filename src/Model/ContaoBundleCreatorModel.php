@@ -15,6 +15,7 @@ use Contao\Model;
 
 /**
  * Class ContaoBundleCreatorModel
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\Model
  */
 class ContaoBundleCreatorModel extends Model

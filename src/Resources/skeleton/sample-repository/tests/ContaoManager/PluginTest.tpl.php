@@ -14,6 +14,7 @@ use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\<?= $this->t
 
 /**
  * Class PluginTest
+ *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Tests\ContaoManager
  */
 class PluginTest extends ContaoTestCase

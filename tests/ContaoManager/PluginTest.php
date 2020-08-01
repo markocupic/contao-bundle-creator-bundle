@@ -22,6 +22,7 @@ use Markocupic\ContaoBundleCreatorBundle\MarkocupicContaoBundleCreatorBundle;
 
 /**
  * Class PluginTest
+ *
  * @package Markocupic\ContaoBundleMakerBundle\Tests\ContaoManager
  */
 class PluginTest extends ContaoTestCase
@@ -29,7 +30,7 @@ class PluginTest extends ContaoTestCase
     /**
      * Test Contao manager plugin class instantiation
      */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf(Plugin::class, new Plugin());
     }
@@ -37,7 +38,7 @@ class PluginTest extends ContaoTestCase
     /**
      * Test returns the bundles
      */
-    public function testGetBundles()
+    public function testGetBundles(): void
     {
         $plugin = new Plugin();
 

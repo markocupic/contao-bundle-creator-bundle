@@ -18,6 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class ParsePhpToken
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken
  */
 class ParsePhpToken
@@ -27,6 +28,7 @@ class ParsePhpToken
 
     /**
      * ParsePhpToken constructor.
+     *
      * @param TagStorage $tagStorage
      */
     public function __construct(TagStorage $tagStorage)

@@ -31,10 +31,14 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class BundleMaker
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker
  */
 class BundleMaker
 {
+    /** @var string */
+    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton/sample-repository';
+
     /** @var SessionInterface */
     protected $session;
 
@@ -55,9 +59,6 @@ class BundleMaker
 
     /** @var ContaoBundleCreatorModel */
     protected $model;
-
-    /** @var string */
-    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton/sample-repository';
 
     /**
      * BundleMaker constructor.
@@ -306,6 +307,30 @@ class BundleMaker
     }
 
     /**
+     * Replace php tags and return content from partials
+     *
+     * @param string $strFilename
+     * @return string
+     * @throws \Exception
+     */
+    protected function getContentFromPartialFile(string $strFilename): string
+    {
+        $sourceFile = self::SAMPLE_DIR . '/partials/' . $strFilename;
+
+        if (!is_file($this->projectDir . '/' . $sourceFile))
+        {
+            throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
+        }
+
+        $objPartialFile = new File($sourceFile);
+        $content = $objPartialFile->getContent();
+        $templateParser = new ParsePhpToken($this->tagStorage);
+        $content = $templateParser->parsePhpTokens($content);
+
+        return $content;
+    }
+
+    /**
      * Add composer.json file to file storage
      *
      * @throws \Exception
@@ -402,71 +427,6 @@ class BundleMaker
     }
 
     /**
-     * Add custom route to the the file storage
-     *
-     * @throws \Exception
-     */
-    protected function addCustomRouteToFileStorage(): void
-    {
-        // Add controller (custom route)
-        $source = self::SAMPLE_DIR . '/src/Controller/MyCustomController.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Controller/MyCustomController.php', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->createFile($source, $target);
-
-        // Add twig template
-        $source = self::SAMPLE_DIR . '/src/Resources/views/my_custom_route.html.tpl.twig';
-        $target = sprintf('vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->createFile($source, $target);
-    }
-
-    /**
-     * Add backend module files to the file storage
-     *
-     * @throws \Exception
-     */
-    protected function addBackendModuleFilesToFileStorage(): void
-    {
-        // Add dca table file
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
-        $this->fileStorage->createFile($source, $target);
-
-        // Add dca table translation file
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
-        $this->fileStorage->createFile($source, $target);
-
-        // Add a sample model
-        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
-        $this->fileStorage->createFile($source, $target);
-    }
-
-    /**
-     * Add frontend module files to the file storage
-     *
-     * @throws \Exception
-     */
-    protected function addFrontendModuleFilesToFileStorage(): void
-    {
-        // Get the frontend module template name
-        $strFrontenModuleTemplateName = $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
-
-        // Get the frontend module classname
-        $strFrontendModuleClassname = $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
-
-        // Add frontend module class to src/Controller/FrontendController
-        $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
-        $this->fileStorage->createFile($source, $target);
-
-        // Add frontend module template
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.tpl.html5';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
-        $this->fileStorage->createFile($source, $target);
-    }
-
-    /**
      * Add miscellaneous files to the file storage
      *
      * @throws \Exception
@@ -534,27 +494,68 @@ class BundleMaker
     }
 
     /**
-     * Replace php tags and return content from partials
+     * Add backend module files to the file storage
      *
-     * @param string $strFilename
-     * @return string
      * @throws \Exception
      */
-    protected function getContentFromPartialFile(string $strFilename): string
+    protected function addBackendModuleFilesToFileStorage(): void
     {
-        $sourceFile = self::SAMPLE_DIR . '/partials/' . $strFilename;
+        // Add dca table file
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $this->fileStorage->createFile($source, $target);
 
-        if (!is_file($this->projectDir . '/' . $sourceFile))
-        {
-            throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
-        }
+        // Add dca table translation file
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $this->fileStorage->createFile($source, $target);
 
-        $objPartialFile = new File($sourceFile);
-        $content = $objPartialFile->getContent();
-        $templateParser = new ParsePhpToken($this->tagStorage);
-        $content = $templateParser->parsePhpTokens($content);
+        // Add a sample model
+        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
+        $this->fileStorage->createFile($source, $target);
+    }
 
-        return $content;
+    /**
+     * Add frontend module files to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addFrontendModuleFilesToFileStorage(): void
+    {
+        // Get the frontend module template name
+        $strFrontenModuleTemplateName = $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
+
+        // Get the frontend module classname
+        $strFrontendModuleClassname = $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
+
+        // Add frontend module class to src/Controller/FrontendController
+        $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add frontend module template
+        $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.tpl.html5';
+        $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
+        $this->fileStorage->createFile($source, $target);
+    }
+
+    /**
+     * Add custom route to the the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addCustomRouteToFileStorage(): void
+    {
+        // Add controller (custom route)
+        $source = self::SAMPLE_DIR . '/src/Controller/MyCustomController.tpl.php';
+        $target = sprintf('vendor/%s/%s/src/Controller/MyCustomController.php', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add twig template
+        $source = self::SAMPLE_DIR . '/src/Resources/views/my_custom_route.html.tpl.twig';
+        $target = sprintf('vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
     }
 
     /**
@@ -615,6 +616,60 @@ class BundleMaker
             }
         }
         return false;
+    }
+
+    /**
+     * Parse templates
+     *
+     * @throws \Exception
+     */
+    protected function parseTemplates(): void
+    {
+        $arrFiles = $this->fileStorage->getAll();
+
+        foreach ($arrFiles as $arrFile)
+        {
+            $this->fileStorage->getFile($arrFile['target']);
+
+            // Skip images...
+            if (isset($arrFile['source']) && !empty($arrFile['source']) && strpos(basename($arrFile['source']), '.tpl.') !== false)
+            {
+                $this->fileStorage->replaceTags($this->tagStorage);
+            }
+        }
+    }
+
+    /**
+     * Write files from the file storage to the filesystem
+     *
+     * @throws \Exception
+     * @todo add a contao hook
+     */
+    protected function createFilesFromFileStorage(): void
+    {
+        $arrFiles = $this->fileStorage->getAll();
+        $i = 0;
+
+        /**
+         * @todo add a contao hook here
+         * Manipulate, remove or add files to the storage
+         */
+        foreach ($arrFiles as $arrFile)
+        {
+            // Create file
+            $objNewFile = new File($arrFile['target']);
+
+            // Overwrite content if file already exists
+            $objNewFile->truncate();
+            $objNewFile->append($arrFile['content']);
+            $objNewFile->close();
+
+            // Display message in the backend
+            $this->message->addInfo(sprintf('Created file "%s".', $objNewFile->path));
+            $i++;
+        }
+        // Display message in the backend
+        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
 
     /**
@@ -687,59 +742,5 @@ class BundleMaker
             $objComposerFile->append($content);
             $objComposerFile->close();
         }
-    }
-
-    /**
-     * Parse templates
-     *
-     * @throws \Exception
-     */
-    protected function parseTemplates(): void
-    {
-        $arrFiles = $this->fileStorage->getAll();
-
-        foreach ($arrFiles as $arrFile)
-        {
-            $this->fileStorage->getFile($arrFile['target']);
-
-            // Skip images...
-            if (isset($arrFile['source']) && !empty($arrFile['source']) && strpos(basename($arrFile['source']), '.tpl.') !== false)
-            {
-                $this->fileStorage->replaceTags($this->tagStorage);
-            }
-        }
-    }
-
-    /**
-     * Write files from the file storage to the filesystem
-     *
-     * @throws \Exception
-     * @todo add a contao hook
-     */
-    protected function createFilesFromFileStorage(): void
-    {
-        $arrFiles = $this->fileStorage->getAll();
-        $i = 0;
-
-        /**
-         * @todo add a contao hook here
-         * Manipulate, remove or add files to the storage
-         */
-        foreach ($arrFiles as $arrFile)
-        {
-            // Create file
-            $objNewFile = new File($arrFile['target']);
-
-            // Overwrite content if file already exists
-            $objNewFile->truncate();
-            $objNewFile->append($arrFile['content']);
-            $objNewFile->close();
-
-            // Display message in the backend
-            $this->message->addInfo(sprintf('Created file "%s".', $objNewFile->path));
-            $i++;
-        }
-        // Display message in the backend
-        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
 }

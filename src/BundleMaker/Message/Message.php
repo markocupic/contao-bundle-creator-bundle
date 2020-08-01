@@ -18,21 +18,23 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class BundleMaker
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker
  */
 class Message
 {
-    /** @var SessionInterface */
-    protected $session;
-
     /** @var string */
     private const STR_INFO_FLASH_TYPE = 'contao.BE.info';
 
     /** @var string */
     private const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
+    
+    /** @var SessionInterface */
+    protected $session;
 
     /**
      * Message constructor.
+     *
      * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
@@ -48,16 +50,6 @@ class Message
     public function addInfo(string $msg): void
     {
         $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
-    }
-
-    /**
-     * Add an error message to the contao backend
-     *
-     * @param string $msg
-     */
-    public function addError(string $msg): void
-    {
-        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
     }
 
     /**
@@ -80,6 +72,16 @@ class Message
         $arrFlash[] = $msg;
 
         $flashBag->set($type, $arrFlash);
+    }
+
+    /**
+     * Add an error message to the contao backend
+     *
+     * @param string $msg
+     */
+    public function addError(string $msg): void
+    {
+        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
     }
 
 }

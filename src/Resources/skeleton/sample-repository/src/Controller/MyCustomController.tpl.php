@@ -12,6 +12,7 @@ use Twig\Environment as TwigEnvironment;
 
 /**
  * Class MyCustomController
+ *
  * @package Symfony
  *
  * @Route("/my_custom",

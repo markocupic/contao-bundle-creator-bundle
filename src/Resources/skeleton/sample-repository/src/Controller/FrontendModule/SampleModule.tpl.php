@@ -22,6 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class <?= $this->frontendmoduleclassname ?><?= "\n" ?>
+ *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule
  */
 class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
@@ -33,6 +34,7 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
 
     /**
      * <?= $this->frontendmoduleclassname ?> constructor.
+     *
      * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
@@ -43,6 +45,7 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
     /**
      * This method extends the parent __invoke method,
      * its usage is usually not necessary
+     *
      * @param Request $request
      * @param ModuleModel $model
      * @param string $section
@@ -66,6 +69,7 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
 
     /**
      * Lazyload some services
+     *
      * @return array
      */
     public static function getSubscribedServices(): array

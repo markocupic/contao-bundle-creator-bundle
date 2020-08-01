@@ -20,6 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
 /**
  * Class ParsePhpTokenTest
+ *
  * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\ParseToken
  */
 class ParsePhpTokenTest extends ContaoTestCase

@@ -13,12 +13,13 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Storage;
 
-use Contao\TestCase\ContaoTestCase;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
 /**
  * Class TagStorageTest
+ *
  * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Storage
  */
 class TagStorageTest extends ContaoTestCase
