@@ -514,6 +514,22 @@ class BundleMaker
         $source = sprintf('%s/%s/src/Model/SampleModel.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
+
+        // Add src/Resources/contao/languages/en/modules.php to file storage
+        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        {
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, static::SAMPLE_DIR);
+            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $this->fileStorage->createFile($source, $target);
+        }
+
+        // Add src/Resources/contao/languages/en/default.php to file storage
+        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        {
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $this->fileStorage->createFile($source, $target);
+        }
     }
 
     /**
@@ -538,6 +554,27 @@ class BundleMaker
         $source = sprintf('%s/%s/src/Resources/contao/templates/mod_sample.tpl.html5', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
         $this->fileStorage->createFile($source, $target);
+
+        // Add src/Resources/contao/dca/tl_module.php
+        $source = sprintf('%s/%s/src/Resources/contao/dca/tl_module.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/dca/tl_module.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->createFile($source, $target);
+
+        // Add src/Resources/contao/languages/en/modules.php to file storage
+        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        {
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, static::SAMPLE_DIR);
+            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $this->fileStorage->createFile($source, $target);
+        }
+
+        // Add src/Resources/contao/languages/en/default.php to file storage
+        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        {
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $this->fileStorage->createFile($source, $target);
+        }
     }
 
     /**
@@ -657,7 +694,7 @@ class BundleMaker
         foreach ($arrFiles as $arrFile)
         {
             // Create file
-            $target = str_replace($this->projectDir  . '/','',$arrFile['target']);
+            $target = str_replace($this->projectDir . '/', '', $arrFile['target']);
             $objNewFile = new File($target);
 
             // Overwrite file content if file already exists
