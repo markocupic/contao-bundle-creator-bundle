@@ -51,9 +51,8 @@ class MessageTest extends ContaoTestCase
 
         $this->message->addError('Error text 1.');
         $this->message->addError('Error text 2.');
-        $arrInfo = $this->message->getInfo();
-        $arrError = $this->message->getError();
-        $this->assertSame('Info text 1.', $arrInfo[0]);
-        $this->assertSame('Error text 2.', $arrError[1]);
+
+        $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
+        $this->assertSame('Error text 2.', $this->message->getError()[1]);
     }
 }

@@ -28,7 +28,7 @@ class Message
 
     /** @var string */
     private const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
-    
+
     /** @var SessionInterface */
     protected $session;
 
@@ -82,6 +82,46 @@ class Message
     public function addError(string $msg): void
     {
         $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
+    }
+
+    /**
+     * Get info messages
+     *
+     * @return array
+     */
+    public function getInfo(): array
+    {
+        return $this->getFlashMessages( self::STR_INFO_FLASH_TYPE);
+    }
+
+    /**
+     * Get flash messages for the contao backend
+     *
+     * @param string $type
+     * @return array
+     */
+    private function getFlashMessages(string $type): array
+    {
+        /** @var Session $session */
+        $session = $this->session;
+        $flashBag = $session->getFlashBag();
+        $arrFlash = [];
+        if ($flashBag->has($type))
+        {
+            $arrFlash = $flashBag->get($type);
+        }
+
+        return $arrFlash;
+    }
+
+    /**
+     * Get error messages
+     *
+     * @return array
+     */
+    public function getError(): array
+    {
+        return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
     }
 
 }
