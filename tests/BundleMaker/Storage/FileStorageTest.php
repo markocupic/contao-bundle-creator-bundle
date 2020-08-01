@@ -76,6 +76,10 @@ class FileStorageTest extends ContaoTestCase
         $this->assertTrue(true === $this->fileStorage->hasFile($this->tmpTargetFile));
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->getFile($this->tmpTargetFile));
         $this->assertSame('Here comes the content.', $this->fileStorage->getContent());
+
+        // Do not allow overwriting files
+        $this->expectException(\Exception::class);
+        $this->fileStorage->createFile($this->tmpSourceFile, $this->tmpTargetFile);
     }
 
     /**
@@ -88,6 +92,10 @@ class FileStorageTest extends ContaoTestCase
         $content = 'Foo';
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->createFileFromString($target, $content));
         $this->assertSame('Foo', $this->fileStorage->getContent());
+
+        // Do not allow overwriting files
+        $this->expectException(\Exception::class);
+        $this->fileStorage->createFileFromString($target, $content);
     }
 
     /**
@@ -143,39 +151,10 @@ class FileStorageTest extends ContaoTestCase
     /**
      * @throws \Exception
      */
-    public function testGet(): void
+    public function testSendFilePointerNotSetException(): void
     {
-        $this->tagStorage->set('foo', 'bar');
-        $this->assertSame('bar', $this->tagStorage->get('foo'));
         $this->expectException(\Exception::class);
-        $this->tagStorage->get('bar');
-    }
-
-    public function testHas(): void
-    {
-        $this->tagStorage->set('foo', 'bar');
-        $this->assertTrue(true === $this->tagStorage->has('foo'));
-        $this->assertTrue(false === $this->tagStorage->has('bar'));
-    }
-
-    public function testRemove(): void
-    {
-        $this->tagStorage->set('foo', 'bar');
-        $this->tagStorage->set('Louis', 'XIV');
-        $this->tagStorage->remove('Louis');
-        $this->assertTrue(['foo' => 'bar'] === $this->tagStorage->getAll());
-        $this->assertTrue(false === $this->tagStorage->has('Louis'));
-        $this->assertTrue(true === $this->tagStorage->has('foo'));
-        $this->assertTrue(1 === count($this->tagStorage->getAll()));
-    }
-
-    public function testRemoveAll(): void
-    {
-        $this->tagStorage->set('foo', 'bar');
-        $this->tagStorage->set('Louis', 'XIV');
-        $this->assertTrue(2 === count($this->tagStorage->getAll()));
-        $this->tagStorage->removeAll();
-        $this->assertTrue(0 === count($this->tagStorage->getAll()));
+        $this->fileStorage->removeAll()->appendContent('Foo');
     }
 
     /**

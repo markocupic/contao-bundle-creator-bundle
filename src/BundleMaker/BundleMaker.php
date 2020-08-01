@@ -477,11 +477,6 @@ class BundleMaker
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/config/config.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
-        // src/Resource/contao/languages/en/modules.php
-        $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->createFile($source, $target);
-
         // Add logo
         $source = sprintf('%s/%s/src/Resources/public/logo.png', $this->projectDir, self::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Resources/public/logo.png', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
@@ -516,18 +511,18 @@ class BundleMaker
         $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
-        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        if (!$this->fileStorage->hasFile($target))
         {
-            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, static::SAMPLE_DIR);
-            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->createFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
-        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        if (!$this->fileStorage->hasFile($target))
         {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
             $this->fileStorage->createFile($source, $target);
         }
     }
@@ -561,18 +556,18 @@ class BundleMaker
         $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
-        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        if (!$this->fileStorage->hasFile($target))
         {
-            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, static::SAMPLE_DIR);
-            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->createFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
-        if (!$this->fileStorage->hasFile(sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname)))
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        if (!$this->fileStorage->hasFile($target))
         {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-            $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
             $this->fileStorage->createFile($source, $target);
         }
     }

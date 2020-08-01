@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *
  * $fileStorage
  * ->createFile('somefolder/somefile.txt', 'destination/somefile.txt')
- * ->appendContent('bla,bla');
+ * ->appendContent('bla, bla');
  *
  * or:
  *
@@ -39,7 +39,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *   $fileStorage
  *   ->getFile('somefolder/someotherfile.txt')
  *   ->truncate()
- *   ->appendContent('bla,bla');
+ *   ->appendContent('bla, bla');
  * }
  *
  *
@@ -67,6 +67,11 @@ class FileStorage
         if (!is_file($sourcePath))
         {
             throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
+        }
+
+        if($this->hasFile($targetPath))
+        {
+            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
         $arrData = [
@@ -114,9 +119,9 @@ class FileStorage
      */
     public function createFileFromString(string $targetPath, string $stringContent = ''): self
     {
-        if (isset($this->arrStorrage[$targetPath]))
+        if ($this->hasFile($targetPath))
         {
-            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile($targetPath)->replaceContent($strContent) instead.', $targetPath));
+            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
         $arrData = [
@@ -189,6 +194,17 @@ class FileStorage
     }
 
     /**
+     * @return FileStorage
+     */
+    public function removeAll(): self
+    {
+        $this->arrStorrage = [];
+        $this->intIndex = -1;
+
+        return $this;
+    }
+
+    /**
      * @param string $strContent
      * @return FileStorage
      * @throws \Exception
@@ -197,7 +213,7 @@ class FileStorage
     {
         if ($this->intIndex < 0)
         {
-            $this->sendFilePointerNotSetException();
+            throw $this->sendFilePointerNotSetException();
         }
 
         $this->arrStorrage[$this->intIndex]['content'] .= $strContent;
@@ -210,7 +226,7 @@ class FileStorage
      */
     private function sendFilePointerNotSetException()
     {
-        throw new \Exception('There is no pointer to a file. Please use FileStorage::getFile($sourceFile) or FileStorage::createFile($sourceFile, $targetFile) or FileStorage::createFileFromString($targetFile, $strContent)');
+        return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::createFile() or FileStorage::createFileFromString()');
     }
 
     /**
@@ -222,7 +238,7 @@ class FileStorage
     {
         if ($this->intIndex < 0)
         {
-            $this->sendFilePointerNotSetException();
+            throw $this->sendFilePointerNotSetException();
         }
 
         $this->arrStorrage[$this->intIndex]['content'] = $strContent;
@@ -238,7 +254,7 @@ class FileStorage
     {
         if ($this->intIndex < 0)
         {
-            $this->sendFilePointerNotSetException();
+            throw $this->sendFilePointerNotSetException();
         }
 
         return (string) $this->arrStorrage[$this->intIndex]['content'];
@@ -252,7 +268,7 @@ class FileStorage
     {
         if ($this->intIndex < 0)
         {
-            $this->sendFilePointerNotSetException();
+            throw $this->sendFilePointerNotSetException();
         }
 
         $this->arrStorrage[$this->intIndex]['content'] = '';
@@ -279,7 +295,7 @@ class FileStorage
     {
         if ($this->intIndex < 0)
         {
-            $this->sendFilePointerNotSetException();
+            throw $this->sendFilePointerNotSetException();
         }
 
         $content = $this->arrStorrage[$this->intIndex]['content'];
