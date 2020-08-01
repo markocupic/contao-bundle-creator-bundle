@@ -34,9 +34,9 @@ return PhpCsFixer\Config::create()
         'escape_implicit_backslashes' => true,
         'fully_qualified_strict_types' => true,
         'general_phpdoc_annotation_remove' => [
-        'author',
-        'expectedException',
-        'expectedExceptionMessage',
+            'author',
+            'expectedException',
+            'expectedExceptionMessage',
         ],
         'fully_qualified_strict_types' => true,
         'header_comment' => ['header' => $header],
@@ -47,8 +47,8 @@ return PhpCsFixer\Config::create()
         'multiline_whitespace_before_semicolons' => [
         'strategy' => 'new_line_for_chained_calls',
         ],
-        'native_function_invocation' => [
-        'include' => ['@compiler_optimized'],
+            'native_function_invocation' => [
+            'include' => ['@compiler_optimized'],
         ],
         'no_alternative_syntax' => true,
         'no_binary_string' => true,
@@ -65,8 +65,8 @@ return PhpCsFixer\Config::create()
         'phpdoc_order' => true,
         'phpdoc_trim_consecutive_blank_line_separation' => true,
         'phpdoc_types_order' => [
-        'null_adjustment' => 'always_last',
-        'sort_algorithm' => 'none',
+            'null_adjustment' => 'always_last',
+            'sort_algorithm' => 'none',
         ],
         'return_assignment' => true,
         'strict_comparison' => true,
