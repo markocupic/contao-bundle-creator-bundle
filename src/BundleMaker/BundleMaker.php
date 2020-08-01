@@ -339,8 +339,8 @@ class BundleMaker
     {
         $blnModified = false;
 
-        $source = self::SAMPLE_DIR . '/composer.tpl.json';
-        $target = sprintf('vendor/%s/%s/composer.json', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/composer.tpl.json', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/composer.json', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add/remove version keyword from composer.json
@@ -381,8 +381,8 @@ class BundleMaker
      */
     protected function addBundleClassToFileStorage(): void
     {
-        $source = self::SAMPLE_DIR . '/src/BundleFile.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/%s%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname), $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
+        $source = sprintf('%s/%s/src/BundleFile.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname), $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -393,8 +393,8 @@ class BundleMaker
      */
     protected function addContaoManagerPluginClassToFileStorage(): void
     {
-        $source = self::SAMPLE_DIR . '/src/ContaoManager/Plugin.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/ContaoManager/Plugin.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/ContaoManager/Plugin.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/ContaoManager/Plugin.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -406,23 +406,23 @@ class BundleMaker
     protected function addUnitTestsToFileStorage(): void
     {
         // Add phpunit.xml.dist
-        $source = self::SAMPLE_DIR . '/phpunit.xml.tpl.dist';
-        $target = sprintf('vendor/%s/%s/phpunit.xml.dist', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/phpunit.xml.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/phpunit.xml.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add plugin test
-        $source = self::SAMPLE_DIR . '/tests/ContaoManager/PluginTest.tpl.php';
-        $target = sprintf('vendor/%s/%s/tests/ContaoManager/PluginTest.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/tests/ContaoManager/PluginTest.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/tests/ContaoManager/PluginTest.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add .travis.yml
-        $source = self::SAMPLE_DIR . '/.travis.tpl.yml';
-        $target = sprintf('vendor/%s/%s/.travis.yml', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/.travis.tpl.yml', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.travis.yml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add .php_cs.dist
-        $source = self::SAMPLE_DIR . '/.php_cs.tpl.dist';
-        $target = sprintf('vendor/%s/%s/.php_cs.dist', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/.php_cs.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.php_cs.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -443,8 +443,8 @@ class BundleMaker
 
         foreach ($arrFiles as $file)
         {
-            $source = sprintf('%s/src/Resources/config/%s', self::SAMPLE_DIR, $file);
-            $target = sprintf('vendor/%s/%s/src/Resources/config/%s', $this->model->vendorname, $this->model->repositoryname, str_replace('tpl.', '', $file));
+            $source = sprintf('%s/%s/src/Resources/config/%s', $this->projectDir, self::SAMPLE_DIR, $file);
+            $target = sprintf('%s/vendor/%s/%s/src/Resources/config/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, str_replace('tpl.', '', $file));
             $this->fileStorage->createFile($source, $target)->replaceTags($this->tagStorage);
 
             // Validate config files
@@ -473,23 +473,23 @@ class BundleMaker
         }
 
         // src/Resource/contao/config/config.php
-        $source = sprintf('%s/src/Resources/contao/config/config.tpl.php', self::SAMPLE_DIR);
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/config/config.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Resources/contao/config/config.tpl.php', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/config/config.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // src/Resource/contao/languages/en/modules.php
-        $source = sprintf('%s/src/Resources/contao/languages/en/modules.tpl.php', self::SAMPLE_DIR);
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add logo
-        $source = sprintf('%s/src/Resources/public/logo.png', self::SAMPLE_DIR);
-        $target = sprintf('vendor/%s/%s/src/Resources/public/logo.png', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Resources/public/logo.png', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/public/logo.png', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Readme.md
-        $source = sprintf('%s/README.tpl.md', self::SAMPLE_DIR);
-        $target = sprintf('vendor/%s/%s/README.md', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/README.tpl.md', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/README.md', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -501,18 +501,18 @@ class BundleMaker
     protected function addBackendModuleFilesToFileStorage(): void
     {
         // Add dca table file
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/dca/tl_sample_table.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $source = sprintf('%s/%s/src/Resources/contao/dca/tl_sample_table.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
         $this->fileStorage->createFile($source, $target);
 
         // Add dca table translation file
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/languages/en/tl_sample_table.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
+        $source = sprintf('%s/%s/src/Resources/contao/languages/en/tl_sample_table.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
         $this->fileStorage->createFile($source, $target);
 
         // Add a sample model
-        $source = self::SAMPLE_DIR . '/src/Model/SampleModel.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Model/%s.php', $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
+        $source = sprintf('%s/%s/src/Model/SampleModel.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -530,13 +530,13 @@ class BundleMaker
         $strFrontendModuleClassname = $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendController
-        $source = self::SAMPLE_DIR . '/src/Controller/FrontendModule/SampleModule.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
+        $source = sprintf('%s/%s/src/Controller/FrontendModule/SampleModule.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
         $this->fileStorage->createFile($source, $target);
 
         // Add frontend module template
-        $source = self::SAMPLE_DIR . '/src/Resources/contao/templates/mod_sample.tpl.html5';
-        $target = sprintf('vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
+        $source = sprintf('%s/%s/src/Resources/contao/templates/mod_sample.tpl.html5', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -548,13 +548,13 @@ class BundleMaker
     protected function addCustomRouteToFileStorage(): void
     {
         // Add controller (custom route)
-        $source = self::SAMPLE_DIR . '/src/Controller/MyCustomController.tpl.php';
-        $target = sprintf('vendor/%s/%s/src/Controller/MyCustomController.php', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Controller/MyCustomController.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Controller/MyCustomController.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
         // Add twig template
-        $source = self::SAMPLE_DIR . '/src/Resources/views/my_custom_route.html.tpl.twig';
-        $target = sprintf('vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Resources/views/my_custom_route.html.tpl.twig', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -657,11 +657,11 @@ class BundleMaker
         foreach ($arrFiles as $arrFile)
         {
             // Create file
-            $objNewFile = new File($arrFile['target']);
+            $target = str_replace($this->projectDir  . '/','',$arrFile['target']);
+            $objNewFile = new File($target);
 
-            // Overwrite content if file already exists
-            $objNewFile->truncate();
-            $objNewFile->append($arrFile['content']);
+            // Overwrite file content if file already exists
+            $objNewFile->write($arrFile['content']);
             $objNewFile->close();
 
             // Display message in the backend

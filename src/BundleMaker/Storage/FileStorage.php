@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
@@ -45,33 +44,17 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *
  *
  * Class FileStorage
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage
  */
 class FileStorage
 {
-
-    /** @var Message */
-    private $message;
-
-    /** @var string */
-    private $projectDir;
 
     /** @var array */
     private $arrStorrage = [];
 
     /** @var int */
     private $intIndex = -1;
-
-    /**
-     * FileStorage constructor.
-     * @param Message $message
-     * @param string $projectDir
-     */
-    public function __construct(Message $message, string $projectDir)
-    {
-        $this->message = $message;
-        $this->projectDir = $projectDir;
-    }
 
     /**
      * @param string $sourcePath
@@ -81,15 +64,15 @@ class FileStorage
      */
     public function createFile(string $sourcePath, string $targetPath): self
     {
-        if (!is_file($this->projectDir . '/' . $sourcePath))
+        if (!is_file($sourcePath))
         {
-            throw new FileNotFoundException(sprintf('File "%s" not found.', $this->projectDir . '/' . $sourcePath));
+            throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
         }
 
         $arrData = [
             'source'  => $sourcePath,
             'target'  => $targetPath,
-            'content' => file_get_contents($this->projectDir . '/' . $sourcePath),
+            'content' => file_get_contents($sourcePath),
         ];
 
         if (($index = $this->getIndexOf($targetPath)) < 0)
@@ -104,6 +87,23 @@ class FileStorage
         $this->intIndex = $this->getIndexOf($targetPath);
 
         return $this;
+    }
+
+    /**
+     * @param string $targetPath
+     * @return int
+     */
+    private function getIndexOf(string $targetPath): int
+    {
+        foreach ($this->arrStorrage as $index => $arrFile)
+        {
+            if ($arrFile['target'] === $targetPath)
+            {
+                return $index;
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -206,6 +206,14 @@ class FileStorage
     }
 
     /**
+     * @throws \Exception
+     */
+    private function sendFilePointerNotSetException()
+    {
+        throw new \Exception('There is no pointer to a file. Please use FileStorage::getFile($sourceFile) or FileStorage::createFile($sourceFile, $targetFile) or FileStorage::createFileFromString($targetFile, $strContent)');
+    }
+
+    /**
      * @param string $strContent
      * @return FileStorage
      * @throws \Exception
@@ -279,31 +287,6 @@ class FileStorage
         $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokens($content);
 
         return $this;
-    }
-
-    /**
-     * @param string $targetPath
-     * @return int
-     */
-    private function getIndexOf(string $targetPath): int
-    {
-        foreach ($this->arrStorrage as $index => $arrFile)
-        {
-            if ($arrFile['target'] === $targetPath)
-            {
-                return $index;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function sendFilePointerNotSetException()
-    {
-        throw new \Exception('There is no pointer to a file. Please use FileStorage::getFile($sourceFile) or FileStorage::createFile($sourceFile, $targetFile) or FileStorage::createFileFromString($targetFile, $strContent)');
     }
 
 }

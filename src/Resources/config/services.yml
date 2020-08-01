@@ -13,9 +13,6 @@ services:
 
     markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage:
         class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage
-        arguments:
-        - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
-        - '%kernel.project_dir%'
         public: true
 
     markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage:
