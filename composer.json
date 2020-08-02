@@ -26,7 +26,6 @@
   },
   "require": {
     "contao/core-bundle": "^4.9",
-    "nelexa/zip": "^3.3",
     "ext-json": "*",
     "ext-zip": "*"
   },
