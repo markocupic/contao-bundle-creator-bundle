@@ -27,8 +27,7 @@
   "require": {
     "contao/core-bundle": "^4.9",
     "markocupic/zip-bundle": "^1.0",
-    "ext-json": "*",
-    "ext-zip": "*"
+    "ext-json": "*"
   },
   "require-dev": {
     "contao/test-case": "^4.0",
