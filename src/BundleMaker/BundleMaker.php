@@ -145,9 +145,9 @@ class BundleMaker
             $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
             $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
             (new Zip())
-                ->stripSourcePath(true)
-                ->saveAsFile(basename($zipTarget))
-                ->zipDirRecursive($zipSource, dirname($zipTarget));
+                ->stripSourcePath($zipSource)
+                ->addDirRecursive($zipSource)
+                ->run($zipTarget);
         }
 
         // Replace if-tokens and replace simple tokens in file storage
@@ -160,9 +160,9 @@ class BundleMaker
         $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname);
         $zip = (new Zip())
-            ->stripSourcePath(true)
-            ->saveAsFile(basename($zipTarget));
-        if ($zip->zipDirRecursive($zipSource, dirname($zipTarget)))
+            ->stripSourcePath($zipSource)
+            ->addDirRecursive($zipSource);
+        if ($zip->run($zipTarget))
         {
             $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir . '/', '', $zipTarget));
         }
