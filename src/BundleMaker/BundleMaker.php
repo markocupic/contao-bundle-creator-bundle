@@ -23,6 +23,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput\SanitizeInput
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -141,23 +142,26 @@ class BundleMaker
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists())
         {
-            $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
-            $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
-            $this->zipData($zipSource, $zipTarget);
+            $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+            $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
+            $zip = (new Zip())
+                ->stripSourcePath(true)
+                ->zipRecursive($zipSource, $zipTarget);
         }
 
         // Replace if-tokens and replace simple tokens in file storage
         $this->parseTemplates();
 
         // Create all the bundle files in vendor/vendorname/bundlename
-        $this->createFilesFromFileStorage();
+        $this->createBundleFiles();
 
         // Store new bundle also as a zip-package for downloading it from system/tmp
-        $zipSource = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
-        $zipTarget = sprintf('system/tmp/%s.zip', $this->model->repositoryname);
-        if ($this->zipData($zipSource, $zipTarget))
+        $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname);
+        $zip = (new Zip())->stripSourcePath(true);
+        if ($this->zipRecursive($zipSource, $zipTarget))
         {
-            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', $zipTarget);
+            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir . '/', '', $zipTarget));
         }
 
         // Optionally extend the composer.json file located in the root directory
@@ -591,66 +595,6 @@ class BundleMaker
     }
 
     /**
-     * Zip folder recursively and store it to a predefined destination
-     *
-     * @param string $source
-     * @param string $destination
-     * @return bool
-     */
-    protected function zipData(string $source, string $destination): bool
-    {
-        if (extension_loaded('zip'))
-        {
-            $source = $this->projectDir . '/' . $source;
-            $destination = $this->projectDir . '/' . $destination;
-
-            if (file_exists($source))
-            {
-                $zip = new \ZipArchive();
-                if ($zip->open($destination, \ZipArchive::CREATE))
-                {
-                    $source = realpath($source);
-                    if (is_dir($source))
-                    {
-                        $iterator = new \RecursiveDirectoryIterator($source);
-
-                        // Skip dot files while iterating
-                        $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
-                        $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-                        foreach ($files as $objSplFileInfo)
-                        {
-                            $file = $objSplFileInfo->getRealPath();
-
-                            if (is_dir($file))
-                            {
-                                // Add empty dir and remove the source path
-                                $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
-                            }
-                            else
-                            {
-                                if (is_file($file))
-                                {
-                                    // Add file and remove the source path
-                                    $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (is_file($source))
-                        {
-                            $zip->addFromString(basename($source), file_get_contents($source));
-                        }
-                    }
-                }
-                return $zip->close();
-            }
-        }
-        return false;
-    }
-
-    /**
      * Parse templates
      *
      * @throws \Exception
@@ -677,7 +621,7 @@ class BundleMaker
      * @throws \Exception
      * @todo add a contao hook
      */
-    protected function createFilesFromFileStorage(): void
+    protected function createBundleFiles(): void
     {
         $arrFiles = $this->fileStorage->getAll();
         $i = 0;
