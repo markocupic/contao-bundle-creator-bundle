@@ -19,7 +19,7 @@ use Contao\Files;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput\SanitizeInput;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
@@ -49,9 +49,6 @@ class BundleMaker
     /** @var TagStorage */
     protected $tagStorage;
 
-    /** @var SanitizeInput */
-    protected $sanitizeInput;
-
     /** @var Message */
     protected $message;
 
@@ -67,16 +64,14 @@ class BundleMaker
      * @param Session $session
      * @param FileStorage $fileStorage
      * @param TagStorage $tagStorage
-     * @param SanitizeInput $sanitizeInput
      * @param Message $message
      * @param string $projectDir
      */
-    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, SanitizeInput $sanitizeInput, Message $message, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, string $projectDir)
     {
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
-        $this->sanitizeInput = $sanitizeInput;
         $this->message = $message;
         $this->projectDir = $projectDir;
     }
@@ -191,49 +186,49 @@ class BundleMaker
         if ($this->model->vendorname != '')
         {
             // Sanitize vendorname
-            $this->model->vendorname = $this->sanitizeInput->getSanitizedVendorname((string) $this->model->vendorname);
+            $this->model->vendorname = Str::getSanitizedVendorname((string) $this->model->vendorname);
             $this->model->save();
         }
 
         if ($this->model->repositoryname != '')
         {
             // Sanitize repositoryname
-            $this->model->repositoryname = $this->sanitizeInput->getSanitizedRepositoryname((string) $this->model->repositoryname);
+            $this->model->repositoryname = Str::getSanitizedRepositoryname((string) $this->model->repositoryname);
             $this->model->save();
         }
 
         if ($this->model->backendmoduletype != '')
         {
             // Get the backend module type and sanitize it to contao backend module convention
-            $this->model->backendmoduletype = $this->sanitizeInput->getSanitizedBackendModuleType((string) $this->model->backendmoduletype);
+            $this->model->backendmoduletype = Str::getSanitizedBackendModuleType((string) $this->model->backendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->dcatable != '')
         {
             // Sanitize dca table name
-            $this->model->dcatable = $this->sanitizeInput->getSanitizedDcaTableName((string) $this->model->dcatable);
+            $this->model->dcatable = Str::getSanitizedDcaTableName((string) $this->model->dcatable);
             $this->model->save();
         }
 
         if ($this->model->backendmodulecategory != '')
         {
             // Get the backend module category and sanitize it to contao backend module convention
-            $this->model->backendmodulecategory = $this->sanitizeInput->toSnakecase((string) $this->model->backendmodulecategory);
+            $this->model->backendmodulecategory = Str::toSnakecase((string) $this->model->backendmodulecategory);
             $this->model->save();
         }
 
         if ($this->model->frontendmoduletype != '')
         {
             // Get the frontend module type and sanitize it to contao frontend module convention
-            $this->model->frontendmoduletype = $this->sanitizeInput->getSanitizedFrontendModuleType((string) $this->model->frontendmoduletype);
+            $this->model->frontendmoduletype = Str::getSanitizedFrontendModuleType((string) $this->model->frontendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->frontendmodulecategory != '')
         {
             // Get the frontend module category and sanitize it to contao frontend module convention
-            $this->model->frontendmodulecategory = $this->sanitizeInput->toSnakecase((string) $this->model->frontendmodulecategory);
+            $this->model->frontendmodulecategory = Str::toSnakecase((string) $this->model->frontendmodulecategory);
             $this->model->save();
         }
     }
@@ -260,11 +255,11 @@ class BundleMaker
         $this->tagStorage->set('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
-        $this->tagStorage->set('toplevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname));
-        $this->tagStorage->set('sublevelnamespace', $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', Str::toPsr4Namespace((string) $this->model->vendorname));
+        $this->tagStorage->set('sublevelnamespace', Str::toPsr4Namespace((string) $this->model->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname) . $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname)));
+        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . Str::toPsr4Namespace((string) $this->model->vendorname) . Str::toPsr4Namespace((string) $this->model->repositoryname)));
 
         // Composer
         $this->tagStorage->set('composerdescription', (string) $this->model->composerdescription);
@@ -282,7 +277,7 @@ class BundleMaker
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->set('modelclassname', (string) $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
+            $this->tagStorage->set('modelclassname', (string) Str::getSanitizedModelClassname((string) $this->model->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
             $this->tagStorage->set('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
@@ -293,10 +288,10 @@ class BundleMaker
         // Frontend module
         if ($this->model->addFrontendModule)
         {
-            $this->tagStorage->set('frontendmoduleclassname', $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduleclassname', Str::getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype));
             $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
-            $this->tagStorage->set('frontendmoduletemplate', $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduletemplate', Str::getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
             $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
@@ -389,7 +384,7 @@ class BundleMaker
     protected function addBundleClassToFileStorage(): void
     {
         $source = sprintf('%s/%s/src/BundleFile.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->toPsr4Namespace((string) $this->model->vendorname), $this->sanitizeInput->toPsr4Namespace((string) $this->model->repositoryname));
+        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::toPsr4Namespace((string) $this->model->vendorname), Str::toPsr4Namespace((string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -514,7 +509,7 @@ class BundleMaker
 
         // Add a sample model
         $source = sprintf('%s/%s/src/Model/SampleModel.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->sanitizeInput->getSanitizedModelClassname((string) $this->model->dcatable));
+        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::getSanitizedModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
@@ -542,10 +537,10 @@ class BundleMaker
     protected function addFrontendModuleFilesToFileStorage(): void
     {
         // Get the frontend module template name
-        $strFrontenModuleTemplateName = $this->sanitizeInput->getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
+        $strFrontenModuleTemplateName = Str::getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
 
         // Get the frontend module classname
-        $strFrontendModuleClassname = $this->sanitizeInput->getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
+        $strFrontendModuleClassname = Str::getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendController
         $source = sprintf('%s/%s/src/Controller/FrontendModule/SampleModule.tpl.php', $this->projectDir, static::SAMPLE_DIR);

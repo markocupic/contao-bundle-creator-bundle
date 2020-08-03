@@ -11,15 +11,47 @@
 
 declare(strict_types=1);
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput;
+namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
 
 /**
- * Class SanitizeInput
+ * Class String
  *
- * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput
+ * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str
  */
-class SanitizeInput
+final class Str
 {
+
+    /**
+     * Looks for prefixes in strings in a case-insensitive way.
+     *
+     * @param string $value
+     * @param string $prefix
+     * @return bool
+     */
+    public static function hasPrefix(string $value, string $prefix): bool
+    {
+        return 0 === stripos($value, $prefix);
+    }
+
+    /**
+     * Ensures that the given string ends with the given prefix. If the string
+     * already contains the prefix, it's not added twice. It's case-insensitive
+     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
+     */
+    public static function addPrefix(string $value, string $prefix): string
+    {
+        return $prefix . self::removePrefix($value, $prefix);
+    }
+
+    /**
+     * Ensures that the given string doesn't starts with the given prefix. If the
+     * string contains the prefix multiple times, only the first one is removed.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     */
+    public static function removePrefix(string $value, string $prefix): string
+    {
+        return self::hasPrefix($value, $prefix) ? substr($value, strlen($prefix)) : $value;
+    }
 
     /**
      * Sanitize vendorname (github restrictions)
@@ -29,7 +61,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public function getSanitizedVendorname(string $str): string
+    public static function asVendorname(string $str): string
     {
         $str = preg_replace('/_/', '-', $str);
         $str = preg_replace('/[\-]{2,}/', '-', $str);
@@ -44,7 +76,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public function getSanitizedRepositoryname(string $str): string
+    public static function asRepositoryname(string $str): string
     {
         return preg_replace('/[^A-Za-z0-9_\-]/', '-', $str);
     }
@@ -56,9 +88,9 @@ class SanitizeInput
      * @param string $str (requires tl_contao_bundle_creator.backendmoduletype)
      * @return string
      */
-    public function getSanitizedBackendModuleType(string $str): string
+    public static function asContaoBackendModuleType(string $str): string
     {
-        $str = $this->toSnakecase($str);
+        $str = self::asSnakecase($str);
         return $str;
     }
 
@@ -69,7 +101,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public function toSnakecase(string $str): string
+    public static function asSnakecase(string $str): string
     {
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace(' ', '_', $str);
@@ -99,10 +131,10 @@ class SanitizeInput
      * @param string $postfix
      * @return string
      */
-    public function getSanitizedFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
+    public static function asContaoFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
     {
-        $str = $this->getSanitizedFrontendModuleType($str);
-        $str = $this->toPsr4Namespace($str);
+        $str = self::asContaoFrontendModuleType($str);
+        $str = self::asClassname($str);
         return $str . $postfix;
     }
 
@@ -121,9 +153,9 @@ class SanitizeInput
      * @param string $postfix
      * @return string
      */
-    public function getSanitizedFrontendModuleType(string $str, $postfix = '_module'): string
+    public static function asContaoFrontendModuleType(string $str, $postfix = '_module'): string
     {
-        $str = $this->toSnakecase((string) $str);
+        $str = self::asSnakecase((string) $str);
 
         $pattern = '/^(module_|module|mod_|mod)/';
         if (preg_match($pattern, $str))
@@ -151,7 +183,7 @@ class SanitizeInput
      * @param string $str
      * @return string
      */
-    public function toPsr4Namespace(string $str): string
+    public static function asClassname(string $str): string
     {
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace('-', '_', $str);
@@ -192,11 +224,11 @@ class SanitizeInput
      * @return string
      * @throws \Exception
      */
-    public function getSanitizedModelClassname(string $str, string $postfix = 'Model'): string
+    public static function asContaoModelClassname(string $str, string $postfix = 'Model'): string
     {
-        $str = $this->getSanitizedDcaTableName($str);
+        $str = self::asContaoDcaTableName($str);
         $str = preg_replace('/^tl_/', '', $str);
-        $str = $this->toPsr4Namespace($str);
+        $str = self::asClassname($str);
         return $str . $postfix;
     }
 
@@ -207,7 +239,7 @@ class SanitizeInput
      * @return string
      * @throws \Exception
      */
-    public function getSanitizedDcaTableName(string $str): string
+    public static function asContaoDcaTableName(string $str): string
     {
         if (!strlen((string) $str))
         {
@@ -238,9 +270,9 @@ class SanitizeInput
      * @param string $strPrefix
      * @return string
      */
-    public function getSanitizedFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
+    public static function asContaoFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
     {
-        $str = $this->getSanitizedFrontendModuleType($str);
+        $str = self::asContaoFrontendModuleType($str);
         if ($strPrefix != '')
         {
             $str = preg_replace('/^' . $strPrefix . '/', '', $str);

@@ -6,7 +6,6 @@ services:
         - '@session'
         - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage'
         - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage'
-        - '@markocupic.contaobundlecreatorbundle.bundlemaker.sanitizeinput.sanitizeinput'
         - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
         - '%kernel.project_dir%'
         public: true
