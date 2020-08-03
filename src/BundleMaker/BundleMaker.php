@@ -561,7 +561,7 @@ class BundleMaker
         $this->fileStorage->createFile($source, $target);
 
         // Add frontend module template
-        $source = sprintf('%s/%s/src/Resources/contao/templates/mod_sample.tpl.html5', $this->projectDir, static::SAMPLE_DIR);
+        $source = sprintf('%s/%s/src/Resources/contao/templates/mod_sample_module.tpl.html5', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontenModuleTemplateName);
         $this->fileStorage->createFile($source, $target);
 

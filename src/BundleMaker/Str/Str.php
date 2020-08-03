@@ -289,17 +289,11 @@ final class Str
      * @param string $valuePrefix
      * @return string
      */
-    public static function asContaoFrontendModuleTemplateName(string $value, $valuePrefix = 'mod_'): string
+    public static function asContaoFrontendModuleTemplateName(string $value, $prefix = 'mod_'): string
     {
 
         $value = self::asContaoFrontendModuleType($value);
-        if ($valuePrefix != '')
-        {
-            $value = preg_replace('/^' . $valuePrefix . '/', '', $value);
-        }
-        $value = preg_replace('/_module$/', '', $value);
-        $value = preg_replace('/_module$/', '', $value);
-        $value = $valuePrefix . $value;
+        $value = self::addPrefix($value, $prefix);
         $value = preg_replace('/_{2,}/', '_', $value);
 
         return $value;

@@ -2,7 +2,7 @@
 
 <?= $this->phpdoc ?>
 /**
- * Table <?= $this->dcatable ?>
+ * Table <?= $this->dcatable . "\n" ?>
  */
 $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = [
 

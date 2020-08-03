@@ -210,11 +210,11 @@ class StrTest extends ContaoTestCase
     {
 
         $test = 'mod_my_ Custom_module';
-        $actual = 'mod_my_custom';
+        $actual = 'mod_my_custom_module';
         $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
 
         $test = '_my_ Custom_module';
-        $actual = 'mod_my_custom';
+        $actual = 'mod_my_custom_module';
         $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
     }
 
