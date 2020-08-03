@@ -39,6 +39,7 @@ class Message
      */
     public function __construct(SessionInterface $session)
     {
+
         $this->session = $session;
     }
 
@@ -49,6 +50,7 @@ class Message
      */
     public function addInfo(string $msg): void
     {
+
         $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
     }
 
@@ -60,6 +62,7 @@ class Message
      */
     private function addFlashMessage(string $msg, string $type): void
     {
+
         /** @var Session $session */
         $session = $this->session;
         $flashBag = $session->getFlashBag();
@@ -81,6 +84,7 @@ class Message
      */
     public function addError(string $msg): void
     {
+
         $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
     }
 
@@ -91,7 +95,8 @@ class Message
      */
     public function getInfo(): array
     {
-        return $this->getFlashMessages( self::STR_INFO_FLASH_TYPE);
+
+        return $this->getFlashMessages(self::STR_INFO_FLASH_TYPE);
     }
 
     /**
@@ -102,6 +107,7 @@ class Message
      */
     private function getFlashMessages(string $type): array
     {
+
         /** @var Session $session */
         $session = $this->session;
         $flashBag = $session->getFlashBag();
@@ -121,6 +127,7 @@ class Message
      */
     public function getError(): array
     {
+
         return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
     }
 

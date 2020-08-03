@@ -19,9 +19,9 @@ use Contao\Files;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -38,7 +38,7 @@ use Symfony\Component\Yaml\Yaml;
 class BundleMaker
 {
     /** @var string */
-    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton/sample-repository';
+    const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton';
 
     /** @var SessionInterface */
     protected $session;
@@ -69,6 +69,7 @@ class BundleMaker
      */
     public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, string $projectDir)
     {
+
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
@@ -84,6 +85,7 @@ class BundleMaker
      */
     public function run(ContaoBundleCreatorModel $model): void
     {
+
         $this->model = $model;
 
         if ($this->bundleExists() && !$this->model->overwriteexisting)
@@ -173,6 +175,7 @@ class BundleMaker
      */
     protected function bundleExists(): bool
     {
+
         return is_dir($this->projectDir . '/vendor/' . $this->model->vendorname . '/' . $this->model->repositoryname);
     }
 
@@ -183,52 +186,53 @@ class BundleMaker
      */
     protected function sanitizeModel(): void
     {
+
         if ($this->model->vendorname != '')
         {
             // Sanitize vendorname
-            $this->model->vendorname = Str::getSanitizedVendorname((string) $this->model->vendorname);
+            $this->model->vendorname = Str::asVendorname((string) $this->model->vendorname);
             $this->model->save();
         }
 
         if ($this->model->repositoryname != '')
         {
             // Sanitize repositoryname
-            $this->model->repositoryname = Str::getSanitizedRepositoryname((string) $this->model->repositoryname);
+            $this->model->repositoryname = Str::asRepositoryname((string) $this->model->repositoryname, 'contao-');
             $this->model->save();
         }
 
         if ($this->model->backendmoduletype != '')
         {
             // Get the backend module type and sanitize it to contao backend module convention
-            $this->model->backendmoduletype = Str::getSanitizedBackendModuleType((string) $this->model->backendmoduletype);
+            $this->model->backendmoduletype = Str::asContaoBackendModuleType((string) $this->model->backendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->dcatable != '')
         {
             // Sanitize dca table name
-            $this->model->dcatable = Str::getSanitizedDcaTableName((string) $this->model->dcatable);
+            $this->model->dcatable = Str::asContaoDcaTableName((string) $this->model->dcatable);
             $this->model->save();
         }
 
         if ($this->model->backendmodulecategory != '')
         {
             // Get the backend module category and sanitize it to contao backend module convention
-            $this->model->backendmodulecategory = Str::toSnakecase((string) $this->model->backendmodulecategory);
+            $this->model->backendmodulecategory = Str::asSnakecase((string) $this->model->backendmodulecategory);
             $this->model->save();
         }
 
         if ($this->model->frontendmoduletype != '')
         {
             // Get the frontend module type and sanitize it to contao frontend module convention
-            $this->model->frontendmoduletype = Str::getSanitizedFrontendModuleType((string) $this->model->frontendmoduletype);
+            $this->model->frontendmoduletype = Str::asContaoFrontendModuleType((string) $this->model->frontendmoduletype);
             $this->model->save();
         }
 
         if ($this->model->frontendmodulecategory != '')
         {
             // Get the frontend module category and sanitize it to contao frontend module convention
-            $this->model->frontendmodulecategory = Str::toSnakecase((string) $this->model->frontendmodulecategory);
+            $this->model->frontendmodulecategory = Str::asSnakecase((string) $this->model->frontendmodulecategory);
             $this->model->save();
         }
     }
@@ -241,6 +245,7 @@ class BundleMaker
      */
     protected function setTags(): void
     {
+
         // Store model values into the tag storage
         $arrModel = $this->model->row();
         foreach ($arrModel as $fieldname => $value)
@@ -255,11 +260,11 @@ class BundleMaker
         $this->tagStorage->set('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
-        $this->tagStorage->set('toplevelnamespace', Str::toPsr4Namespace((string) $this->model->vendorname));
-        $this->tagStorage->set('sublevelnamespace', Str::toPsr4Namespace((string) $this->model->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', Str::asClassname((string) $this->model->vendorname));
+        $this->tagStorage->set('sublevelnamespace', Str::asClassname((string) $this->model->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . Str::toPsr4Namespace((string) $this->model->vendorname) . Str::toPsr4Namespace((string) $this->model->repositoryname)));
+        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . Str::asClassname((string) $this->model->vendorname) . Str::asClassname((string) $this->model->repositoryname)));
 
         // Composer
         $this->tagStorage->set('composerdescription', (string) $this->model->composerdescription);
@@ -277,7 +282,7 @@ class BundleMaker
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->set('modelclassname', (string) Str::getSanitizedModelClassname((string) $this->model->dcatable));
+            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassname((string) $this->model->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
             $this->tagStorage->set('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
@@ -288,10 +293,10 @@ class BundleMaker
         // Frontend module
         if ($this->model->addFrontendModule)
         {
-            $this->tagStorage->set('frontendmoduleclassname', Str::getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassname((string) $this->model->frontendmoduletype));
             $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
-            $this->tagStorage->set('frontendmoduletemplate', Str::getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
             $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
@@ -317,6 +322,7 @@ class BundleMaker
      */
     protected function getContentFromPartialFile(string $strFilename): string
     {
+
         $sourceFile = self::SAMPLE_DIR . '/partials/' . $strFilename;
 
         if (!is_file($this->projectDir . '/' . $sourceFile))
@@ -339,6 +345,7 @@ class BundleMaker
      */
     protected function addComposerJsonFileToFileStorage(): void
     {
+
         $blnModified = false;
 
         $source = sprintf('%s/%s/composer.tpl.json', $this->projectDir, static::SAMPLE_DIR);
@@ -383,8 +390,9 @@ class BundleMaker
      */
     protected function addBundleClassToFileStorage(): void
     {
-        $source = sprintf('%s/%s/src/BundleFile.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::toPsr4Namespace((string) $this->model->vendorname), Str::toPsr4Namespace((string) $this->model->repositoryname));
+
+        $source = sprintf('%s/%s/src/Class.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asClassname((string) $this->model->vendorname), Str::asClassname((string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -395,6 +403,7 @@ class BundleMaker
      */
     protected function addContaoManagerPluginClassToFileStorage(): void
     {
+
         $source = sprintf('%s/%s/src/ContaoManager/Plugin.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/ContaoManager/Plugin.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
@@ -407,6 +416,7 @@ class BundleMaker
      */
     protected function addUnitTestsToFileStorage(): void
     {
+
         // Add phpunit.xml.dist
         $source = sprintf('%s/%s/phpunit.xml.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/phpunit.xml.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
@@ -435,6 +445,7 @@ class BundleMaker
      */
     protected function addMiscFilesToFileStorage(): void
     {
+
         // src/Resources/config/*.yml yaml config files
         $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml'];
 
@@ -497,6 +508,7 @@ class BundleMaker
      */
     protected function addBackendModuleFilesToFileStorage(): void
     {
+
         // Add dca table file
         $source = sprintf('%s/%s/src/Resources/contao/dca/tl_sample_table.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
@@ -508,8 +520,8 @@ class BundleMaker
         $this->fileStorage->createFile($source, $target);
 
         // Add a sample model
-        $source = sprintf('%s/%s/src/Model/SampleModel.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::getSanitizedModelClassname((string) $this->model->dcatable));
+        $source = sprintf('%s/%s/src/Model/Model.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asContaoModelClassname((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
@@ -536,14 +548,15 @@ class BundleMaker
      */
     protected function addFrontendModuleFilesToFileStorage(): void
     {
+
         // Get the frontend module template name
-        $strFrontenModuleTemplateName = Str::getSanitizedFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
+        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
 
         // Get the frontend module classname
-        $strFrontendModuleClassname = Str::getSanitizedFrontendModuleClassname((string) $this->model->frontendmoduletype);
+        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassname((string) $this->model->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendController
-        $source = sprintf('%s/%s/src/Controller/FrontendModule/SampleModule.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $source = sprintf('%s/%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
         $this->fileStorage->createFile($source, $target);
 
@@ -581,8 +594,9 @@ class BundleMaker
      */
     protected function addCustomRouteToFileStorage(): void
     {
+
         // Add controller (custom route)
-        $source = sprintf('%s/%s/src/Controller/MyCustomController.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $source = sprintf('%s/%s/src/Controller/Controller.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Controller/MyCustomController.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->createFile($source, $target);
 
@@ -599,6 +613,7 @@ class BundleMaker
      */
     protected function parseTemplates(): void
     {
+
         $arrFiles = $this->fileStorage->getAll();
 
         foreach ($arrFiles as $arrFile)
@@ -621,6 +636,7 @@ class BundleMaker
      */
     protected function createBundleFiles(): void
     {
+
         $arrFiles = $this->fileStorage->getAll();
         $i = 0;
 
@@ -653,6 +669,7 @@ class BundleMaker
      */
     protected function editRootComposerJson(): void
     {
+
         $blnModified = false;
         $objComposerFile = new File('composer.json');
         $content = $objComposerFile->getContent();

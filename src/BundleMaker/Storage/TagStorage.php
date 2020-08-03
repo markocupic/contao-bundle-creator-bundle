@@ -15,6 +15,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
 /**
  * Class TagStorage
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage
  */
 class TagStorage
@@ -29,6 +30,7 @@ class TagStorage
      */
     public function set(string $strKey, string $strValue)
     {
+
         $this->arrTags[$strKey] = $strValue;
     }
 
@@ -39,6 +41,7 @@ class TagStorage
      */
     public function get(string $strKey): string
     {
+
         if (!array_key_exists($strKey, $this->arrTags))
         {
             throw new \Exception(sprintf('Tag "%s" not found.', $strKey));
@@ -51,6 +54,7 @@ class TagStorage
      */
     public function getAll(): array
     {
+
         return $this->arrTags;
     }
 
@@ -60,6 +64,7 @@ class TagStorage
      */
     public function has(string $strKey): bool
     {
+
         if (array_key_exists($strKey, $this->arrTags))
         {
             return true;
@@ -72,6 +77,7 @@ class TagStorage
      */
     public function remove(string $strKey): void
     {
+
         if (array_key_exists($strKey, $this->arrTags))
         {
             unset($this->arrTags[$strKey]);
@@ -83,6 +89,7 @@ class TagStorage
      */
     public function removeAll(): void
     {
+
         $this->arrTags = [];
     }
 }

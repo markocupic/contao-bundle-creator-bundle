@@ -24,6 +24,3 @@ services:
         - '@session'
         public: true
 
-    markocupic.contaobundlecreatorbundle.bundlemaker.sanitizeinput.sanitizeinput:
-        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\SanitizeInput\SanitizeInput
-        public: true

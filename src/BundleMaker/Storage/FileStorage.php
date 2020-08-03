@@ -64,12 +64,13 @@ class FileStorage
      */
     public function createFile(string $sourcePath, string $targetPath): self
     {
+
         if (!is_file($sourcePath))
         {
             throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
         }
 
-        if($this->hasFile($targetPath))
+        if ($this->hasFile($targetPath))
         {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
@@ -100,6 +101,7 @@ class FileStorage
      */
     private function getIndexOf(string $targetPath): int
     {
+
         foreach ($this->arrStorrage as $index => $arrFile)
         {
             if ($arrFile['target'] === $targetPath)
@@ -119,6 +121,7 @@ class FileStorage
      */
     public function createFileFromString(string $targetPath, string $stringContent = ''): self
     {
+
         if ($this->hasFile($targetPath))
         {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
@@ -151,6 +154,7 @@ class FileStorage
      */
     public function getFile(string $targetPath): self
     {
+
         if (($index = $this->getIndexOf($targetPath)) < 0)
         {
             throw new \Exception(sprintf('File "%s" not found in the storage', $targetPath));
@@ -167,6 +171,7 @@ class FileStorage
      */
     public function hasFile(string $targetPath): bool
     {
+
         if ($this->getIndexOf($targetPath) < 0)
         {
             return false;
@@ -180,6 +185,7 @@ class FileStorage
      */
     public function removeFile(): self
     {
+
         if ($this->intIndex > -1)
         {
             if (isset($this->arrStorrage[$this->intIndex]))
@@ -198,6 +204,7 @@ class FileStorage
      */
     public function removeAll(): self
     {
+
         $this->arrStorrage = [];
         $this->intIndex = -1;
 
@@ -211,6 +218,7 @@ class FileStorage
      */
     public function appendContent(string $strContent): self
     {
+
         if ($this->intIndex < 0)
         {
             throw $this->sendFilePointerNotSetException();
@@ -226,6 +234,7 @@ class FileStorage
      */
     private function sendFilePointerNotSetException()
     {
+
         return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::createFile() or FileStorage::createFileFromString()');
     }
 
@@ -236,6 +245,7 @@ class FileStorage
      */
     public function replaceContent(string $strContent): self
     {
+
         if ($this->intIndex < 0)
         {
             throw $this->sendFilePointerNotSetException();
@@ -252,6 +262,7 @@ class FileStorage
      */
     public function getContent(): string
     {
+
         if ($this->intIndex < 0)
         {
             throw $this->sendFilePointerNotSetException();
@@ -266,6 +277,7 @@ class FileStorage
      */
     public function truncate(): self
     {
+
         if ($this->intIndex < 0)
         {
             throw $this->sendFilePointerNotSetException();
@@ -281,6 +293,7 @@ class FileStorage
      */
     public function getAll()
     {
+
         return $this->arrStorrage;
     }
 
@@ -293,6 +306,7 @@ class FileStorage
      */
     public function replaceTags(TagStorage $tagStorage): self
     {
+
         if ($this->intIndex < 0)
         {
             throw $this->sendFilePointerNotSetException();

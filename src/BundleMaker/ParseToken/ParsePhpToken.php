@@ -33,6 +33,7 @@ class ParsePhpToken
      */
     public function __construct(TagStorage $tagStorage)
     {
+
         $this->tagStorage = $tagStorage;
     }
 
@@ -46,6 +47,7 @@ class ParsePhpToken
      */
     public function __get(string $name): string
     {
+
         if (!$this->tagStorage->has($name))
         {
             if (ob_get_status()['level'] > 0)
@@ -74,6 +76,7 @@ class ParsePhpToken
      */
     public function parsePhpTokens(string $content): string
     {
+
         $objFile = new Filesystem();
 
         $tmpDir = sys_get_temp_dir();

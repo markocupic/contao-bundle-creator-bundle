@@ -30,6 +30,7 @@ final class Str
      */
     public static function hasPrefix(string $value, string $prefix): bool
     {
+
         return 0 === stripos($value, $prefix);
     }
 
@@ -40,6 +41,7 @@ final class Str
      */
     public static function addPrefix(string $value, string $prefix): string
     {
+
         return $prefix . self::removePrefix($value, $prefix);
     }
 
@@ -50,6 +52,7 @@ final class Str
      */
     public static function removePrefix(string $value, string $prefix): string
     {
+
         return self::hasPrefix($value, $prefix) ? substr($value, strlen($prefix)) : $value;
     }
 
@@ -63,6 +66,7 @@ final class Str
      */
     public static function asVendorname(string $str): string
     {
+
         $str = preg_replace('/_/', '-', $str);
         $str = preg_replace('/[\-]{2,}/', '-', $str);
         $str = preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $str);
@@ -78,6 +82,7 @@ final class Str
      */
     public static function asRepositoryname(string $str): string
     {
+
         return preg_replace('/[^A-Za-z0-9_\-]/', '-', $str);
     }
 
@@ -90,6 +95,7 @@ final class Str
      */
     public static function asContaoBackendModuleType(string $str): string
     {
+
         $str = self::asSnakecase($str);
         return $str;
     }
@@ -103,6 +109,7 @@ final class Str
      */
     public static function asSnakecase(string $str): string
     {
+
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace(' ', '_', $str);
         $str = str_replace('-', '_', $str);
@@ -110,6 +117,7 @@ final class Str
         // Split between uppercase letters FooBBar -> Foo_B_Bar
         $pieces = preg_split('/(?=[A-Z])/', $str);
         $pieces = array_map(function ($str) {
+
             return '_' . $str;
         }, $pieces);
         $str = implode($pieces);
@@ -133,6 +141,7 @@ final class Str
      */
     public static function asContaoFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
     {
+
         $str = self::asContaoFrontendModuleType($str);
         $str = self::asClassname($str);
         return $str . $postfix;
@@ -155,6 +164,7 @@ final class Str
      */
     public static function asContaoFrontendModuleType(string $str, $postfix = '_module'): string
     {
+
         $str = self::asSnakecase((string) $str);
 
         $pattern = '/^(module_|module|mod_|mod)/';
@@ -185,6 +195,7 @@ final class Str
      */
     public static function asClassname(string $str): string
     {
+
         $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
         $str = str_replace('-', '_', $str);
         $str = str_replace(' ', '_', $str);
@@ -192,6 +203,7 @@ final class Str
         // Split where Uppercase letter begins fooBar -> foo_Bar
         $pieces = preg_split('/(?=[A-Z\s]+)/', $str);
         $pieces = array_map(function ($str) {
+
             return '_' . $str;
         }, $pieces);
         $str = implode($pieces);
@@ -199,6 +211,7 @@ final class Str
         // Split between uppercase letters FooBBar -> Foo_B_Bar
         $pieces = preg_split('/(?=[A-Z])/', $str);
         $pieces = array_map(function ($str) {
+
             return '_' . $str;
         }, $pieces);
         $str = implode($pieces);
@@ -217,7 +230,7 @@ final class Str
     }
 
     /**
-     * Get model classname f.ex. SampleTableModel
+     * Get model classname f.ex. SampleTable
      *
      * @param string $str (requires tl_contao_bundle_creator.dcatable)
      * @param string $postfix
@@ -226,6 +239,7 @@ final class Str
      */
     public static function asContaoModelClassname(string $str, string $postfix = 'Model'): string
     {
+
         $str = self::asContaoDcaTableName($str);
         $str = preg_replace('/^tl_/', '', $str);
         $str = self::asClassname($str);
@@ -241,6 +255,7 @@ final class Str
      */
     public static function asContaoDcaTableName(string $str): string
     {
+
         if (!strlen((string) $str))
         {
             throw new \Exception('No dca tablename set.');
@@ -272,6 +287,7 @@ final class Str
      */
     public static function asContaoFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
     {
+
         $str = self::asContaoFrontendModuleType($str);
         if ($strPrefix != '')
         {
