@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         ],
         'repositoryname'                    => [
             'inputType' => 'text',
-            'default'   => 'contao-...',
+            'default'   => 'contao- ... - ... -bundle',
             'exclude'   => true,
             'sorting'   => true,
             'flag'      => 1,
