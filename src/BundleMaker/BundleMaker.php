@@ -190,14 +190,14 @@ class BundleMaker
         if ($this->model->vendorname != '')
         {
             // Sanitize vendorname
-            $this->model->vendorname = Str::asVendorname((string) $this->model->vendorname);
+            $this->model->vendorname = Str::asVendorName((string) $this->model->vendorname);
             $this->model->save();
         }
 
         if ($this->model->repositoryname != '')
         {
             // Sanitize repositoryname
-            $this->model->repositoryname = Str::asRepositoryname((string) $this->model->repositoryname, 'contao-');
+            $this->model->repositoryname = Str::asRepositoryName((string) $this->model->repositoryname, '');
             $this->model->save();
         }
 
@@ -218,7 +218,7 @@ class BundleMaker
         if ($this->model->backendmodulecategory != '')
         {
             // Get the backend module category and sanitize it to contao backend module convention
-            $this->model->backendmodulecategory = Str::asSnakecase((string) $this->model->backendmodulecategory);
+            $this->model->backendmodulecategory = Str::asSnakeCase((string) $this->model->backendmodulecategory);
             $this->model->save();
         }
 
@@ -232,7 +232,7 @@ class BundleMaker
         if ($this->model->frontendmodulecategory != '')
         {
             // Get the frontend module category and sanitize it to contao frontend module convention
-            $this->model->frontendmodulecategory = Str::asSnakecase((string) $this->model->frontendmodulecategory);
+            $this->model->frontendmodulecategory = Str::asSnakeCase((string) $this->model->frontendmodulecategory);
             $this->model->save();
         }
     }
@@ -260,11 +260,11 @@ class BundleMaker
         $this->tagStorage->set('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
 
         // Namespaces
-        $this->tagStorage->set('toplevelnamespace', Str::asClassname((string) $this->model->vendorname));
-        $this->tagStorage->set('sublevelnamespace', Str::asClassname((string) $this->model->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->model->vendorname));
+        $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->model->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . Str::asClassname((string) $this->model->vendorname) . Str::asClassname((string) $this->model->repositoryname)));
+        $this->tagStorage->set('toplevelnamespacetwig', preg_replace('/Bundle$/', '', '@' . Str::asClassName((string) $this->model->vendorname) . Str::asClassName((string) $this->model->repositoryname)));
 
         // Composer
         $this->tagStorage->set('composerdescription', (string) $this->model->composerdescription);
@@ -282,7 +282,7 @@ class BundleMaker
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
             $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassname((string) $this->model->dcatable));
+            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->model->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
             $this->tagStorage->set('backendmodulecategory', (string) $this->model->backendmodulecategory);
             $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
@@ -293,7 +293,7 @@ class BundleMaker
         // Frontend module
         if ($this->model->addFrontendModule)
         {
-            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassname((string) $this->model->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->model->frontendmoduletype));
             $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
             $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
@@ -392,7 +392,7 @@ class BundleMaker
     {
 
         $source = sprintf('%s/%s/src/Class.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asClassname((string) $this->model->vendorname), Str::asClassname((string) $this->model->repositoryname));
+        $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asClassName((string) $this->model->vendorname), Str::asClassName((string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
@@ -521,7 +521,7 @@ class BundleMaker
 
         // Add a sample model
         $source = sprintf('%s/%s/src/Model/Model.tpl.php', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asContaoModelClassname((string) $this->model->dcatable));
+        $target = sprintf('%s/vendor/%s/%s/src/Model/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asContaoModelClassName((string) $this->model->dcatable));
         $this->fileStorage->createFile($source, $target);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
@@ -553,7 +553,7 @@ class BundleMaker
         $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
 
         // Get the frontend module classname
-        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassname((string) $this->model->frontendmoduletype);
+        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->model->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendController
         $source = sprintf('%s/%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php', $this->projectDir, static::SAMPLE_DIR);

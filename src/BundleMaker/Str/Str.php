@@ -38,6 +38,10 @@ final class Str
      * Ensures that the given string ends with the given prefix. If the string
      * already contains the prefix, it's not added twice. It's case-insensitive
      * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
+     *
+     * @param string $value
+     * @param string $prefix
+     * @return string
      */
     public static function addPrefix(string $value, string $prefix): string
     {
@@ -46,9 +50,56 @@ final class Str
     }
 
     /**
+     * Looks for suffixes in strings in a case-insensitive way.
+     *
+     * @param string $value
+     * @param string $suffix
+     * @return bool
+     */
+    public static function hasSuffix(string $value, string $suffix): bool
+    {
+
+        return 0 === strcasecmp($suffix, substr($value, -\strlen($suffix)));
+    }
+
+    /**
+     * Ensures that the given string ends with the given suffix. If the string
+     * already contains the suffix, it's not added twice. It's case-insensitive
+     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
+     *
+     * @param string $value
+     * @param string $suffix
+     * @return string
+     */
+    public static function addSuffix(string $value, string $suffix): string
+    {
+
+        return self::removeSuffix($value, $suffix) . $suffix;
+    }
+
+    /**
+     * Ensures that the given string doesn't end with the given suffix. If the
+     * string contains the suffix multiple times, only the last one is removed.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     *
+     * @param string $value
+     * @param string $suffix
+     * @return string
+     */
+    public static function removeSuffix(string $value, string $suffix): string
+    {
+
+        return self::hasSuffix($value, $suffix) ? substr($value, 0, -\strlen($suffix)) : $value;
+    }
+
+    /**
      * Ensures that the given string doesn't starts with the given prefix. If the
      * string contains the prefix multiple times, only the first one is removed.
      * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     *
+     * @param string $value
+     * @param string $prefix
+     * @return string
      */
     public static function removePrefix(string $value, string $prefix): string
     {
@@ -61,243 +112,196 @@ final class Str
      * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name
      * But allow Vendor-Name, vendor-name
      *
-     * @param string $str
+     * @param string $value
      * @return string
      */
-    public static function asVendorname(string $str): string
+    public static function asVendorName(string $value): string
     {
 
-        $str = preg_replace('/_/', '-', $str);
-        $str = preg_replace('/[\-]{2,}/', '-', $str);
-        $str = preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $str);
-        return $str;
+        $value = preg_replace('/_/', '-', $value);
+        $value = preg_replace('/[\-]{2,}/', '-', $value);
+        $value = preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $value);
+        return $value;
     }
 
     /**
      * Sanitize repository name (github restrictions)
-     * "vendor_name#" will be converted to "vendor_name-"
+     * Remove not accepted strings and replace them with "-"
+     * contao-my-repository#" will be converted to "contao-my-repository-"
      *
-     * @param string $str
+     * @param string $value
+     * @param string $prefix
      * @return string
      */
-    public static function asRepositoryname(string $str): string
+    public static function asRepositoryName(string $value, string $prefix = ''): string
     {
 
-        return preg_replace('/[^A-Za-z0-9_\-]/', '-', $str);
+        $value = preg_replace('/[^A-Za-z0-9_\-]/', '-', $value);
+        return self::addPrefix($value, $prefix);
     }
 
     /**
      * Get the backend module type (f.ex. my_custom_module)
      * Convention => snakecase
      *
-     * @param string $str (requires tl_contao_bundle_creator.backendmoduletype)
+     * @param string $value (requires tl_contao_bundle_creator.backendmoduletype)
      * @return string
      */
-    public static function asContaoBackendModuleType(string $str): string
+    public static function asContaoBackendModuleType(string $value): string
     {
 
-        $str = self::asSnakecase($str);
-        return $str;
+        return self::asSnakeCase($value);
     }
 
     /**
      * Converts a string to snakecase
      * My custom module => my_custom_module
      *
-     * @param string $str
+     * @param string $value
      * @return string
      */
-    public static function asSnakecase(string $str): string
+    public static function asSnakeCase(string $value): string
     {
 
-        $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
-        $str = str_replace(' ', '_', $str);
-        $str = str_replace('-', '_', $str);
+        $value = trim($value);
+        $value = preg_replace('/[^a-zA-Z0-9_]/', '_', $value);
+        $value = preg_replace('/(?<=\\w)([A-Z])/', '_$1', $value);
+        $value = preg_replace('/_{2,}/', '_', $value);
 
-        // Split between uppercase letters FooBBar -> Foo_B_Bar
-        $pieces = preg_split('/(?=[A-Z])/', $str);
-        $pieces = array_map(function ($str) {
-
-            return '_' . $str;
-        }, $pieces);
-        $str = implode($pieces);
-
-        // Trim from underscores
-        $str = preg_replace('/^_|_$/', '', $str);
-        // Do not allow multiple underscores in series
-        $str = preg_replace('/_{2,}/', '_', $str);
-        $str = strtolower($str);
-
-        return $str;
+        return strtolower($value);
     }
 
     /**
-     * Get the frontend module classname from module type and add the "Controller" postfix
+     * Get the frontend module classname from module type and add the "Controller" suffix
      * f.ex. my_custom_module => MyCustomModuleController
      *
-     * @param string $str (requires tl_contao_bundle_creator.frontendmoduletype)
-     * @param string $postfix
+     * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $suffix
      * @return string
      */
-    public static function asContaoFrontendModuleClassname(string $str, string $postfix = 'Controller'): string
+    public static function asContaoFrontendModuleClassName(string $value, string $suffix = 'Controller'): string
     {
 
-        $str = self::asContaoFrontendModuleType($str);
-        $str = self::asClassname($str);
-        return $str . $postfix;
+        $value = self::asContaoFrontendModuleType($value);
+        $value = self::asClassName($value);
+        return self::addSuffix($value, $suffix);
     }
-
-    /**
-     * Get the backend module type (f.ex. my_custom_module)
-     * Convention => snakecase
-     *
-     * @return string
-     */
 
     /**
      * Get the frontend module type (f.ex. my_custom_module)
-     * Convention => snakecase with postfix "_module"
+     * Convention => snakecase with suffix "_module"
      *
-     * @param string $str (requires tl_contao_bundle_creator.frontendmoduletype)
-     * @param string $postfix
+     * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $suffix
      * @return string
      */
-    public static function asContaoFrontendModuleType(string $str, $postfix = '_module'): string
+    public static function asContaoFrontendModuleType(string $value, $suffix = '_module'): string
     {
 
-        $str = self::asSnakecase((string) $str);
+        $value = self::asSnakeCase((string) $value);
 
-        $pattern = '/^(module_|module|mod_|mod)/';
-        if (preg_match($pattern, $str))
-        {
-            $str = preg_replace($pattern, '', $str);
-        }
+        $pattern = '/^(module_|module|mod_|mod|_{1})/';
+        $value = preg_replace($pattern, '', $value);
 
-        $pattern = '/(_module|module)$/';
-        if (preg_match($pattern, $str))
-        {
-            $str = preg_replace($pattern, '', $str);
-        }
+        $pattern = '/_{1}$/';
+        $value = preg_replace($pattern, '', $value);
 
-        // Add postfix
-        $str = $str . $postfix;
+        // Add suffix
+        $value = self::addSuffix($value, $suffix);
 
-        return $str;
+        return $value;
     }
 
     /**
-     * Converts a string to namespace format
-     * "my_custom name-space" becomes "MyCustomNameSpace"
-     * "foo_Bar_fooBar99" becomes "FooBarFooBar99"
+     * Transforms the given string into the format commonly used by PHP classes,
+     * (e.g. `app:do_this-and_that` -> `AppDoThisAndThat`) but it doesn't check
+     * the validity of the class name.
      *
-     * @param string $str
+     * @param string $value
+     * @param string $suffix
      * @return string
      */
-    public static function asClassname(string $str): string
+    public static function asClassName(string $value, string $suffix = ''): string
     {
 
-        $str = str_replace('/[^A-Za-z0-9_\-]/', '', $str);
-        $str = str_replace('-', '_', $str);
-        $str = str_replace(' ', '_', $str);
+        $value = trim($value);
+        $value = str_replace(['-', '_', '.', ':'], ' ', $value);
+        $value = ucwords($value);
+        $value = str_replace(' ', '', $value);
+        $value = ucfirst($value);
+        $value = self::addSuffix($value, $suffix);
 
-        // Split where Uppercase letter begins fooBar -> foo_Bar
-        $pieces = preg_split('/(?=[A-Z\s]+)/', $str);
-        $pieces = array_map(function ($str) {
-
-            return '_' . $str;
-        }, $pieces);
-        $str = implode($pieces);
-
-        // Split between uppercase letters FooBBar -> Foo_B_Bar
-        $pieces = preg_split('/(?=[A-Z])/', $str);
-        $pieces = array_map(function ($str) {
-
-            return '_' . $str;
-        }, $pieces);
-        $str = implode($pieces);
-
-        // Trim from underscores
-        $str = preg_replace('/^_|_$/', '', $str);
-
-        // Do not allow multiple underscores in series
-        $str = preg_replace('/_{2,}/', '_', $str);
-
-        $arrNamespace = explode('_', $str);
-        $arrNamespace = array_filter($arrNamespace, 'strlen');
-        $arrNamespace = array_map('strtolower', $arrNamespace);
-        $arrNamespace = array_map('ucfirst', $arrNamespace);
-        return implode('', $arrNamespace);
+        return $value;
     }
 
     /**
      * Get model classname f.ex. SampleTable
      *
-     * @param string $str (requires tl_contao_bundle_creator.dcatable)
-     * @param string $postfix
+     * @param string $value (requires tl_contao_bundle_creator.dcatable)
+     * @param string $suffix
      * @return string
      * @throws \Exception
      */
-    public static function asContaoModelClassname(string $str, string $postfix = 'Model'): string
+    public static function asContaoModelClassName(string $value, string $suffix = 'Model'): string
     {
 
-        $str = self::asContaoDcaTableName($str);
-        $str = preg_replace('/^tl_/', '', $str);
-        $str = self::asClassname($str);
-        return $str . $postfix;
+        $value = self::asContaoDcaTableName($value);
+        $value = preg_replace('/^tl_/', '', $value);
+        return self::asClassName($value, $suffix);
     }
 
     /**
      * Get the sanitized dca tablename f.ex. tl_sample_table
      *
-     * @param string $str (requires tl_contao_bundle_creator.dcatable)
+     * @param string $value (requires tl_contao_bundle_creator.dcatable)
      * @return string
      * @throws \Exception
      */
-    public static function asContaoDcaTableName(string $str): string
+    public static function asContaoDcaTableName(string $value): string
     {
 
-        if (!strlen((string) $str))
+        if (!strlen((string) $value))
         {
             throw new \Exception('No dca tablename set.');
         }
 
-        $str = strtolower($str);
-        $str = preg_replace('/-|\s/', '_', $str);
-        $str = preg_replace('/_{2,}/', '_', $str);
-        $str = preg_replace('/[^A-Za-z0-9_]|_$/', '', $str);
-        if (!preg_match('/^tl_/', $str))
+        $value = strtolower($value);
+        $value = preg_replace('/-|\s/', '_', $value);
+        $value = preg_replace('/_{2,}/', '_', $value);
+        $value = preg_replace('/[^A-Za-z0-9_]|_$/', '', $value);
+        if (!preg_match('/^tl_/', $value))
         {
-            $str = 'tl_' . $str;
+            $value = 'tl_' . $value;
         }
-        return $str;
+        return $value;
     }
 
     /**
      * Get the frontend module template name from the frontend module type and add the prefix "mod_"
      *
-     * @param string $strPrefix
-     * @return string $str (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $valuePrefix
+     * @return string $value (requires tl_contao_bundle_creator.frontendmoduletype)
      * @return string
      */
 
     /**
-     * @param string $str
-     * @param string $strPrefix
+     * @param string $value
+     * @param string $valuePrefix
      * @return string
      */
-    public static function asContaoFrontendModuleTemplateName(string $str, $strPrefix = 'mod_'): string
+    public static function asContaoFrontendModuleTemplateName(string $value, $valuePrefix = 'mod_'): string
     {
 
-        $str = self::asContaoFrontendModuleType($str);
-        if ($strPrefix != '')
+        $value = self::asContaoFrontendModuleType($value);
+        if ($valuePrefix != '')
         {
-            $str = preg_replace('/^' . $strPrefix . '/', '', $str);
+            $value = preg_replace('/^' . $valuePrefix . '/', '', $value);
         }
-        $str = preg_replace('/_module$/', '', $str);
-        $str = preg_replace('/_module$/', '', $str);
-        $str = $strPrefix . $str;
-        $str = preg_replace('/_{2,}/', '_', $str);
+        $value = preg_replace('/_module$/', '', $value);
+        $value = preg_replace('/_module$/', '', $value);
+        $value = $valuePrefix . $value;
+        $value = preg_replace('/_{2,}/', '_', $value);
 
-        return $str;
+        return $value;
     }
 }

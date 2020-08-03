@@ -35,28 +35,28 @@ class StrTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to classname format
      */
-    public function testAsClassname(): void
+    public function testAsClassName(): void
     {
 
         $test = 'foo-Bar_foo__Bar--foo9';
         $actual = 'FooBarFooBarFoo9';
-        $this->assertSame(Str::asClassname($test), $actual);
+        $this->assertSame(Str::asClassName($test), $actual);
 
         $test = 'foo-BBar_foo__Bar--foo9';
         $actual = 'FooBBarFooBarFoo9';
-        $this->assertSame(Str::asClassname($test), $actual);
+        $this->assertSame(Str::asClassName($test), $actual);
 
         $test = 'FFFbF';
         $actual = 'FFFbF';
-        $this->assertSame(Str::asClassname($test), $actual);
+        $this->assertSame(Str::asClassName($test), $actual);
 
         $test = 'my_custom name-space';
         $actual = 'MyCustomNameSpace';
-        $this->assertSame(Str::asClassname($test), $actual);
+        $this->assertSame(Str::asClassName($test), $actual);
 
         $test = 'foo_Bar_fooBar99';
         $actual = 'FooBarFooBar99';
-        $this->assertSame(Str::asClassname($test), $actual);
+        $this->assertSame(Str::asClassName($test), $actual);
     }
 
     /**
@@ -64,6 +64,11 @@ class StrTest extends ContaoTestCase
      */
     public function testAddPrefix()
     {
+
+        $testValue = 'custom-bundle';
+        $testPrefix = '';
+        $actual = 'custom-bundle';
+        $this->assertSame(Str::addPrefix($testValue, $testPrefix), $actual);
 
         $testValue = 'custom-bundle';
         $testPrefix = 'contao-';
@@ -89,42 +94,42 @@ class StrTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to snakecase format
      */
-    public function testAsSnakecase(): void
+    public function testAsSnakeCase(): void
     {
 
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
-        $this->assertSame(Str::asSnakecase($test), $actual);
+        $this->assertSame(Str::asSnakeCase($test), $actual);
     }
 
     /**
      * Test if strings are correctly converted to github vendorname format
      */
-    public function testAsVendorname(): void
+    public function testAsVendorName(): void
     {
 
         $test = 'vendor_Name8';
         $actual = 'vendor-Name8';
-        $this->assertSame(Str::asVendorname($test), $actual);
+        $this->assertSame(Str::asVendorName($test), $actual);
 
         $test = '-vendor--name-';
         $actual = 'vendor-name';
-        $this->assertSame(Str::asVendorname($test), $actual);
+        $this->assertSame(Str::asVendorName($test), $actual);
 
         $test = '--vendor_name--';
         $actual = 'vendor-name';
-        $this->assertSame(Str::asVendorname($test), $actual);
+        $this->assertSame(Str::asVendorName($test), $actual);
     }
 
     /**
      * Test if strings are correctly converted to github repository name format
      */
-    public function testAsRepositoryname(): void
+    public function testAsRepositoryName(): void
     {
 
         $test = 'repository_-name#?';
         $actual = 'repository_-name--';
-        $this->assertSame(Str::asRepositoryname($test), $actual);
+        $this->assertSame(Str::asRepositoryName($test), $actual);
     }
 
     /**
@@ -137,7 +142,7 @@ class StrTest extends ContaoTestCase
         $actual = 'my_custom_module';
         $this->assertSame(Str::asContaoFrontendModuleType($test), $actual);
 
-        $test = 'my_ Custom99_';
+        $test = 'my_ Custom99___';
         $actual = 'my_custom99_module';
         $this->assertSame(Str::asContaoFrontendModuleType($test), $actual);
     }
@@ -173,16 +178,16 @@ class StrTest extends ContaoTestCase
     /**
      * Test if strings are correctly converted to frontend module classname format
      */
-    public function testAsContaoFrontendModuleClassname(): void
+    public function testAsContaoFrontendModuleClassName(): void
     {
 
         $test = 'my_ --ExtraCustom--99_Module';
         $actual = 'MyExtraCustom99ModuleController';
-        $this->assertSame(Str::asContaoFrontendModuleClassname($test, 'Controller'), $actual);
+        $this->assertSame(Str::asContaoFrontendModuleClassName($test, 'Controller'), $actual);
 
         $test = 'my_ --ExtraCustom--99_';
         $actual = 'MyExtraCustom99ModuleController';
-        $this->assertSame(Str::asContaoFrontendModuleClassname($test, 'Controller'), $actual);
+        $this->assertSame(Str::asContaoFrontendModuleClassName($test, 'Controller'), $actual);
     }
 
     /**
@@ -190,12 +195,12 @@ class StrTest extends ContaoTestCase
      *
      * @throws \Exception
      */
-    public function testAsContaoModelClassname(): void
+    public function testAsContaoModelClassName(): void
     {
 
         $test = 'tl_my_ table';
         $actual = 'MyTableModel';
-        $this->assertSame(Str::asContaoModelClassname($test), $actual);
+        $this->assertSame(Str::asContaoModelClassName($test), $actual);
     }
 
     /**

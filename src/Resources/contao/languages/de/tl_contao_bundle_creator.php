@@ -12,9 +12,10 @@
 /**
  * Operations
  */
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['edit'] = ["Bundle mit ID: %s bearbeiten", "Bundle mit ID: %s bearbeiten"];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['delete'] = ["Bundle mit ID: %s löschen", "Bundle mit ID: %s löschen"];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle mit ID: %s ansehen", "Bundle mit ID: %s ansehen"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['edit'] = ["Bundle ID %s bearbeiten", "Bundle ID %s bearbeiten"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['copy'] = ["Bundle ID %s duplizieren", "Bundle ID %s duplizieren"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['delete'] = ["Bundle ID %s löschen", "Bundle ID %s löschen"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['show'] = ["Bundle ID %s ansehen", "Details des Bundles ID %s anzeigen"];
 
 /**
  * Legends
@@ -31,7 +32,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['custom_route_settings_legend'] 
  */
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['bundlename'] = ["Bundle Name", "Geben Sie einen Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['vendorname'] = ["Vendorname", "Geben Sie Ihren Vendornamen ein."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name (f.ex. \"hello-world-bundle\")", "Geben Sie den Repository Namen für das Bundle ein."];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['repositoryname'] = ["(Github-) Repository Name (f.ex. \"contao-hello-world-bundle\")", "Geben Sie den Repository Namen für das Bundle ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['overwriteexisting'] = ["Gleichnamiges Bundle überschreiben", "Soll ein gleichnamiges, bereits bestehendes Bundle überschrieben werden?"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerdescription'] = ["composer.json: Beschreibungstext", "Geben Sie den Beschreibungstext für die composer.json ein."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['composerpackageversion'] = ["composer.json: Paketversion (Nötig für Paketupload mit Contao Manager)", "Geben Sie die Paketversion im Format 1.x ein. (Nur nötig wenn bundle über Paketupload in Contao Manager bereitgestellt wird)"];
@@ -51,7 +52,7 @@ $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['dcatable'] = ["DCA Tabellenname
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addFrontendModule'] = ["Frontendmodul hinzufügen", "Fügen Sie dem Package ein Frontendmodul hinzu."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategory'] = ["Frontendmodul-Kategorie (snakecase)", "Geben Sie die Kategorie in camelcase an. z.B. my_custom_modules"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmodulecategorytrans'] = ["Frontendmodul-Kategorie-Übersetzung", "Bei bereits bestehenden Kategorien sollte das Feld leer gelassen werden."];
-$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletype'] = ["Frontendmodul-Typ (snakecase mit \"_module\" als postfix)", "Geben Sie den Namen des Modules in snakecase an. z.B. my_custom_module"];
+$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletype'] = ["Frontendmodul-Typ (snakecase mit \"_module\" als suffix)", "Geben Sie den Namen des Modules in snakecase an. z.B. my_custom_module"];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['frontendmoduletrans'] = ["Frontendmodul-Name-Übersetzung und Beschreibung", "Geben Sie dem Modul einen Namen und eine Beschreibung."];
 $GLOBALS['TL_LANG']['tl_contao_bundle_creator']['addCustomRoute'] = ["Eine \"custom route\" hinzufügen", "Geben Sie an, ob Sie eine \"custom route\" hinzufügen möchten."];
 
