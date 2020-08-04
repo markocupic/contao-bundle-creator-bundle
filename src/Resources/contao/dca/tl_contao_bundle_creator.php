@@ -112,12 +112,11 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         ],
         'repositoryname'                    => [
             'inputType' => 'text',
-            'default'   => 'contao- ... - ... -bundle',
             'exclude'   => true,
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'doNotCopy' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'doNotCopy' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. contao-pet-collection-bundle'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'overwriteexisting'                 => [
@@ -146,13 +145,15 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sql'       => "varchar(16) NOT NULL default ''"
         ],
         'composerlicense'                   => [
-            'inputType' => 'text',
-            'exclude'   => true,
-            'sorting'   => true,
-            'flag'      => 1,
-            'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
-            'sql'       => "varchar(255) NOT NULL default ''"
+            'inputType'        => 'select',
+            'exclude'          => true,
+            'sorting'          => true,
+            'options_callback' => ['tl_contao_bundle_creator', 'getLicenses'],
+            'default'          => 'GPL-3.0-or-later',
+            'flag'             => 1,
+            'search'           => true,
+            'eval'             => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'sql'              => "varchar(255) NOT NULL default ''"
         ],
         'composerauthorname'                => [
             'inputType' => 'text',
@@ -208,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. tl_pets'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmodulecategory'             => [
@@ -217,16 +218,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
-            'sql'       => "varchar(255) NOT NULL default ''"
-        ],
-        'backendmoduletype'                 => [
-            'inputType' => 'text',
-            'exclude'   => true,
-            'sorting'   => true,
-            'flag'      => 1,
-            'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmodulecategorytrans'        => [
@@ -238,13 +230,22 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
+        'backendmoduletype'                 => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_collection'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
         'backendmoduletrans'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'clr'],
+            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'addFrontendModule'                 => [
@@ -259,16 +260,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
-            'sql'       => "varchar(255) NOT NULL default ''"
-        ],
-        'frontendmoduletype'                => [
-            'inputType' => 'text',
-            'exclude'   => true,
-            'sorting'   => true,
-            'flag'      => 1,
-            'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'frontendmodulecategorytrans'       => [
@@ -280,13 +272,22 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
+        'frontendmoduletype'                => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_listing_module'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
         'frontendmoduletrans'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'clr'],
+            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'addCustomRoute'                    => [
@@ -386,5 +387,20 @@ class tl_contao_bundle_creator extends Contao\Backend
         }
 
         return $arrButtons;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLicenses(): array
+    {
+
+        $arrLicenses = [];
+        foreach ($GLOBALS['contao_bundle_creator']['licenses'] as $k => $v)
+        {
+            $arrLicenses[$k] = "$k   ($v)";
+        }
+
+        return $arrLicenses;
     }
 }
