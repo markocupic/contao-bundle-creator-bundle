@@ -107,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_vendorname'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'repositoryname'                    => [
@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'doNotCopy' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. contao-pet-collection-bundle'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'doNotCopy' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_repositoryname', 'placeholder' => 'e.g. contao-pet-collection-bundle'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'overwriteexisting'                 => [
@@ -209,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. tl_pets'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_dcatable', 'placeholder' => 'e.g. tl_pets'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmodulecategory'             => [
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_modules'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_backendmodulecategory', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmodulecategorytrans'        => [
@@ -236,7 +236,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_collection'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_backendmoduletype', 'placeholder' => 'e.g. pet_collection'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'backendmoduletrans'                => [
@@ -260,7 +260,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_modules'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmodulecategory', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'frontendmodulecategorytrans'       => [
@@ -278,7 +278,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => 1,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'rgxp' => 'alnum', 'placeholder' => 'e.g. pet_listing_module'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmoduletype', 'placeholder' => 'e.g. pet_listing_module'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'frontendmoduletrans'               => [

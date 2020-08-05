@@ -168,11 +168,11 @@ class StrTest extends ContaoTestCase
 
         $test = 'foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
-        $this->assertSame(Str::asContaoDcaTableName($test), $actual);
+        $this->assertSame(Str::asContaoDcaTable($test), $actual);
 
         $test = 'tl_foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
-        $this->assertSame(Str::asContaoDcaTableName($test), $actual);
+        $this->assertSame(Str::asContaoDcaTable($test), $actual);
     }
 
     /**

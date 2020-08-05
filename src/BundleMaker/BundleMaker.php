@@ -96,10 +96,6 @@ class BundleMaker
 
         $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
 
-        // Sanitize model (backendmoduletype, backendmodulecategory, frontendmoduletype, frontendmodulecategory)
-        // Don't move the position, this has to be called first!
-        $this->sanitizeModel();
-
         // Set the php template tags
         $this->setTags();
 
@@ -177,64 +173,6 @@ class BundleMaker
     {
 
         return is_dir($this->projectDir . '/vendor/' . $this->model->vendorname . '/' . $this->model->repositoryname);
-    }
-
-    /**
-     * Sanitize model
-     *
-     * @throws \Exception
-     */
-    protected function sanitizeModel(): void
-    {
-
-        if ($this->model->vendorname != '')
-        {
-            // Sanitize vendorname
-            $this->model->vendorname = Str::asVendorName((string) $this->model->vendorname);
-            $this->model->save();
-        }
-
-        if ($this->model->repositoryname != '')
-        {
-            // Sanitize repositoryname
-            $this->model->repositoryname = Str::asRepositoryName((string) $this->model->repositoryname, '');
-            $this->model->save();
-        }
-
-        if ($this->model->backendmoduletype != '')
-        {
-            // Get the backend module type and sanitize it to contao backend module convention
-            $this->model->backendmoduletype = Str::asContaoBackendModuleType((string) $this->model->backendmoduletype);
-            $this->model->save();
-        }
-
-        if ($this->model->dcatable != '')
-        {
-            // Sanitize dca table name
-            $this->model->dcatable = Str::asContaoDcaTableName((string) $this->model->dcatable);
-            $this->model->save();
-        }
-
-        if ($this->model->backendmodulecategory != '')
-        {
-            // Get the backend module category and sanitize it to contao backend module convention
-            $this->model->backendmodulecategory = Str::asSnakeCase((string) $this->model->backendmodulecategory);
-            $this->model->save();
-        }
-
-        if ($this->model->frontendmoduletype != '')
-        {
-            // Get the frontend module type and sanitize it to contao frontend module convention
-            $this->model->frontendmoduletype = Str::asContaoFrontendModuleType((string) $this->model->frontendmoduletype);
-            $this->model->save();
-        }
-
-        if ($this->model->frontendmodulecategory != '')
-        {
-            // Get the frontend module category and sanitize it to contao frontend module convention
-            $this->model->frontendmodulecategory = Str::asSnakeCase((string) $this->model->frontendmodulecategory);
-            $this->model->save();
-        }
     }
 
     /**

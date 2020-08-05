@@ -135,7 +135,7 @@ final class Str
      */
     public static function asRepositoryName(string $value, string $prefix = ''): string
     {
-
+        $value = str_replace('#', '-', $value);
         $value = preg_replace('/[^A-Za-z0-9_\-]/', '-', $value);
         return self::addPrefix($value, $prefix);
     }
@@ -245,7 +245,7 @@ final class Str
     public static function asContaoModelClassName(string $value, string $suffix = 'Model'): string
     {
 
-        $value = self::asContaoDcaTableName($value);
+        $value = self::asContaoDcaTable($value);
         $value = preg_replace('/^tl_/', '', $value);
         return self::asClassName($value, $suffix);
     }
@@ -257,7 +257,7 @@ final class Str
      * @return string
      * @throws \Exception
      */
-    public static function asContaoDcaTableName(string $value): string
+    public static function asContaoDcaTable(string $value): string
     {
 
         if (!strlen((string) $value))
