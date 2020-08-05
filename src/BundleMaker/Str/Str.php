@@ -172,6 +172,19 @@ final class Str
     }
 
     /**
+     * Return Dependeny Injection Extension Classname
+     * e.g. ContaoCalendarExtension
+     *
+     * @param string $vendorname
+     * @param string $repositoryname
+     * @return string|string[]|null
+     */
+    public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
+    {
+        return preg_replace('/Bundle$/','Extension', self::asClassName($vendorName).self::asClassName($repositoryName));
+    }
+
+    /**
      * Get the frontend module classname from module type and add the "Controller" suffix
      * f.ex. my_custom_module => MyCustomModuleController
      *

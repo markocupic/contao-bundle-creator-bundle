@@ -122,6 +122,18 @@ class StrTest extends ContaoTestCase
     }
 
     /**
+     * Test if strings are correctly converted to dependency injection extension class name
+     */
+    public function testAsDependencyInjectionExtensionClassName(): void
+    {
+
+        $vendorName = 'dirty_harry';
+        $repositoryName = 'contao-super-bundle';
+        $actual = 'DirtyHarryContaoSuperExtension';
+        $this->assertSame(Str::asDependencyInjectionExtensionClassName($vendorName, $repositoryName), $actual);
+    }
+
+    /**
      * Test if strings are correctly converted to github repository name format
      */
     public function testAsRepositoryName(): void

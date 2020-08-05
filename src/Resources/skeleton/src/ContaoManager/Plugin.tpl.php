@@ -8,11 +8,9 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contao
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 <?php if($this->addcustomroute == "1"): ?>
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 <?php endif; ?>
-use Symfony\Component\Config\Loader\LoaderInterface;
 <?php if($this->addcustomroute == "1"): ?>
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 <?php endif; ?>
@@ -25,7 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\ContaoManager
  */
-class Plugin implements BundlePluginInterface, <?php if($this->addcustomroute == "1"): ?>RoutingPluginInterface, <?php endif; ?>ConfigPluginInterface
+class Plugin implements BundlePluginInterface<?php if($this->addcustomroute == "1"): ?>, RoutingPluginInterface<?php endif; ?><?= "\n" ?>
 {
     /**
      * @param ParserInterface $parser
@@ -37,18 +35,6 @@ class Plugin implements BundlePluginInterface, <?php if($this->addcustomroute ==
             BundleConfig::create('<?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\<?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?>')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
-    }
-
-    /**
-     * @param LoaderInterface $loader
-     * @param array $managerConfig
-     * @throws \Exception
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
-    {
-        $loader->load(__DIR__ . '/../Resources/config/parameters.yml');
-        $loader->load(__DIR__ . '/../Resources/config/services.yml');
-        $loader->load(__DIR__ . '/../Resources/config/listener.yml');
     }
 
 <?php if($this->addcustomroute == "1"): ?>

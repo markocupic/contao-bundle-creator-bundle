@@ -105,6 +105,9 @@ class BundleMaker
         // Add the bundle class to file storage
         $this->addBundleClassToFileStorage();
 
+        // Add the Dependency Injection Extension class to file storage
+        $this->addDependencyInjectionExtensionClassToFileStorage();
+
         // Add the Contao Manager Plugin class to file storage
         $this->addContaoManagerPluginClassToFileStorage();
 
@@ -196,6 +199,7 @@ class BundleMaker
         $this->tagStorage->set('repositoryname', (string) $this->model->repositoryname);
         $this->tagStorage->set('vendornametolower', (string) str_replace('-', '_', strtolower($this->model->vendorname)));
         $this->tagStorage->set('repositorynametolower', (string) preg_replace('/-bundle$/', '', str_replace('-', '_', strtolower($this->model->repositoryname))));
+        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->model->vendorname, (string) $this->model->repositoryname));
 
         // Namespaces
         $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->model->vendorname));
@@ -331,6 +335,19 @@ class BundleMaker
 
         $source = sprintf('%s/%s/src/Class.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asClassName((string) $this->model->vendorname), Str::asClassName((string) $this->model->repositoryname));
+        $this->fileStorage->createFile($source, $target);
+    }
+
+    /**
+     * Add the Dependency Injection Extension class to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addDependencyInjectionExtensionClassToFileStorage(): void
+    {
+
+        $source = sprintf('%s/%s/src/DependencyInjection/Extension.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/DependencyInjection/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asDependencyInjectionExtensionClassName((string) $this->model->vendorname, (string) $this->model->repositoryname));
         $this->fileStorage->createFile($source, $target);
     }
 
