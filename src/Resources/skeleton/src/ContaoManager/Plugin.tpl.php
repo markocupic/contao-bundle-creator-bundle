@@ -31,6 +31,7 @@ class Plugin implements BundlePluginInterface<?php if($this->addcustomroute == "
      */
     public function getBundles(ParserInterface $parser)
     {
+
         return [
             BundleConfig::create('<?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\<?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?>')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
@@ -46,6 +47,7 @@ class Plugin implements BundlePluginInterface<?php if($this->addcustomroute == "
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
+
         return $resolver
             ->resolve(__DIR__ . '/../Resources/config/routes.yml')
             ->load(__DIR__ . '/../Resources/config/routes.yml');
