@@ -3,7 +3,7 @@
 
 ![Alt text](src/Resources/public/logo.png?raw=true "Marko Cupic")
 
-### ❤️ :heart: Currently looking for a translator who would translate the contao language files from German into English.
+### ❤️ :heart: Help wanted. I'm currently looking for a translator who would translate the contao language files from German into English.
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
