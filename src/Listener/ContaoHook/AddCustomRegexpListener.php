@@ -29,48 +29,45 @@ class AddCustomRegexpListener
     public function cbcbRegexp(string $regexp, $input, Widget $widget): bool
     {
 
-        if (strpos($regexp, 'cbcb_') === 0)
+        if (preg_match('/^cbcb_(.*)$/', $regexp, $matches))
         {
-            if (preg_match('/^cbcb_(.*)$/', $regexp, $matches))
+            if (isset($matches[1]) && $widget->name === $matches[1])
             {
-                if (isset($matches[1]) && $widget->name === $matches[1])
+                $blnTested = false;
+                $fittedInput = $input;
+                switch ($matches[1])
                 {
-                    $blnTested = false;
-                    $fittedInput = $input;
-                    switch ($matches[1])
-                    {
-                        case 'vendorname':
-                            $blnTested = true;
-                            $fittedInput = Str::asVendorName($input);
-                            break;
-                        case 'repositoryname':
-                            $blnTested = true;
-                            $fittedInput = Str::asRepositoryName($input);
-                            break;
-                        case 'dcatable':
-                            $blnTested = true;
-                            $fittedInput = Str::asContaoDcaTable($input);
-                            break;
-                        case 'frontendmodulecategory':
-                        case 'backendmodulecategory':
-                            $blnTested = true;
-                            $fittedInput = Str::asSnakeCase($input);
-                            break;
-                        case 'backendmoduletype':
-                            $blnTested = true;
-                            $fittedInput = Str::asContaoBackendModuleType($input);
-                            break;
-                        case 'frontendmoduletype':
-                            $blnTested = true;
-                            $fittedInput = Str::asContaoFrontendModuleType($input);
-                            break;
-                    }
+                    case 'vendorname':
+                        $blnTested = true;
+                        $fittedInput = Str::asVendorName($input);
+                        break;
+                    case 'repositoryname':
+                        $blnTested = true;
+                        $fittedInput = Str::asRepositoryName($input);
+                        break;
+                    case 'dcatable':
+                        $blnTested = true;
+                        $fittedInput = Str::asContaoDcaTable($input);
+                        break;
+                    case 'frontendmodulecategory':
+                    case 'backendmodulecategory':
+                        $blnTested = true;
+                        $fittedInput = Str::asSnakeCase($input);
+                        break;
+                    case 'backendmoduletype':
+                        $blnTested = true;
+                        $fittedInput = Str::asContaoBackendModuleType($input);
+                        break;
+                    case 'frontendmoduletype':
+                        $blnTested = true;
+                        $fittedInput = Str::asContaoFrontendModuleType($input);
+                        break;
+                }
 
-                    if ($blnTested && $fittedInput !== $input)
-                    {
-                        $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cbcb_rgxp'], $fittedInput, $input));
-                        return true;
-                    }
+                if ($blnTested && $fittedInput !== $input)
+                {
+                    $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cbcb_rgxp'], $fittedInput, $input));
+                    return true;
                 }
             }
         }

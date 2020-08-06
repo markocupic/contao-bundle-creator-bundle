@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  * $fileStorage = new FileStorage();
  *
  * $fileStorage
- * ->createFile('somefolder/somefile.txt', 'destination/somefile.txt')
+ * ->addFile('somefolder/somefile.txt', 'destination/somefile.txt')
  * ->appendContent('bla, bla');
  *
  * or:
@@ -30,7 +30,7 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  * $fileStorage = new FileStorage();
  *
  * $fileStorage
- * ->createFileFromString('destination/somefile.txt', 'Lorem ipsum',);
+ * ->addFileFromString('destination/somefile.txt', 'Lorem ipsum',);
  *
  * or:
  *
@@ -62,7 +62,7 @@ class FileStorage
      * @return FileStorage
      * @throws \Exception
      */
-    public function createFile(string $sourcePath, string $targetPath): self
+    public function addFile(string $sourcePath, string $targetPath): self
     {
 
         if (!is_file($sourcePath))
@@ -119,7 +119,7 @@ class FileStorage
      * @return FileStorage
      * @throws \Exception
      */
-    public function createFileFromString(string $targetPath, string $stringContent = ''): self
+    public function addFileFromString(string $targetPath, string $stringContent = ''): self
     {
 
         if ($this->hasFile($targetPath))
@@ -235,7 +235,7 @@ class FileStorage
     private function sendFilePointerNotSetException()
     {
 
-        return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::createFile() or FileStorage::createFileFromString()');
+        return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::addFile() or FileStorage::addFileFromString()');
     }
 
     /**

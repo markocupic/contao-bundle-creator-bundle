@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Page Title</title>
-    </head>
-    <body>
+{% block body %}
 
-        <h1>Welcome to our homepage</h1>
+    <h1>Welcome to our homepage</h1>
 
-        <p>We are purchasing</p>
+    <p>We are purchasing</p>
 
-        {% for animal in animals %}
-            <ul>
-                <li> {{ animal.color }} {{ animal.species }}</li>
-            </ul>
+    {% for animal in animals %}
 
-        {% endfor %}
+        <ul>
+            <li> {{ animal.color }} {{ animal.species }}</li>
+        </ul>
 
-    </body>
-</html>
+    {% endfor %}
+
+{% endblock %}

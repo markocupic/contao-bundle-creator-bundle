@@ -1,4 +1,4 @@
 # config/routes.yml
-<?= $this->vendornametolower ?>.<?= $this->repositorynametolower ?>.controller:
+<?= $this->routeid ?>.controller:
     resource: ../../../src/Controller
     type: annotation

@@ -230,4 +230,16 @@ class StrTest extends ContaoTestCase
         $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
     }
 
+    /**
+     * Test if method returns the correct twig namespace
+     */
+    public function testAsTwigNamespace()
+    {
+
+        $vendorName = 'dirty_harry';
+        $repositoryName = 'contao-super-bundle';
+        $actual = '@DirtyHarryContaoSuper';
+        $this->assertSame(Str::asTwigNamespace($vendorName, $repositoryName), $actual);
+    }
+
 }

@@ -70,32 +70,32 @@ class FileStorageTest extends ContaoTestCase
     /**
      * @throws \Exception
      */
-    public function testCreateFile(): void
+    public function testAddFile(): void
     {
-        $this->fileStorage->createFile($this->tmpSourceFile, $this->tmpTargetFile);
+        $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile);
         $this->assertTrue(true === $this->fileStorage->hasFile($this->tmpTargetFile));
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->getFile($this->tmpTargetFile));
         $this->assertSame('Here comes the content.', $this->fileStorage->getContent());
 
         // Do not allow overwriting files
         $this->expectException(\Exception::class);
-        $this->fileStorage->createFile($this->tmpSourceFile, $this->tmpTargetFile);
+        $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile);
     }
 
     /**
      * @throws \Exception
      */
-    public function testCreateFileFromString(): void
+    public function testAddFileFromString(): void
     {
         // Another file
         $target = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target.txt';
         $content = 'Foo';
-        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->createFileFromString($target, $content));
+        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target, $content));
         $this->assertSame('Foo', $this->fileStorage->getContent());
 
         // Do not allow overwriting files
         $this->expectException(\Exception::class);
-        $this->fileStorage->createFileFromString($target, $content);
+        $this->fileStorage->addFileFromString($target, $content);
     }
 
     /**
@@ -105,7 +105,7 @@ class FileStorageTest extends ContaoTestCase
     {
         $this->assertSame(
             'Bar',
-            $this->fileStorage->createFile($this->tmpSourceFile, $this->tmpTargetFile)
+            $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile)
                 ->replaceContent('Bar')
                 ->getContent()
         );
@@ -117,7 +117,7 @@ class FileStorageTest extends ContaoTestCase
     public function testAppendContent(): void
     {
         $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
-        $this->fileStorage->createFileFromString($target1, 'Foo');
+        $this->fileStorage->addFileFromString($target1, 'Foo');
         $this->assertSame('FooBar', $this->fileStorage->appendContent('Bar')->getContent());
     }
 
@@ -129,7 +129,7 @@ class FileStorageTest extends ContaoTestCase
         // Another file
         $this->assertSame(
             '',
-            $this->fileStorage->createFile($this->tmpSourceFile, $this->tmpTargetFile)
+            $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile)
                 ->truncate()
                 ->getContent()
         );
@@ -143,8 +143,8 @@ class FileStorageTest extends ContaoTestCase
         // Another file
         $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
         $target2 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target2.txt';
-        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->createFileFromString($target1, 'Foo'));
-        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->createFileFromString($target2, 'Bar'));
+        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target1, 'Foo'));
+        $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target2, 'Bar'));
         $this->assertTrue(2 === count($this->fileStorage->getAll()));
     }
 
@@ -167,7 +167,7 @@ class FileStorageTest extends ContaoTestCase
         $this->tagStorage->set('actor', 'Charles Bronson');
 
         $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
-        $this->fileStorage->createFileFromString($target1, $strContent);
+        $this->fileStorage->addFileFromString($target1, $strContent);
 
         $this->assertSame($strExpected, $this->fileStorage->replaceTags($this->tagStorage)->getContent());
     }

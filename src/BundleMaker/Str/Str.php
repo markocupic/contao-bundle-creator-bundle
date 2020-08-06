@@ -135,6 +135,7 @@ final class Str
      */
     public static function asRepositoryName(string $value, string $prefix = ''): string
     {
+
         $value = str_replace('#', '-', $value);
         $value = preg_replace('/[^A-Za-z0-9_\-]/', '-', $value);
         return self::addPrefix($value, $prefix);
@@ -181,7 +182,8 @@ final class Str
      */
     public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
     {
-        return preg_replace('/Bundle$/','Extension', self::asClassName($vendorName).self::asClassName($repositoryName));
+
+        return preg_replace('/Bundle$/', 'Extension', self::asClassName($vendorName) . self::asClassName($repositoryName));
     }
 
     /**
@@ -290,14 +292,6 @@ final class Str
     }
 
     /**
-     * Get the frontend module template name from the frontend module type and add the prefix "mod_"
-     *
-     * @param string $valuePrefix
-     * @return string $value (requires tl_contao_bundle_creator.frontendmoduletype)
-     * @return string
-     */
-
-    /**
      * @param string $value
      * @param string $valuePrefix
      * @return string
@@ -310,5 +304,22 @@ final class Str
         $value = preg_replace('/_{2,}/', '_', $value);
 
         return $value;
+    }
+
+    /**
+     * Returns the twig namespace: e.g. @MarkocupicContaoBundleCreator
+     *
+     * @param string $vendorName
+     * @param string $repositoryName
+     * @return string
+     */
+    public function asTwigNamespace(string $vendorName, string $repositoryName)
+    {
+
+        return preg_replace(
+            '/Bundle$/',
+            '',
+            '@' . self::asClassName($vendorName) . Str::asClassName($repositoryName)
+        );
     }
 }
