@@ -10,6 +10,5 @@ before_script:
 
 deploy:
   provider: transifex
-  controller: transifex.transifexapps.com
   api_token: $TRANSIFEX_API_TOKEN
   edge: true # opt in to dpl v2
