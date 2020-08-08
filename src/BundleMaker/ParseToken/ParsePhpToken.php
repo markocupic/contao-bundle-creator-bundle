@@ -74,7 +74,7 @@ class ParsePhpToken
      * @return string
      * @throws \Exception
      */
-    public function parsePhpTokens(string $content): string
+    public function parsePhpTokensFromString(string $content): string
     {
 
         $objFile = new Filesystem();

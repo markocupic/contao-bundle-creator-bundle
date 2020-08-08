@@ -275,7 +275,7 @@ class BundleMaker
 
         $content = file_get_contents($this->projectDir . '/' . $sourceFile);
         $templateParser = new ParsePhpToken($this->tagStorage);
-        $content = $templateParser->parsePhpTokens($content);
+        $content = $templateParser->parsePhpTokensFromString($content);
 
         return $content;
     }

@@ -48,16 +48,16 @@ class ParsePhpTokenTest extends ContaoTestCase
     /**
      * @throws \Exception
      */
-    public function testParsePhpTokens(): void
+    public function testParsePhpTokensFromString(): void
     {
         $strTest = 'Louis <?= $this->Louis ?>, known as Louis the Great or the Sun King (le Roi Soleil), was King of France from 14 May 1643 until his death in 1715.';
         $strReplaced = 'Louis XIV, known as Louis the Great or the Sun King (le Roi Soleil), was King of France from 14 May 1643 until his death in 1715.';
-        $this->assertSame($strReplaced, $this->parseToken->parsePhpTokens($strTest));
+        $this->assertSame($strReplaced, $this->parseToken->parsePhpTokensFromString($strTest));
 
         $this->expectException(\Exception::class);
         $strTest = 'Louis <?= $this->chucknorris ?>, known as Louis the Great or the Sun King (le Roi Soleil), was King of France from 14 May 1643 until his death in 1715.';
 
-        $this->parseToken->parsePhpTokens($strTest);
+        $this->parseToken->parsePhpTokensFromString($strTest);
     }
 
 }

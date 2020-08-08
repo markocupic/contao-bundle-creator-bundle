@@ -314,7 +314,7 @@ class FileStorage
 
         $content = $this->arrStorrage[$this->intIndex]['content'];
         $templateParser = new ParsePhpToken($tagStorage);
-        $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokens($content);
+        $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
 
         return $this;
     }
