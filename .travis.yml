@@ -7,8 +7,3 @@ php:
 before_script:
   - composer self-update
   - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --prefer-dist --no-interaction
-
-deploy:
-  provider: transifex
-  api_token: $TRANSIFEX_API_TOKEN
-  edge: true # opt in to dpl v2
