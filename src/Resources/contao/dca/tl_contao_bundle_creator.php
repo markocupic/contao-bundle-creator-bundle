@@ -76,13 +76,19 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Palettes
     'palettes'    => [
-        '__selector__' => ['addBackendModule', 'addFrontendModule'],
-        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;{composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;{rootcomposer_settings_legend},rootcomposerextendrepositorieskey,rootcomposerextendrequirekey;{dcatable_settings_legend},addBackendModule;{frontendmodule_settings_legend},addFrontendModule;{custom_route_settings_legend},addCustomRoute'
+        '__selector__' => ['editrootcomposer', 'addbackendmodule', 'addfrontendmodule'],
+        'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;
+        {composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;
+        {rootcomposer_settings_legend},editrootcomposer;
+        {dcatable_settings_legend},addbackendmodule;
+        {frontendmodule_settings_legend},addfrontendmodule;
+        {custom_route_settings_legend},addcustomroute'
     ],
     // Subpalettes
     'subpalettes' => [
-        'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
-        'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
+        'editrootcomposer' => 'rootcomposerextendrepositorieskey',
+        'addbackendmodule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
+        'addfrontendmodule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
     ],
     // Fields
     'fields'      => [
@@ -182,22 +188,22 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'rootcomposerextendrequirekey'      => [
+        'editrootcomposer' => [
+            'inputType' => 'checkbox',
+            'exclude'   => true,
+            'sorting'   => true,
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'rootcomposerextendrepositorieskey'      => [
             'inputType' => 'select',
             'exclude'   => true,
             'options'   => ['path', 'vcs-github'],
             'sorting'   => true,
-            'eval'      => ['includeBlankOption' => true, 'tl_class' => 'clr'],
+            'eval'      => ['includeBlankOption' => false, 'tl_class' => 'clr'],
             'sql'       => "varchar(16) NOT NULL default ''"
         ],
-        'rootcomposerextendrepositorieskey' => [
-            'inputType' => 'checkbox',
-            'exclude'   => true,
-            'sorting'   => true,
-            'eval'      => ['tl_class' => 'clr'],
-            'sql'       => "char(1) NOT NULL default ''"
-        ],
-        'addBackendModule'                  => [
+        'addbackendmodule'                  => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
@@ -248,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'addFrontendModule'                 => [
+        'addfrontendmodule'                 => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
@@ -290,7 +296,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'addCustomRoute'                    => [
+        'addcustomroute'                    => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => false, 'tl_class' => 'w50 clr'],

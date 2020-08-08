@@ -1,0 +1,23 @@
+[main]
+host = https://www.transifex.com
+
+[contao-bundle-creator-bundle.default-xlf]
+file_filter = src/Resources/contao/languages/<lang>/default.xlf
+minimum_perc = 0
+source_file = src/Resources/contao/languages/en/default.xlf
+source_lang = en
+type = XLIFF
+
+[contao-bundle-creator-bundle.modules-xlf]
+file_filter = src/Resources/contao/languages/<lang>/modules.xlf
+minimum_perc = 0
+source_file = src/Resources/contao/languages/en/modules.xlf
+source_lang = en
+type = XLIFF
+
+[contao-bundle-creator-bundle.tl_contao_bundle_creator-xlf]
+file_filter = src/Resources/contao/languages/<lang>/tl_contao_bundle_creator.xlf
+minimum_perc = 0
+source_file = src/Resources/contao/languages/en/tl_contao_bundle_creator.xlf
+source_lang = en
+type = XLIFF

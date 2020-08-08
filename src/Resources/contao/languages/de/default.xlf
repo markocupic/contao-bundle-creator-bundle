@@ -1,0 +1,10 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="de">
+        <body>
+            <trans-unit id="ERR.cbcb_rgxp">
+                <source>Invalid insert! Use &quot;%s&quot; instead of &quot;%s&quot;, please.</source>
+                <target>Ungültige Eingabe! Bitte verwenden Sie &quot;%s&quot; anstatt &quot;%s&quot;.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

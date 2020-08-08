@@ -633,7 +633,7 @@ class BundleMaker
         $content = $objComposerFile->getContent();
         $objJSON = json_decode($content);
 
-        if ($this->model->rootcomposerextendrepositorieskey !== '')
+        if ($this->model->editrootcomposer !== '')
         {
             if (!isset($objJSON->repositories))
             {
@@ -642,7 +642,7 @@ class BundleMaker
 
             $objRepositories = new \stdClass();
 
-            if ($this->model->rootcomposerextendrequirekey === 'path')
+            if ($this->model->rootcomposerextendrepositorieskey === 'path')
             {
                 $objRepositories->type = 'path';
                 $objRepositories->url = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
@@ -656,7 +656,7 @@ class BundleMaker
                 }
             }
 
-            if ($this->model->rootcomposerextendrequirekey === 'vcs-github')
+            if ($this->model->rootcomposerextendrepositorieskey === 'vcs-github')
             {
                 $objRepositories->type = 'vcs';
                 $objRepositories->url = sprintf('https://github.com/%s/%s', $this->model->vendorname, $this->model->repositoryname);
@@ -669,10 +669,7 @@ class BundleMaker
                     $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
                 }
             }
-        }
-
-        if ($this->model->rootcomposerextendrequirekey)
-        {
+            // Extend require key
             $blnModified = true;
             $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
             $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
