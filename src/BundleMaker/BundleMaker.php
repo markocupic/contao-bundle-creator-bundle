@@ -250,11 +250,11 @@ class BundleMaker
 
         if ($this->model->addCustomRoute)
         {
-            $this->tagStorage->set('addcustomroute', '1');
+            $this->tagStorage->set('addCustomRoute', '1');
         }
         else
         {
-            $this->tagStorage->set('addcustomroute', '0');
+            $this->tagStorage->set('addCustomRoute', '0');
         }
     }
 
@@ -633,7 +633,7 @@ class BundleMaker
         $content = $objComposerFile->getContent();
         $objJSON = json_decode($content);
 
-        if ($this->model->editrootcomposer !== '')
+        if ($this->model->editRootComposer !== '')
         {
             if (!isset($objJSON->repositories))
             {

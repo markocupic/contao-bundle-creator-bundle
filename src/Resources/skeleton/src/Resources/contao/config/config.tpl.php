@@ -1,7 +1,7 @@
 <?= "<?php\n" ?>
 
 <?= $this->phpdoc ?>
-<?php if($this->addbackendmodule): ?>
+<?php if($this->addBackendModule): ?>
 /**
  * Backend modules
  */

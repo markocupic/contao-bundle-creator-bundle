@@ -1,7 +1,7 @@
 <?= "<?php\n" ?>
 
 <?= $this->phpdoc ?>
-<?php if($this->addfrontendmodule): ?>
+<?php if($this->addFrontendModule): ?>
 /**
  * Frontend modules
  */

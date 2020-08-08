@@ -8,13 +8,13 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contao
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-<?php if($this->addcustomroute == "1"): ?>
+<?php if($this->addCustomRoute == "1"): ?>
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 <?php endif; ?>
-<?php if($this->addcustomroute == "1"): ?>
+<?php if($this->addCustomRoute == "1"): ?>
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 <?php endif; ?>
-<?php if($this->addcustomroute == "1"): ?>
+<?php if($this->addCustomRoute == "1"): ?>
 use Symfony\Component\HttpKernel\KernelInterface;
 <?php endif; ?>
 
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\ContaoManager
  */
-class Plugin implements BundlePluginInterface<?php if($this->addcustomroute == "1"): ?>, RoutingPluginInterface<?php endif; ?><?= "\n" ?>
+class Plugin implements BundlePluginInterface<?php if($this->addCustomRoute == "1"): ?>, RoutingPluginInterface<?php endif; ?><?= "\n" ?>
 {
     /**
      * @param ParserInterface $parser
@@ -38,7 +38,7 @@ class Plugin implements BundlePluginInterface<?php if($this->addcustomroute == "
         ];
     }
 
-<?php if($this->addcustomroute == "1"): ?>
+<?php if($this->addCustomRoute == "1"): ?>
     /**
      * @param LoaderResolverInterface $resolver
      * @param KernelInterface $kernel

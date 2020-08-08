@@ -1,7 +1,7 @@
 <?= "<?php\n" ?>
 
 <?= $this->phpdoc ?>
-<?php if($this->addbackendmodule): ?>
+<?php if($this->addBackendModule): ?>
 /**
  * Backend modules
  */
@@ -11,7 +11,7 @@ $GLOBALS['TL_LANG']['MOD']['<?= $this->backendmodulecategory ?>'] = '<?= $this->
 $GLOBALS['TL_LANG']['MOD']['<?= $this->backendmoduletype ?>'] = ['<?= $this->backendmoduletrans_0 ?>', '<?= $this->backendmoduletrans_1 ?>'];
 <?php endif; ?>
 
-<?php if($this->addfrontendmodule): ?>
+<?php if($this->addFrontendModule): ?>
 /**
 * Frontend modules
 */

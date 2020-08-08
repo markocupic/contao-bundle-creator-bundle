@@ -1,7 +1,7 @@
 services:
     _defaults: { autowire: true, autoconfigure: true, public: true }
 
-<?php if($this->addfrontendmodule): ?>
+<?php if($this->addFrontendModule): ?>
     # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
         tags:
@@ -10,7 +10,7 @@ services:
         public: true
 <?php endif; ?>
 
-<?php if($this->addcustomroute): ?>
+<?php if($this->addCustomRoute): ?>
     # Custom route
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\MyCustomController: ~
 <?php endif; ?>

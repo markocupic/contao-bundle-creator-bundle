@@ -189,10 +189,9 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'editRootComposer' => [
-            'inputType' => 'checkbox',
             'exclude'   => true,
-            'sorting'   => true,
-            'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
         'rootcomposerextendrepositorieskey'      => [
@@ -206,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         'addBackendModule'                  => [
             'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
         'dcatable'                          => [
@@ -257,7 +256,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         'addFrontendModule'                 => [
             'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
         'frontendmodulecategory'            => [
