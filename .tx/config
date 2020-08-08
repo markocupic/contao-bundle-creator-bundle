@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+type = XLIFF
+
+[contao-bundle-creator-bundle.default
+source_file = src/Resources/contao/languages/en/default.xlf
+source_lang = en
+file_filter = src/Resources/contao/languages/<lang>/countries.xlf
