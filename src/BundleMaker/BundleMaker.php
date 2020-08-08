@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
 use Contao\Date;
-use Contao\File;
-use Contao\Files;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
@@ -275,8 +273,7 @@ class BundleMaker
             throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
         }
 
-        $objPartialFile = new File($sourceFile);
-        $content = $objPartialFile->getContent();
+        $content = file_get_contents($this->projectDir . '/' . $sourceFile);
         $templateParser = new ParsePhpToken($this->tagStorage);
         $content = $templateParser->parsePhpTokens($content);
 
@@ -605,15 +602,11 @@ class BundleMaker
         foreach ($arrFiles as $arrFile)
         {
             // Create file
-            $target = str_replace($this->projectDir . '/', '', $arrFile['target']);
-            $objNewFile = new File($target);
-
-            // Overwrite file content if file already exists
-            $objNewFile->write($arrFile['content']);
-            $objNewFile->close();
+            file_put_contents($arrFile['target'], $arrFile['content']);
 
             // Display message in the backend
-            $this->message->addInfo(sprintf('Created file "%s".', $objNewFile->path));
+            $target = str_replace($this->projectDir . '/', '', $arrFile['target']);
+            $this->message->addInfo(sprintf('Created file "%s".', $target));
             $i++;
         }
         // Display message in the backend
@@ -629,8 +622,8 @@ class BundleMaker
     {
 
         $blnModified = false;
-        $objComposerFile = new File('composer.json');
-        $content = $objComposerFile->getContent();
+
+        $content = file_get_contents($this->projectDir . '/composer.json');
         $objJSON = json_decode($content);
 
         if ($this->model->editRootComposer !== '')
@@ -679,14 +672,15 @@ class BundleMaker
         {
             // Make a backup first
             $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
-            Files::getInstance()->copy($objComposerFile->path, $strBackupPath);
+            copy(
+                $this->projectDir . DIRECTORY_SEPARATOR . 'composer.json',
+                $this->projectDir . DIRECTORY_SEPARATOR . $strBackupPath
+            );
             $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
 
             // Append modifications
             $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            $objComposerFile->truncate();
-            $objComposerFile->append($content);
-            $objComposerFile->close();
+            file_put_contents($this->projectDir . '/composer.json', $content);
         }
     }
 }
