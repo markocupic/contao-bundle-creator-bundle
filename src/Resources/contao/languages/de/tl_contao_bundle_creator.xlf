@@ -128,7 +128,7 @@
 
             <trans-unit id="tl_contao_bundle_creator.composerpackageversion.1">
                 <source>Please enter the package version in format 1.x (Mandatory only for package uploads with the Contao Manager).</source>
-                <target>Geben Sie die Paketversion im Format 1.x ein. (Nur nötig wenn das Bundle über Paketupload in Contao Manager bereitgestellt wird)</target>
+                <target>Geben Sie die Paketversion im Format 1.x ein. (Nur nötig, wenn das Bundle über Paketupload in Contao Manager bereitgestellt wird)</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.editRootComposer.0">
@@ -138,7 +138,7 @@
 
             <trans-unit id="tl_contao_bundle_creator.editRootComposer.1">
                 <source>Authorize the bundle generator editing your composer.json (ROOT)?</source>
-                <target>Den bundle generator autorisieren die composer.json (ROOT) anzupassen?</target>
+                <target>Den Bundle Generator autorisieren die composer.json (ROOT) anzupassen?</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.rootcomposerextendrepositorieskey.0">
@@ -229,7 +229,7 @@
 
             <trans-unit id="tl_contao_bundle_creator.backendmoduletype.1">
                 <source>Please enter the backend module type as a snakecased string.</source>
-                <target>Geben Sie den Type des Modules in snakecase an.</target>
+                <target>Geben Sie den Typ des Backendmoduls in snakecase an.</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.backendmoduletrans.0">
@@ -269,7 +269,7 @@
 
             <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.1">
                 <source>Please enter the frontend module category as a snakecased string.</source>
-                <target>Geben Sie die Frontendmodul-Kategorie in camelcase an.</target>
+                <target>Geben Sie die Frontendmodul-Kategorie in snakecase an.</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmodulecategorytrans.0">
@@ -289,7 +289,7 @@
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.1">
                 <source>Please enter the frontend module type as a snakecased string.</source>
-                <target>Geben Sie den Typ des Modules in snakecase an.</target>
+                <target>Geben Sie den Typ des Frontendmoduls in snakecase an.</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.0">
