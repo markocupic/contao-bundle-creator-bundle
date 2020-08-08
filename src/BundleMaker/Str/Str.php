@@ -313,7 +313,7 @@ final class Str
      * @param string $repositoryName
      * @return string
      */
-    public function asTwigNamespace(string $vendorName, string $repositoryName)
+    public static function asTwigNamespace(string $vendorName, string $repositoryName)
     {
 
         return preg_replace(
