@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
@@ -606,9 +607,9 @@ class BundleMaker
         foreach ($arrFiles as $arrFile)
         {
             // Create directory recursive
-            if(!is_dir(dirname($arrFile['target'])))
+            if (!is_dir(dirname($arrFile['target'])))
             {
-                mkdir(dirname($arrFile['target']),0777, true);
+                mkdir(dirname($arrFile['target']), 0777, true);
             }
 
             // Create file

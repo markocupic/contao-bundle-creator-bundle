@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    RSZ Mein Steckbrief
  * @license    MIT
@@ -32,6 +33,7 @@ class MessageTest extends ContaoTestCase
 
     public function setUp(): void
     {
+
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -41,11 +43,13 @@ class MessageTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
+
         $this->assertInstanceOf(Message::class, $this->message);
     }
 
     public function testAdd(): void
     {
+
         $this->message->addInfo('Info text 1.');
         $this->message->addInfo('Info text 2.');
 

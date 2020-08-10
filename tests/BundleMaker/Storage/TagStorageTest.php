@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    RSZ Mein Steckbrief
  * @license    MIT
@@ -29,6 +30,7 @@ class TagStorageTest extends ContaoTestCase
 
     public function setUp(): void
     {
+
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
         $this->tagStorage = new TagStorage();
@@ -36,11 +38,13 @@ class TagStorageTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
+
         $this->assertInstanceOf(TagStorage::class, $this->tagStorage);
     }
 
     public function testGetAll(): void
     {
+
         $this->assertSame([], $this->tagStorage->getAll());
         $this->tagStorage->set('foo', 'bar');
         $this->tagStorage->set('Louis', 'XIV');
@@ -52,6 +56,7 @@ class TagStorageTest extends ContaoTestCase
      */
     public function testGet(): void
     {
+
         $this->tagStorage->set('foo', 'bar');
         $this->assertSame('bar', $this->tagStorage->get('foo'));
         $this->expectException(\Exception::class);
@@ -60,6 +65,7 @@ class TagStorageTest extends ContaoTestCase
 
     public function testHas(): void
     {
+
         $this->tagStorage->set('foo', 'bar');
         $this->assertTrue(true === $this->tagStorage->has('foo'));
         $this->assertTrue(false === $this->tagStorage->has('bar'));
@@ -67,6 +73,7 @@ class TagStorageTest extends ContaoTestCase
 
     public function testRemove(): void
     {
+
         $this->tagStorage->set('foo', 'bar');
         $this->tagStorage->set('Louis', 'XIV');
         $this->tagStorage->remove('Louis');
@@ -78,6 +85,7 @@ class TagStorageTest extends ContaoTestCase
 
     public function testRemoveAll(): void
     {
+
         $this->tagStorage->set('foo', 'bar');
         $this->tagStorage->set('Louis', 'XIV');
         $this->assertTrue(2 === count($this->tagStorage->getAll()));

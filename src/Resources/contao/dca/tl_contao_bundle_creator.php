@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
@@ -86,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Subpalettes
     'subpalettes' => [
-        'editRootComposer' => 'rootcomposerextendrepositorieskey',
+        'editRootComposer'  => 'rootcomposerextendrepositorieskey',
         'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
         'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
     ],
@@ -188,14 +189,14 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
-        'editRootComposer' => [
+        'editRootComposer'                  => [
             'inputType' => 'checkbox',
             'exclude'   => true,
             'sorting'   => true,
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'rootcomposerextendrepositorieskey'      => [
+        'rootcomposerextendrepositorieskey' => [
             'inputType' => 'select',
             'exclude'   => true,
             'options'   => ['path', 'vcs-github'],

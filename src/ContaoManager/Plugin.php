@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
@@ -21,6 +22,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Class Plugin
+ *
  * @package Markocupic\ContaoBundleCreatorBundle\ContaoManager
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface
@@ -30,6 +32,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
      */
     public function getBundles(ParserInterface $parser)
     {
+
         return [
             BundleConfig::create('Markocupic\ContaoBundleCreatorBundle\MarkocupicContaoBundleCreatorBundle')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
@@ -43,6 +46,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
      */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
+
         $loader->load(__DIR__ . '/../Resources/config/parameters.yml');
         $loader->load(__DIR__ . '/../Resources/config/services.yml');
         $loader->load(__DIR__ . '/../Resources/config/listener.yml');

@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    RSZ Mein Steckbrief
  * @license    MIT
@@ -32,6 +33,7 @@ class PluginTest extends ContaoTestCase
      */
     public function testInstantiation(): void
     {
+
         $this->assertInstanceOf(Plugin::class, new Plugin());
     }
 
@@ -40,6 +42,7 @@ class PluginTest extends ContaoTestCase
      */
     public function testGetBundles(): void
     {
+
         $plugin = new Plugin();
 
         /** @var array $bundles */

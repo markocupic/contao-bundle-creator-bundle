@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    RSZ Mein Steckbrief
  * @license    MIT
@@ -13,8 +14,8 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\ParseToken;
 
-use Contao\TestCase\ContaoTestCase;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
@@ -33,6 +34,7 @@ class ParsePhpTokenTest extends ContaoTestCase
 
     public function setUp(): void
     {
+
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
         $this->tagStorage = new TagStorage();
@@ -42,6 +44,7 @@ class ParsePhpTokenTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
+
         $this->assertInstanceOf(ParsePhpToken::class, $this->parseToken);
     }
 
@@ -50,6 +53,7 @@ class ParsePhpTokenTest extends ContaoTestCase
      */
     public function testParsePhpTokensFromString(): void
     {
+
         $strTest = 'Louis <?= $this->Louis ?>, known as Louis the Great or the Sun King (le Roi Soleil), was King of France from 14 May 1643 until his death in 1715.';
         $strReplaced = 'Louis XIV, known as Louis the Great or the Sun King (le Roi Soleil), was King of France from 14 May 1643 until his death in 1715.';
         $this->assertSame($strReplaced, $this->parseToken->parsePhpTokensFromString($strTest));

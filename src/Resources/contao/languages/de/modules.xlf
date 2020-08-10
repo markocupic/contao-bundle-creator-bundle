@@ -6,8 +6,8 @@
                 <target>Entwickler Tools</target>
             </trans-unit>
             <trans-unit id="MOD.contao_bundle_creator.0">
-                 <source>Contao bundle creator</source>
-                 <target>Contao Bundle Generator</target>
+                <source>Contao bundle creator</source>
+                <target>Contao Bundle Generator</target>
             </trans-unit>
             <trans-unit id="MOD.contao_bundle_creator.1">
                 <source>Create a contao bundle.</source>

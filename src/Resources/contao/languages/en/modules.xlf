@@ -5,7 +5,7 @@
                 <source>Developer tools.</source>
             </trans-unit>
             <trans-unit id="MOD.contao_bundle_creator.0">
-                 <source>Contao bundle creator</source>
+                <source>Contao bundle creator</source>
             </trans-unit>
             <trans-unit id="MOD.contao_bundle_creator.1">
                 <source>Create a contao bundle.</source>

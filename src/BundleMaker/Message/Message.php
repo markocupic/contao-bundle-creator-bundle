@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @copyright  Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ *
  * @author     Marko Cupic
  * @package    Contao Bundle Creator
  * @license    MIT
@@ -55,6 +56,39 @@ class Message
     }
 
     /**
+     * Add an error message to the contao backend
+     *
+     * @param string $msg
+     */
+    public function addError(string $msg): void
+    {
+
+        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
+    }
+
+    /**
+     * Get info messages
+     *
+     * @return array
+     */
+    public function getInfo(): array
+    {
+
+        return $this->getFlashMessages(self::STR_INFO_FLASH_TYPE);
+    }
+
+    /**
+     * Get error messages
+     *
+     * @return array
+     */
+    public function getError(): array
+    {
+
+        return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
+    }
+
+    /**
      * Add a message to the contao backend
      *
      * @param string $msg
@@ -78,28 +112,6 @@ class Message
     }
 
     /**
-     * Add an error message to the contao backend
-     *
-     * @param string $msg
-     */
-    public function addError(string $msg): void
-    {
-
-        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
-    }
-
-    /**
-     * Get info messages
-     *
-     * @return array
-     */
-    public function getInfo(): array
-    {
-
-        return $this->getFlashMessages(self::STR_INFO_FLASH_TYPE);
-    }
-
-    /**
      * Get flash messages for the contao backend
      *
      * @param string $type
@@ -118,17 +130,6 @@ class Message
         }
 
         return $arrFlash;
-    }
-
-    /**
-     * Get error messages
-     *
-     * @return array
-     */
-    public function getError(): array
-    {
-
-        return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
     }
 
 }

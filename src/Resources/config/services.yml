@@ -1,26 +1,26 @@
 services:
 
-    markocupic.contaobundlecreatorbundle.bundlemaker.bundlemaker:
-        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker
-        arguments:
-        - '@session'
-        - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage'
-        - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage'
-        - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
-        - '%kernel.project_dir%'
-        public: true
+  markocupic.contaobundlecreatorbundle.bundlemaker.bundlemaker:
+    class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker
+    arguments:
+      - '@session'
+      - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage'
+      - '@markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage'
+      - '@markocupic.contaobundlecreatorbundle.bundlemaker.message.message'
+      - '%kernel.project_dir%'
+    public: true
 
-    markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage:
-        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage
-        public: true
+  markocupic.contaobundlecreatorbundle.bundlemaker.storage.filestorage:
+    class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage
+    public: true
 
-    markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage:
-        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage
-        public: true
+  markocupic.contaobundlecreatorbundle.bundlemaker.storage.tagstorage:
+    class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage
+    public: true
 
-    markocupic.contaobundlecreatorbundle.bundlemaker.message.message:
-        class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message
-        arguments:
-        - '@session'
-        public: true
+  markocupic.contaobundlecreatorbundle.bundlemaker.message.message:
+    class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message
+    arguments:
+      - '@session'
+    public: true
 
