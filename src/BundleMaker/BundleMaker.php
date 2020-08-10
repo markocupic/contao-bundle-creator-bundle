@@ -241,7 +241,11 @@ class BundleMaker
         }
 
         // Custom route
-        $subject = sprintf('%s.%s', $this->model->vendorname, $this->model->repositoryname);
+        $subject = sprintf(
+            '%s_%s',
+            strtolower($this->model->vendorname),
+            strtolower($this->model->repositoryname)
+        );
         $subject = preg_replace('/-bundle$/', '', $subject);
         $routeId = preg_replace('/-/', '_', $subject);
         $this->tagStorage->set('routeid', $routeId);
@@ -601,6 +605,12 @@ class BundleMaker
          */
         foreach ($arrFiles as $arrFile)
         {
+            // Create directory recursive
+            if(!is_dir(dirname($arrFile['target'])))
+            {
+                mkdir(dirname($arrFile['target']),0777, true);
+            }
+
             // Create file
             file_put_contents($arrFile['target'], $arrFile['content']);
 

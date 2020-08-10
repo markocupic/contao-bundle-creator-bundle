@@ -1,7 +1,7 @@
 /**
- * This file is part of a <?= $this->vendorname ?> Contao Bundle
+ * This file is part of a <?= $this->vendorname ?> Contao Bundle.
  *
- * @copyright  <?= $this->composerauthorname ?> 2020 <<?= $this->composerauthoremail ?>>
+ * (c) <?= $this->composerauthorname ?> 2020 <<?= $this->composerauthoremail ?>>
  * @author     <?= $this->composerauthorname ?><?= "\n" ?>
  * @package    <?= $this->bundlename ?><?= "\n" ?>
  * @license    <?= $this->composerlicense ?><?= "\n" ?>

@@ -46,9 +46,7 @@ class FileStorageTest extends ContaoTestCase
 
         // Create temp file
         $this->tmpSourceFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'source.txt';
-        $fh = fopen($this->tmpSourceFile, 'w');
-        fwrite($fh, 'Here comes the content.');
-        fclose($fh);
+        file_put_contents($this->tmpSourceFile, 'Here comes the content.');
 
         // Set target file path
         $this->tmpTargetFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target.txt';

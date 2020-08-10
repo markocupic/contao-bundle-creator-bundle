@@ -16,7 +16,7 @@ use Twig\Environment as TwigEnvironment;
  * @package Symfony
  *
  * @Route("/my_custom",
- *     name="<?= $this->routeid ?>.my_custom",
+ *     name="<?= $this->routeid ?>_my_custom",
  *     defaults={
  *         "_scope" = "frontend",
  *         "_token_check" = true
@@ -65,7 +65,9 @@ class MyCustomController extends AbstractController
 
         return new Response($this->twig->render(
             '<?= $this->twignamespace ?>/my_custom_route.html.twig',
-            ['animals' => $animals]
+            [
+                'animals' => $animals,
+            ]
         ));
     }
 }
