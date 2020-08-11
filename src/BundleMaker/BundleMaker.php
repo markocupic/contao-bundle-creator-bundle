@@ -116,7 +116,7 @@ class BundleMaker
         $this->addContaoManagerPluginClassToFileStorage();
 
         // Add unit tests to file storage
-        $this->addUnitTestsToFileStorage();
+        $this->addContinuousIntegrationToFileStorage();
 
         // Config files, assets, etc.
         $this->addMiscFilesToFileStorage();
@@ -375,11 +375,11 @@ class BundleMaker
     }
 
     /**
-     * Add unit tests to the file storage
+     * Add continuous integration to the file storage (phpunit tests, travis, github workflows)
      *
      * @throws \Exception
      */
-    protected function addUnitTestsToFileStorage(): void
+    protected function addContinuousIntegrationToFileStorage(): void
     {
 
         // Add phpunit.xml.dist
@@ -402,7 +402,7 @@ class BundleMaker
         $target = sprintf('%s/vendor/%s/%s/.travis.yml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // Add github workflow
+        // Add github workflow file
         $source = sprintf('%s/%s/.github/workflows/ci.tpl.yml', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/.github/workflows/ci.yml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
