@@ -17,6 +17,11 @@ namespace Markocupic\ContaoBundleCreatorBundle\Listener\ContaoHook;
 use Contao\Widget;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 
+/**
+ * Class AddCustomRegexpListener
+ *
+ * @package Markocupic\ContaoBundleCreatorBundle\Listener\ContaoHook
+ */
 class AddCustomRegexpListener
 {
 

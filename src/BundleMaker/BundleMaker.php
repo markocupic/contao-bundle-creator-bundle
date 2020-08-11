@@ -561,8 +561,8 @@ class BundleMaker
         $this->fileStorage->addFile($source, $target);
 
         // Add twig template
-        $source = sprintf('%s/%s/src/Resources/views/my_custom_route.html.tpl.twig', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/src/Resources/views/my_custom_route.html.twig', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $source = sprintf('%s/%s/src/Resources/views/MyCustom/my_custom.tpl.twig', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.twig', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
     }
 

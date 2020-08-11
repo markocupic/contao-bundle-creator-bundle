@@ -336,7 +336,7 @@ class tl_contao_bundle_creator extends Contao\Backend
             if (null !== ($objModel = Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel::findByPk(Contao\Input::get('id'))))
             {
                 /** @var  Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker $bundleMakerService */
-                $bundleMakerService = Contao\System::getContainer()->get('markocupic.contaobundlecreatorbundle.bundlemaker.bundlemaker');
+                $bundleMakerService = Contao\System::getContainer()->get('markocupic.contao_bundle_creator_bundle.bundle_maker.bundle_maker');
                 $bundleMakerService->run($objModel);
             }
         }

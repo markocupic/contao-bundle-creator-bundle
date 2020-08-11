@@ -64,7 +64,7 @@ class MyCustomController extends AbstractController
         ];
 
         return new Response($this->twig->render(
-            '<?= $this->twignamespace ?>/my_custom_route.html.twig',
+            '<?= $this->twignamespace ?>/MyCustom/my_custom.twig',
             [
                 'animals' => $animals,
             ]
