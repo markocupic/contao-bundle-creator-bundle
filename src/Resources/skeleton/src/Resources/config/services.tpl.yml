@@ -16,4 +16,5 @@ services:
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\MyCustomController:
         arguments:
             - '@twig'
+        public: true
     <?php endif; ?>
