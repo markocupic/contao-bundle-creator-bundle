@@ -20,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-versions: ['7.3','7.4']
+          php-versions: [7.3,7.4]
           extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
           tools: prestissimo, flex
           coverage: none
