@@ -392,14 +392,19 @@ class BundleMaker
         $target = sprintf('%s/vendor/%s/%s/tests/ContaoManager/PluginTest.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
+        // Add .php_cs.dist
+        $source = sprintf('%s/%s/.php_cs.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.php_cs.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
         // Add .travis.yml
         $source = sprintf('%s/%s/.travis.tpl.yml', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/.travis.yml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // Add .php_cs.dist
-        $source = sprintf('%s/%s/.php_cs.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.php_cs.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // Add github workflow
+        $source = sprintf('%s/%s/.github/workflows/ci.tpl.yml', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.github/workflows/ci.yml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
     }
 
