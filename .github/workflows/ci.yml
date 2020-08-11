@@ -33,5 +33,3 @@ jobs:
 
       - name: Run the unit tests
         run: vendor/bin/phpunit --colors=always
-
-
