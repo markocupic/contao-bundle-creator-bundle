@@ -51,6 +51,9 @@ class BundleMaker
     /** @var Message */
     protected $message;
 
+    /** @var Zip */
+    protected $zip;
+
     /** @var string */
     protected $projectDir;
 
@@ -64,15 +67,17 @@ class BundleMaker
      * @param FileStorage $fileStorage
      * @param TagStorage $tagStorage
      * @param Message $message
+     * @param Zip $zip
      * @param string $projectDir
      */
-    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, Zip $zip, string $projectDir)
     {
 
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
         $this->message = $message;
+        $this->zip = $zip;
         $this->projectDir = $projectDir;
     }
 
@@ -139,7 +144,7 @@ class BundleMaker
         {
             $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
             $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
-            (new Zip())
+            $this->zip
                 ->stripSourcePath($zipSource)
                 ->addDirRecursive($zipSource)
                 ->run($zipTarget);
@@ -154,7 +159,7 @@ class BundleMaker
         // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
         $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname);
-        $zip = (new Zip())
+        $zip = $this->zip
             ->stripSourcePath($zipSource)
             ->addDirRecursive($zipSource);
         if ($zip->run($zipTarget))
