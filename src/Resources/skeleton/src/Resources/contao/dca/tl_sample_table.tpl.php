@@ -42,18 +42,23 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = [
         ],
         'operations'        => [
             'edit'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_sample_table']['edit'],
+                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif'
             ],
+            'copy'   => [
+                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['copy'],
+                'href'  => 'act=copy',
+                'icon'  => 'copy.gif'
+            ],
             'delete' => [
-                'label'      => &$GLOBALS['TL_LANG']['tl_sample_table']['delete'],
+                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
             ],
             'show'   => [
-                'label'      => &$GLOBALS['TL_LANG']['tl_sample_table']['show'],
+                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['show'],
                 'href'       => 'act=show',
                 'icon'       => 'show.gif',
                 'attributes' => 'style="margin-right:3px"'

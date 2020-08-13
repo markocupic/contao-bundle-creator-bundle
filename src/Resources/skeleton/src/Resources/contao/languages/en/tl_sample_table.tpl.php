@@ -11,6 +11,7 @@ $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['second_legend'] = "Erweiterte Ein
  * Operations
  */
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['edit'] = ["Datensatz mit ID: %s bearbeiten", "Datensatz mit ID: %s bearbeiten"];
+$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['copy'] = ["Datensatz mit ID: %s kopieren", "Datensatz mit ID: %s kopieren"];
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['delete'] = ["Datensatz mit ID: %s löschen", "Datensatz mit ID: %s löschen"];
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['show'] = ["Datensatz mit ID: %s ansehen", "Datensatz mit ID: %s ansehen"];
 
