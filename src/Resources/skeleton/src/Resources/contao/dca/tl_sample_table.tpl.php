@@ -148,7 +148,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = [
 ];
 
 /**
- * Class <?= $this->dcatable ?>
+ * Class <?= $this->dcatable . "\n" ?>
  */
 class <?= $this->dcatable ?> extends Contao\Backend
 {
