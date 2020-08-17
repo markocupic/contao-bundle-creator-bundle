@@ -2,7 +2,6 @@
 
 name: CI
 
-
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
@@ -14,14 +13,18 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   tests:
-    name: PHP 7.4 Tests
-    runs-on: ubuntu-latest
+
+    name: PHP ${{ matrix.php }}
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          php: [7.2, 7.3, 7.4]
 
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php }}
           extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
           tools: prestissimo, flex
           coverage: none
