@@ -469,6 +469,11 @@ class BundleMaker
         $source = sprintf('%s/%s/README.tpl.md', $this->projectDir, self::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/README.md', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
+
+        // .gitattributes
+        $source = sprintf('%s/%s/.gitattributes.tpl.txt', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.gitattributes', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
