@@ -1,7 +1,7 @@
 ![passed tests at travis-ci.org](https://travis-ci.org/markocupic/contao-bundle-creator-bundle.svg?branch=master "")
 
 
-![Alt text](src/Resources/public/logo.png?raw=true "Marko Cupic")
+![Alt text](src/Resources/docs/logo.png?raw=true "Marko Cupic")
 
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
@@ -15,13 +15,13 @@ Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurc
 
 ## Via Contao Backend das Bundle konfigurieren
 
-![Alt text](src/Resources/public/backend.png?raw=true "Backend")
+![Alt text](src/Resources/docs/backend.png?raw=true "Backend")
 
 
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
-![Alt text](src/Resources/public/file-tree.png?raw=true "Verzeichnisstruktur")
+![Alt text](src/Resources/docs/file-tree.png?raw=true "Verzeichnisstruktur")
 
 
 ## Inbetriebnahme des Bundles
