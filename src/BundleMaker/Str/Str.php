@@ -184,7 +184,7 @@ final class Str
     public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
     {
 
-        return preg_replace('/Bundle$/', 'Extension', self::asClassName($vendorName) . self::asClassName($repositoryName));
+        return preg_replace('/Bundle$/', '', self::asClassName($vendorName) . self::asClassName($repositoryName)) . 'Extension';
     }
 
     /**
