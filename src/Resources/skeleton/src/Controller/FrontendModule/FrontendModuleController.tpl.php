@@ -27,9 +27,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
 {
-    /**
-     * @var PageModel
-     */
+
+    /** @var SessionInterface */
+    protected $session;
+
+    /** @var PageModel */
     protected $page;
 
     /**
