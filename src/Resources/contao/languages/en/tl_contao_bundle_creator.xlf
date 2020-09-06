@@ -50,7 +50,11 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmodule_settings_legend">
-                <source>Frontend moule settings</source>
+                <source>Frontend element settings</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelement_settings_legend">
+                <source>Content element settings</source>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.custom_route_settings_legend">
@@ -239,6 +243,46 @@
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.1">
                 <source>Please add a name and a description for the frontend module.</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addContentElement.0">
+                <source>Add a content element</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addContentElement.1">
+                <source>Add a content element to the bundle.</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.0">
+                <source>Content element category (snakecase)</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.1">
+                <source>Please enter the content element category as a snakecased string.</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.0">
+                <source>Content element category translation</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.1">
+                <source>Let the field empty if the category and the translation already exists.</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
+                <source>Content element type (snakecase with &quot;_element&quot; as a suffix)</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">
+                <source>Please enter the content element type as a snakecased string.</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.0">
+                <source>Content element type name and description</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.1">
+                <source>Please add a name and a description for the content element.</source>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.addCustomRoute.0">

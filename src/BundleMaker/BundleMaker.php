@@ -133,6 +133,12 @@ class BundleMaker
             $this->addFrontendModuleFilesToFileStorage();
         }
 
+        // Add content element files to file storage
+        if ($this->model->addContentElement)
+        {
+            $this->addContentElementFilesToFileStorage();
+        }
+
         // Add a custom route to the file storage
         if ($this->model->addCustomRoute)
         {
@@ -244,6 +250,18 @@ class BundleMaker
             $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
             $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
+        }
+
+        // Content element
+        if ($this->model->addContentElement)
+        {
+            $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->model->contentelementtype));
+            $this->tagStorage->set('contentelementtype', (string) $this->model->contentelementtype);
+            $this->tagStorage->set('contentelementcategory', (string) $this->model->contentelementcategory);
+            $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->model->contentelementtype));
+            $arrLabel = StringUtil::deserialize($this->model->contentelementtrans, true);
+            $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
+            $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
         }
 
         // Custom route
@@ -530,7 +548,7 @@ class BundleMaker
         // Get the frontend module classname
         $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->model->frontendmoduletype);
 
-        // Add frontend module class to src/Controller/FrontendController
+        // Add frontend module class to src/Controller/FrontendModuleController
         $source = sprintf('%s/%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strFrontendModuleClassname);
         $this->fileStorage->addFile($source, $target);
@@ -554,6 +572,44 @@ class BundleMaker
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        if (!$this->fileStorage->hasFile($target))
+        {
+            $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+            $this->fileStorage->addFile($source, $target);
+        }
+    }
+
+    /**
+     * Add content element files to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addContentElementFilesToFileStorage(): void
+    {
+
+        // Get the content element template name
+        $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->model->contentelementtype);
+
+        // Get the content element classname
+        $strContentElementClassname = Str::asContaoContentElementClassName((string) $this->model->contentelementtype);
+
+        // Add content element class to src/Controller/ContentElement
+        $source = sprintf('%s/%s/src/Controller/ContentElement/ContentElementController.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Controller/ContentElement/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strContentElementClassname);
+        $this->fileStorage->addFile($source, $target);
+
+        // Add content element template
+        $source = sprintf('%s/%s/src/Resources/contao/templates/ce_sample_element.tpl.html5', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $strContentElementTemplateName);
+        $this->fileStorage->addFile($source, $target);
+
+        // Add src/Resources/contao/dca/tl_content.php
+        $source = sprintf('%s/%s/src/Resources/contao/dca/tl_content.tpl.php', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/dca/tl_content.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         if (!$this->fileStorage->hasFile($target))
         {

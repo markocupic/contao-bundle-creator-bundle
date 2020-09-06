@@ -55,9 +55,10 @@ class AddCustomRegexpListener
                         $blnTested = true;
                         $fittedInput = Str::asContaoDcaTable($input);
                         break;
-                    case 'frontendmodulecategory':
                     case 'backendmodulecategory':
-                        $blnTested = true;
+                    case 'frontendmodulecategory':
+                    case 'contentelementcategory':
+                    $blnTested = true;
                         $fittedInput = Str::asSnakeCase($input);
                         break;
                     case 'backendmoduletype':
@@ -67,6 +68,10 @@ class AddCustomRegexpListener
                     case 'frontendmoduletype':
                         $blnTested = true;
                         $fittedInput = Str::asContaoFrontendModuleType($input);
+                        break;
+                    case 'contentelementtype':
+                        $blnTested = true;
+                        $fittedInput = Str::asContaoContentElementType($input);
                         break;
                 }
 

@@ -229,6 +229,47 @@ final class Str
     }
 
     /**
+     * Get the content element classname from element type and add the "Controller" suffix
+     * f.ex. my_custom_element => MyCustomElementController
+     *
+     * @param string $value (requires tl_contao_bundle_creator.contentelementtype)
+     * @param string $suffix
+     * @return string
+     */
+    public static function asContaoContentElementClassName(string $value, string $suffix = 'Controller'): string
+    {
+
+        $value = self::asContaoContentElementType($value);
+        $value = self::asClassName($value);
+        return self::addSuffix($value, $suffix);
+    }
+
+    /**
+     * Get the content element type (f.ex. my_custom_element)
+     * Convention => snakecase with suffix "_element"
+     *
+     * @param string $value (requires tl_contao_bundle_creator.contentelementtype)
+     * @param string $suffix
+     * @return string
+     */
+    public static function asContaoContentElementType(string $value, $suffix = '_element'): string
+    {
+
+        $value = self::asSnakeCase((string) $value);
+
+        $pattern = '/^(element_|element|ce_|ce|_{1})/';
+        $value = preg_replace($pattern, '', $value);
+
+        $pattern = '/_{1}$/';
+        $value = preg_replace($pattern, '', $value);
+
+        // Add suffix
+        $value = self::addSuffix($value, $suffix);
+
+        return $value;
+    }
+
+    /**
      * Transforms the given string into the format commonly used by PHP classes,
      * (e.g. `app:do_this-and_that` -> `AppDoThisAndThat`) but it doesn't check
      * the validity of the class name.
@@ -301,6 +342,21 @@ final class Str
     {
 
         $value = self::asContaoFrontendModuleType($value);
+        $value = self::addPrefix($value, $prefix);
+        $value = preg_replace('/_{2,}/', '_', $value);
+
+        return $value;
+    }
+
+    /**
+     * @param string $value
+     * @param string $valuePrefix
+     * @return string
+     */
+    public static function asContaoContentElementTemplateName(string $value, $prefix = 'ce_'): string
+    {
+
+        $value = self::asContaoContentElementType($value);
         $value = self::addPrefix($value, $prefix);
         $value = preg_replace('/_{2,}/', '_', $value);
 

@@ -77,12 +77,13 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     ],
     // Palettes
     'palettes'    => [
-        '__selector__' => ['editRootComposer', 'addBackendModule', 'addFrontendModule'],
+        '__selector__' => ['editRootComposer', 'addBackendModule', 'addFrontendModule', 'addContentElement'],
         'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;
         {composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;
         {rootcomposer_settings_legend},editRootComposer;
         {dcatable_settings_legend},addBackendModule;
         {frontendmodule_settings_legend},addFrontendModule;
+        {contentelement_settings_legend},addContentElement;
         {custom_route_settings_legend},addCustomRoute'
     ],
     // Subpalettes
@@ -90,6 +91,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         'editRootComposer'  => 'rootcomposerextendrepositorieskey',
         'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
         'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
+        'addContentElement' => 'contentelementcategory,contentelementcategorytrans,contentelementtype,contentelementtrans',
     ],
     // Fields
     'fields'      => [
@@ -289,6 +291,48 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'frontendmoduletrans'               => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'search'    => true,
+            'filter'    => true,
+            'sorting'   => true,
+            'eval'      => ['mandatory' => true, 'multiple' => true, 'size' => 2, 'decodeEntities' => true, 'rgxp' => 'alnum', 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'addContentElement'                 => [
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'contentelementcategory'            => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementcategory', 'placeholder' => 'e.g. image_elements'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'contentelementcategorytrans'       => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'contentelementtype'                => [
+            'inputType' => 'text',
+            'exclude'   => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementtype', 'placeholder' => 'e.g. heroimage_element'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'contentelementtrans'               => [
             'inputType' => 'text',
             'exclude'   => true,
             'search'    => true,
