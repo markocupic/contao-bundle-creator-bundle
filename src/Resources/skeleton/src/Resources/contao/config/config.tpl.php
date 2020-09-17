@@ -6,7 +6,7 @@
  * Backend modules
  */
 $GLOBALS['BE_MOD']['<?= $this->backendmodulecategory ?>']['<?= $this->backendmoduletype ?>'] = array(
-'tables' => ['<?= $this->dcatable ?>']
+    'tables' => ['<?= $this->dcatable ?>']
 );
 
 /**
