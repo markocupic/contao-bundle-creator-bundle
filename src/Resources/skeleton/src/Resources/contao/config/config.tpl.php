@@ -5,9 +5,9 @@
 /**
  * Backend modules
  */
-$GLOBALS['BE_MOD']['<?= $this->backendmodulecategory ?>']['<?= $this->backendmoduletype ?>'] = array(
+$GLOBALS['BE_MOD']['<?= $this->backendmodulecategory ?>']['<?= $this->backendmoduletype ?>'] = [
     'tables' => ['<?= $this->dcatable ?>']
-);
+];
 
 /**
  * Models
