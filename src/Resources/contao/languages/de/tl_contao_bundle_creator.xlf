@@ -62,8 +62,13 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmodule_settings_legend">
-                <source>Frontend moule settings</source>
+                <source>Frontend element settings</source>
                 <target>Frontendmodul Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelement_settings_legend">
+                <source>Content element settings</source>
+                <target>Inhaltselement Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.custom_route_settings_legend">
@@ -253,12 +258,12 @@
 
             <trans-unit id="tl_contao_bundle_creator.addFrontendModule.0">
                 <source>Add a frontend module</source>
-                <target>Add a frontend module</target>
+                <target>Frontendmodul hinzufügen</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.addFrontendModule.1">
                 <source>Add a frontend module to the bundle.</source>
-                <target>Add a frontend module to the bundle.</target>
+                <target>Dem Bundle ein Frontendmodul hinzufügen.</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.0">
@@ -299,6 +304,56 @@
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.1">
                 <source>Please add a name and a description for the frontend module.</source>
                 <target>Geben Sie dem Modul einen Namen und eine Beschreibung.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addContentElement.0">
+                <source>Add a content element</source>
+                <target>Inhaltselement hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addContentElement.1">
+                <source>Add a content element to the bundle.</source>
+                <target>Dem Bundle ein Inhaltselement hinzufügen.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.0">
+                <source>Content element category (snakecase)</source>
+                <target>Inhaltselement-Kategorie (snakecase)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.1">
+                <source>Please enter the content element category as a snakecased string.</source>
+                <target>Geben Sie die Inhaltselement-Kategorie in snakecase an.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.0">
+                <source>Content element category translation</source>
+                <target>Inhaltselement-Kategorie-Übersetzung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.1">
+                <source>Let the field empty if the category and the translation already exists.</source>
+                <target>Falls die Kategorie bereits besteht, kann das Feld leer gelassen werden.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
+                <source>Content element type (snakecase with &quot;_element&quot; as a suffix)</source>
+                <target>Inhaltselement-Typ (snakecase mit &quot;_element&quot; als suffix)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">
+                <source>Please enter the content element type as a snakecased string.</source>
+                <target>Geben Sie den Typ des Inhaltselements in snakecase an.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.0">
+                <source>Content element type name and description</source>
+                <target>Inhaltselement-Typ-Übersetzung und Beschreibung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.1">
+                <source>Please add a name and a description for the content element.</source>
+                <target>Geben Sie dem Inhaltselement einen Namen und eine Beschreibung.</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.addCustomRoute.0">
