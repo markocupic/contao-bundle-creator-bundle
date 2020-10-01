@@ -121,6 +121,12 @@ class BundleMaker
         // Config files, assets, etc.
         $this->addMiscFilesToFileStorage();
 
+        // Add ecs config files to the bundle
+        if($this->model->addEasyCodingStandard)
+        {
+            $this->addEasyCodingStandard();
+        }
+
         // Add backend module files to file storage
         if ($this->model->addBackendModule && $this->model->dcatable != '')
         {
@@ -316,41 +322,97 @@ class BundleMaker
     protected function addComposerJsonFileToFileStorage(): void
     {
 
-        $blnModified = false;
+        $objComposer = new \stdClass();
 
-        $source = sprintf('%s/%s/composer.tpl.json', $this->projectDir, static::SAMPLE_DIR);
+        // Name
+        $objComposer->name = $this->tagStorage->get('vendorname') . '/' . $this->tagStorage->get('repositoryname');
+
+        // Description
+        $objComposer->description = $this->tagStorage->get('composerdescription');
+
+        // Keywords
+        $objComposer->keywords = [
+            'contao',
+            'bundle',
+            'tag 3',
+            'tag 4',
+        ];
+
+        // Type
+        $objComposer->type = 'contao-bundle';
+
+        // License
+        $objComposer->license = $this->tagStorage->get('composerlicense');
+
+        //Authors
+        $objComposer->authors = [];
+        $authors = new \stdClass();
+        $authors->name = $this->tagStorage->get('composerauthorname');
+        $authors->email = $this->tagStorage->get('composerauthoremail');
+        $authors->homepage = $this->tagStorage->get('composerauthorwebsite');
+        $authors->role = 'Developer';
+        $objComposer->authors[] = $authors;
+
+        // Support
+        $objComposer->support = new \stdClass();
+        $objComposer->support->issues = sprintf(
+            'https://github.com/%s/%s/issues',
+            $this->tagStorage->get('vendorname'),
+            $this->tagStorage->get('repositoryname')
+            );
+        $objComposer->support->source = sprintf(
+            'https://github.com/%s/%s',
+            $this->tagStorage->get('vendorname'),
+            $this->tagStorage->get('repositoryname'),
+        );
+
+        // Version
+        if (!empty($this->model->composerpackageversion))
+        {
+            $objComposer->version = $this->model->composerpackageversion;
+        }
+
+        // Require
+        $objComposer->require = new \stdClass();
+        $objComposer->require->{'contao/core-bundle'} = '^4.9';
+
+        // Require-dev
+        $objComposer->{'require-dev'} = new \stdClass();
+        $objComposer->{'require-dev'}->{'contao/test-case'} = '^4.0';
+        $objComposer->{'require-dev'}->{'contao/php-cs-fixer'} = '^2.2';
+        $objComposer->{'require-dev'}->{'contao/manager-plugin'} = '^2.3';
+        $objComposer->{'require-dev'}->{'phpunit/phpunit'} = '^8.4';
+        $objComposer->{'require-dev'}->{'symfony/phpunit-bridge'} = '4.4.*';
+        $objComposer->{'require-dev'}->{'contao/test-case'} = '^4.0';
+        if($this->model->addEasyCodingStandard)
+        {
+            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} =  '^2.1';
+        }
+
+        // Autoload
+        $objComposer->autoload = new \stdClass();
+        $objComposer->autoload->{'psr-4'} = new \stdClass();
+        $objComposer->autoload->{'psr-4'}->{sprintf('%s\\%s\\', $this->tagStorage->get('toplevelnamespace'), $this->tagStorage->get('sublevelnamespace'))} = 'src/';
+        $objComposer->autoload->{'classmap'} = ['src/Resources/contao'];
+        $objComposer->autoload->{'exclude-from-classmap'} = [
+            'src/Resources/contao/config',
+            'src/Resources/contao/dca',
+            'src/Resources/contao/languages',
+            'src/Resources/contao/templates'
+        ];
+
+        // Extra
+        $objComposer->extra = new \stdClass();
+        $objComposer->extra->{'contao-manager-plugin'} = sprintf(
+            '%s\%s\ContaoManager\Plugin',
+            $this->tagStorage->get('toplevelnamespace'),
+            $this->tagStorage->get('sublevelnamespace')
+            );
+
+        $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $target = sprintf('%s/vendor/%s/%s/composer.json', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFileFromString($target, $content);
 
-        // Add/remove version keyword from composer.json
-        $content = $this->fileStorage->getContent();
-        $composer = json_decode($content);
-
-        if (isset($composer->version))
-        {
-            unset($composer->version);
-            $blnModified = true;
-        }
-
-        if ($this->model->composerpackageversion == '')
-        {
-            if (isset($composer->version))
-            {
-                unset($composer->version);
-                $blnModified = true;
-            }
-        }
-        else
-        {
-            $composer->version = $this->model->composerpackageversion;
-            $blnModified = true;
-        }
-
-        if ($blnModified)
-        {
-            $content = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            $this->fileStorage->replaceContent($content);
-        }
     }
 
     /**
@@ -491,6 +553,45 @@ class BundleMaker
         // .gitattributes
         $source = sprintf('%s/%s/.gitattributes.tpl.txt', $this->projectDir, self::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/.gitattributes', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+    }
+
+    /**
+     * Add easy coding standard files to the file storage
+     *
+     * @throws \Exception
+     */
+    protected function addEasyCodingStandard(): void
+    {
+
+        // ecs/config/set/contao.yaml
+        $source = sprintf('%s/%s/ecs/config/set/contao.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/set/contao.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // ecs/config/set/header_comment_fixer.yaml
+        $source = sprintf('%s/%s/ecs/config/set/header_comment_fixer.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/set/header_comment_fixer.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // ecs/config/default.yaml
+        $source = sprintf('%s/%s/ecs/config/default.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/default.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // ecs/config/legacy.yaml
+        $source = sprintf('%s/%s/ecs/config/legacy.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/legacy.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // ecs/config/self.yaml
+        $source = sprintf('%s/%s/ecs/config/self.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/self.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // ecs/config/template.yaml
+        $source = sprintf('%s/%s/ecs/config/template.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/ecs/config/template.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
     }
 

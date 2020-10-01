@@ -84,7 +84,8 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         {dcatable_settings_legend},addBackendModule;
         {frontendmodule_settings_legend},addFrontendModule;
         {contentelement_settings_legend},addContentElement;
-        {custom_route_settings_legend},addCustomRoute'
+        {custom_route_settings_legend},addCustomRoute;
+        {coding_style_legend},addEasyCodingStandard'
     ],
     // Subpalettes
     'subpalettes' => [
@@ -342,6 +343,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sql'       => "varchar(255) NOT NULL default ''"
         ],
         'addCustomRoute'                    => [
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => false, 'tl_class' => 'w50 clr'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'addEasyCodingStandard'                    => [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => false, 'tl_class' => 'w50 clr'],

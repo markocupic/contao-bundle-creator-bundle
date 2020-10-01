@@ -1,7 +1,8 @@
 <?= "<?php\n" ?>
 
-<?= $this->phpdoc ?>
 declare(strict_types=1);
+
+<?= $this->phpdoc ?>
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection;
 
@@ -12,20 +13,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Class <?= $this->dependencyinjectionextensionclassname ?><?= "\n" ?>
- *
- * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection
  */
 class <?= $this->dependencyinjectionextensionclassname ?> extends Extension
 {
-
     /**
-     * @param array $configs
-     * @param ContainerBuilder $container
      * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')

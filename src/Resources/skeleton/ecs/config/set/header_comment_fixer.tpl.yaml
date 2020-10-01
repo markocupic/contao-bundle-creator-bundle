@@ -1,0 +1,3 @@
+services:
+    PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
+        header: "This file is part of a <?= $this->vendorname ?> Contao Bundle.\n\n(c) <?= $this->composerauthorname ?> <?= $this->year ?> <<?= $this->composerauthoremail ?>>\n@author <?= $this->composerauthorname ?>\n@package <?= $this->bundlename ?>\n@license <?= $this->composerlicense ?>\n@see https://github.com/<?= $this->vendorname ?>/<?= $this->repositoryname ?>\n\n"
