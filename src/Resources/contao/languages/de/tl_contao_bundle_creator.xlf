@@ -76,6 +76,11 @@
                 <target>Custom Route Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
+                <source>Coding Style Tools</source>
+                <target>Coding Style Tools</target>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.bundlename.0">
                 <source>Bundle name</source>
                 <target>Bundle Name</target>
@@ -365,7 +370,6 @@
                 <source>Should a custom route be added to the bundle?</source>
                 <target>Eine benutzerdefinierte Route hinzufügen?</target>
             </trans-unit>
-
             <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
                 <source>Add easy-coding-standard configuration</source>
                 <target>Easy-Coding-Standard Konfigurationsdateien hinzufügen</target>

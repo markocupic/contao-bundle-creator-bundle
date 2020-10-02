@@ -61,6 +61,10 @@
                 <source>Custom route settings</source>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
+                <source>Coding Style Tools</source>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.bundlename.0">
                 <source>Bundle name</source>
             </trans-unit>
@@ -292,7 +296,6 @@
             <trans-unit id="tl_contao_bundle_creator.addCustomRoute.1">
                 <source>Should a custom route be added to the bundle?</source>
             </trans-unit>
-
             <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
                 <source>Add easy-coding-standard configuration</source>
             </trans-unit>
