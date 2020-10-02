@@ -366,6 +366,16 @@
                 <target>Eine benutzerdefinierte Route hinzufügen?</target>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
+                <source>Add easy-coding-standard configuration</source>
+                <target>Easy-Coding-Standard Konfigurationsdateien hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.1">
+                <source>Add easy-coding-standard configuration.</source>
+                <target>Easy-Coding-Standard Konfigurationsdateien hinzufügen.</target>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.createBundleButton">
                 <source>Generate bundle</source>
                 <target>Bundle-Generator starten</target>
