@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    RSZ Mein Steckbrief
- * @license    MIT
- * @see        https://github.com/markocupic/rsz-steckbrief-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Str;
 
@@ -19,26 +21,21 @@ use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 
 /**
- * Class StrTest
- *
- * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Str
+ * Class StrTest.
  */
 class StrTest extends ContaoTestCase
 {
-
-    public function setUp(): void
+    protected function setUp(): void
     {
-
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     /**
-     * Test if strings are correctly converted to classname format
+     * Test if strings are correctly converted to classname format.
      */
     public function testAsClassName(): void
     {
-
         $test = 'foo-Bar_foo__Bar--foo9';
         $actual = 'FooBarFooBarFoo9';
         $this->assertSame(Str::asClassName($test), $actual);
@@ -60,12 +57,8 @@ class StrTest extends ContaoTestCase
         $this->assertSame(Str::asClassName($test), $actual);
     }
 
-    /**
-     *
-     */
-    public function testAddPrefix()
+    public function testAddPrefix(): void
     {
-
         $testValue = 'custom-bundle';
         $testPrefix = '';
         $actual = 'custom-bundle';
@@ -93,22 +86,20 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to snakecase format
+     * Test if strings are correctly converted to snakecase format.
      */
     public function testAsSnakeCase(): void
     {
-
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
         $this->assertSame(Str::asSnakeCase($test), $actual);
     }
 
     /**
-     * Test if strings are correctly converted to github vendorname format
+     * Test if strings are correctly converted to github vendorname format.
      */
     public function testAsVendorName(): void
     {
-
         $test = 'vendor_Name8';
         $actual = 'vendor-Name8';
         $this->assertSame(Str::asVendorName($test), $actual);
@@ -123,11 +114,10 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to dependency injection extension class name
+     * Test if strings are correctly converted to dependency injection extension class name.
      */
     public function testAsDependencyInjectionExtensionClassName(): void
     {
-
         $vendorName = 'dirty_harry';
         $repositoryName = 'contao-super-bundle';
         $actual = 'DirtyHarryContaoSuperExtension';
@@ -135,22 +125,20 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to github repository name format
+     * Test if strings are correctly converted to github repository name format.
      */
     public function testAsRepositoryName(): void
     {
-
         $test = 'repository_-name#?';
         $actual = 'repository_-name--';
         $this->assertSame(Str::asRepositoryName($test), $actual);
     }
 
     /**
-     * Test if strings are correctly converted to frontend module type format
+     * Test if strings are correctly converted to frontend module type format.
      */
     public function testAsContaoFrontendModuleType(): void
     {
-
         $test = 'my_ Custom_module';
         $actual = 'my_custom_module';
         $this->assertSame(Str::asContaoFrontendModuleType($test), $actual);
@@ -161,24 +149,22 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to backend module type format
+     * Test if strings are correctly converted to backend module type format.
      */
     public function testAsContaoBackendModuleType(): void
     {
-
         $test = 'foo-Bar_foo__Bar--foo 9';
         $actual = 'foo_bar_foo_bar_foo_9';
         $this->assertSame(Str::asContaoBackendModuleType($test), $actual);
     }
 
     /**
-     * Test if strings are correctly converted to the dca table format
+     * Test if strings are correctly converted to the dca table format.
      *
      * @throws \Exception
      */
     public function testAsContaoDcaTableName(): void
     {
-
         $test = 'foo-Bar_foo_ _Bar--foo 9';
         $actual = 'tl_foo_bar_foo_bar_foo_9';
         $this->assertSame(Str::asContaoDcaTable($test), $actual);
@@ -189,11 +175,10 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to frontend module classname format
+     * Test if strings are correctly converted to frontend module classname format.
      */
     public function testAsContaoFrontendModuleClassName(): void
     {
-
         $test = 'my_ --ExtraCustom--99_Module';
         $actual = 'MyExtraCustom99ModuleController';
         $this->assertSame(Str::asContaoFrontendModuleClassName($test, 'Controller'), $actual);
@@ -204,24 +189,22 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if strings are correctly converted to model classname format
+     * Test if strings are correctly converted to model classname format.
      *
      * @throws \Exception
      */
     public function testAsContaoModelClassName(): void
     {
-
         $test = 'tl_my_ table';
         $actual = 'MyTableModel';
         $this->assertSame(Str::asContaoModelClassName($test), $actual);
     }
 
     /**
-     * Test if strings are correctly converted to frontend module template format
+     * Test if strings are correctly converted to frontend module template format.
      */
     public function testAsContaoFrontendModuleTemplateName(): void
     {
-
         $test = 'mod_my_ Custom_module';
         $actual = 'mod_my_custom_module';
         $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
@@ -232,15 +215,13 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if method returns the correct twig namespace
+     * Test if method returns the correct twig namespace.
      */
-    public function testAsTwigNamespace()
+    public function testAsTwigNamespace(): void
     {
-
         $vendorName = 'dirty_harry';
         $repositoryName = 'contao-super-bundle';
         $actual = '@DirtyHarryContaoSuper';
         $this->assertSame(Str::asTwigNamespace($vendorName, $repositoryName), $actual);
     }
-
 }

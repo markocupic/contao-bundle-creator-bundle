@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    RSZ Mein Steckbrief
- * @license    MIT
- * @see        https://github.com/markocupic/rsz-steckbrief-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Storage;
 
@@ -20,52 +22,54 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
 /**
- * Class FileStorageTest
- *
- * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Storage
+ * Class FileStorageTest.
  */
 class FileStorageTest extends ContaoTestCase
 {
-    /** @var TagStorage */
+    /**
+     * @var TagStorage
+     */
     protected $tagStorage;
 
-    /** @var FileStorage */
+    /**
+     * @var FileStorage
+     */
     protected $fileStorage;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $tmpSourceFile;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $tmpTargetFile;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
         $this->tagStorage = new TagStorage();
         $this->fileStorage = new FileStorage();
 
         // Create temp file
-        $this->tmpSourceFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'source.txt';
+        $this->tmpSourceFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source.txt';
         file_put_contents($this->tmpSourceFile, 'Here comes the content.');
 
         // Set target file path
-        $this->tmpTargetFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target.txt';
+        $this->tmpTargetFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target.txt';
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
-
-        if (file_exists($this->tmpSourceFile) === true)
-        {
+        if (true === file_exists($this->tmpSourceFile)) {
             unlink($this->tmpSourceFile);
         }
     }
 
     public function testInstantiation(): void
     {
-
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage);
     }
 
@@ -74,7 +78,6 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testAddFile(): void
     {
-
         $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile);
         $this->assertTrue(true === $this->fileStorage->hasFile($this->tmpTargetFile));
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->getFile($this->tmpTargetFile));
@@ -90,9 +93,8 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testAddFileFromString(): void
     {
-
         // Another file
-        $target = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target.txt';
+        $target = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target.txt';
         $content = 'Foo';
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target, $content));
         $this->assertSame('Foo', $this->fileStorage->getContent());
@@ -107,7 +109,6 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testReplaceContent(): void
     {
-
         $this->assertSame(
             'Bar',
             $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile)
@@ -121,8 +122,7 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testAppendContent(): void
     {
-
-        $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
+        $target1 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target1.txt';
         $this->fileStorage->addFileFromString($target1, 'Foo');
         $this->assertSame('FooBar', $this->fileStorage->appendContent('Bar')->getContent());
     }
@@ -132,7 +132,6 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testTruncate(): void
     {
-
         // Another file
         $this->assertSame(
             '',
@@ -147,13 +146,12 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testGetAll(): void
     {
-
         // Another file
-        $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
-        $target2 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target2.txt';
+        $target1 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target1.txt';
+        $target2 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target2.txt';
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target1, 'Foo'));
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->addFileFromString($target2, 'Bar'));
-        $this->assertTrue(2 === count($this->fileStorage->getAll()));
+        $this->assertTrue(2 === \count($this->fileStorage->getAll()));
     }
 
     /**
@@ -161,7 +159,6 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testSendFilePointerNotSetException(): void
     {
-
         $this->expectException(\Exception::class);
         $this->fileStorage->removeAll()->appendContent('Foo');
     }
@@ -169,17 +166,15 @@ class FileStorageTest extends ContaoTestCase
     /**
      * @throws \Exception
      */
-    public function testReplaceTags()
+    public function testReplaceTags(): void
     {
-
         $strContent = '<?= $this->actor ?> was an American actor.';
         $strExpected = 'Charles Bronson was an American actor.';
         $this->tagStorage->set('actor', 'Charles Bronson');
 
-        $target1 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'target1.txt';
+        $target1 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target1.txt';
         $this->fileStorage->addFileFromString($target1, $strContent);
 
         $this->assertSame($strExpected, $this->fileStorage->replaceTags($this->tagStorage)->getContent());
     }
-
 }

@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    Contao Bundle Creator
- * @license    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
@@ -30,49 +32,55 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class BundleMaker
- *
- * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker
+ * Class BundleMaker.
  */
 class BundleMaker
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     const SAMPLE_DIR = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources/skeleton';
 
-    /** @var SessionInterface */
+    /**
+     * @var SessionInterface
+     */
     protected $session;
 
-    /** @var FileStorage */
+    /**
+     * @var FileStorage
+     */
     protected $fileStorage;
 
-    /** @var TagStorage */
+    /**
+     * @var TagStorage
+     */
     protected $tagStorage;
 
-    /** @var Message */
+    /**
+     * @var Message
+     */
     protected $message;
 
-    /** @var Zip */
+    /**
+     * @var Zip
+     */
     protected $zip;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $projectDir;
 
-    /** @var ContaoBundleCreatorModel */
+    /**
+     * @var ContaoBundleCreatorModel
+     */
     protected $model;
 
     /**
      * BundleMaker constructor.
-     *
-     * @param Session $session
-     * @param FileStorage $fileStorage
-     * @param TagStorage $tagStorage
-     * @param Message $message
-     * @param Zip $zip
-     * @param string $projectDir
      */
     public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, Zip $zip, string $projectDir)
     {
-
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
@@ -82,19 +90,17 @@ class BundleMaker
     }
 
     /**
-     * Run contao bundle creator
+     * Run contao bundle creator.
      *
-     * @param ContaoBundleCreatorModel $model
      * @throws \Exception
      */
     public function run(ContaoBundleCreatorModel $model): void
     {
-
         $this->model = $model;
 
-        if ($this->bundleExists() && !$this->model->overwriteexisting)
-        {
+        if ($this->bundleExists() && !$this->model->overwriteexisting) {
             $this->message->addError('An extension with the same name already exists. Please set the "override extension flag".');
+
             return;
         }
 
@@ -122,44 +128,39 @@ class BundleMaker
         $this->addMiscFilesToFileStorage();
 
         // Add ecs config files to the bundle
-        if($this->model->addEasyCodingStandard)
-        {
+        if ($this->model->addEasyCodingStandard) {
             $this->addEasyCodingStandard();
         }
 
         // Add backend module files to file storage
-        if ($this->model->addBackendModule && $this->model->dcatable != '')
-        {
+        if ($this->model->addBackendModule && '' !== $this->model->dcatable) {
             $this->addBackendModuleFilesToFileStorage();
         }
 
         // Add frontend module files to file storage
-        if ($this->model->addFrontendModule)
-        {
+        if ($this->model->addFrontendModule) {
             $this->addFrontendModuleFilesToFileStorage();
         }
 
         // Add content element files to file storage
-        if ($this->model->addContentElement)
-        {
+        if ($this->model->addContentElement) {
             $this->addContentElementFilesToFileStorage();
         }
 
         // Add a custom route to the file storage
-        if ($this->model->addCustomRoute)
-        {
+        if ($this->model->addCustomRoute) {
             $this->addCustomRouteToFileStorage();
         }
 
         // Create a backup of the old bundle that will be overwritten now
-        if ($this->bundleExists())
-        {
+        if ($this->bundleExists()) {
             $zipSource = sprintf('%s/vendor/%s/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-            $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname . '_backup_' . Date::parse('Y-m-d _H-i-s', time()));
+            $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname.'_backup_'.Date::parse('Y-m-d _H-i-s', time()));
             $this->zip
                 ->stripSourcePath($zipSource)
                 ->addDirRecursive($zipSource)
-                ->run($zipTarget);
+                ->run($zipTarget)
+            ;
         }
 
         // Replace php tokens in file storage
@@ -173,10 +174,11 @@ class BundleMaker
         $zipTarget = sprintf('%s/system/tmp/%s.zip', $this->projectDir, $this->model->repositoryname);
         $zip = $this->zip
             ->stripSourcePath($zipSource)
-            ->addDirRecursive($zipSource);
-        if ($zip->run($zipTarget))
-        {
-            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir . '/', '', $zipTarget));
+            ->addDirRecursive($zipSource)
+        ;
+
+        if ($zip->run($zipTarget)) {
+            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir.'/', '', $zipTarget));
         }
 
         // Optionally extend the composer.json file located in the root directory
@@ -184,29 +186,26 @@ class BundleMaker
     }
 
     /**
-     * Check if an extension with the same name already exists
-     *
-     * @return bool
+     * Check if an extension with the same name already exists.
      */
     protected function bundleExists(): bool
     {
-
-        return is_dir($this->projectDir . '/vendor/' . $this->model->vendorname . '/' . $this->model->repositoryname);
+        return is_dir($this->projectDir.'/vendor/'.$this->model->vendorname.'/'.$this->model->repositoryname);
     }
 
     /**
-     * Set all the tags here
+     * Set all the tags here.
      *
      * @throws \Exception
+     *
      * @todo add a contao hook
      */
     protected function setTags(): void
     {
-
         // Store model values into the tag storage
         $arrModel = $this->model->row();
-        foreach ($arrModel as $fieldname => $value)
-        {
+
+        foreach ($arrModel as $fieldname => $value) {
             $this->tagStorage->set((string) $fieldname, (string) $value);
         }
 
@@ -235,8 +234,7 @@ class BundleMaker
         $this->tagStorage->set('year', date('Y'));
 
         // Dca table and backend module
-        if ($this->model->addBackendModule && $this->model->dcatable != '')
-        {
+        if ($this->model->addBackendModule && '' !== $this->model->dcatable) {
             $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
             $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->model->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
@@ -247,8 +245,7 @@ class BundleMaker
         }
 
         // Frontend module
-        if ($this->model->addFrontendModule)
-        {
+        if ($this->model->addFrontendModule) {
             $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->model->frontendmoduletype));
             $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
             $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
@@ -259,8 +256,7 @@ class BundleMaker
         }
 
         // Content element
-        if ($this->model->addContentElement)
-        {
+        if ($this->model->addContentElement) {
             $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->model->contentelementtype));
             $this->tagStorage->set('contentelementtype', (string) $this->model->contentelementtype);
             $this->tagStorage->set('contentelementcategory', (string) $this->model->contentelementcategory);
@@ -280,52 +276,43 @@ class BundleMaker
         $routeId = preg_replace('/-/', '_', $subject);
         $this->tagStorage->set('routeid', $routeId);
 
-        if ($this->model->addCustomRoute)
-        {
+        if ($this->model->addCustomRoute) {
             $this->tagStorage->set('addCustomRoute', '1');
-        }
-        else
-        {
+        } else {
             $this->tagStorage->set('addCustomRoute', '0');
         }
     }
 
     /**
-     * Replace php tags and return content from partials
+     * Replace php tags and return content from partials.
      *
-     * @param string $strFilename
-     * @return string
      * @throws \Exception
      */
     protected function getContentFromPartialFile(string $strFilename): string
     {
+        $sourceFile = self::SAMPLE_DIR.'/partials/'.$strFilename;
 
-        $sourceFile = self::SAMPLE_DIR . '/partials/' . $strFilename;
-
-        if (!is_file($this->projectDir . '/' . $sourceFile))
-        {
+        if (!is_file($this->projectDir.'/'.$sourceFile)) {
             throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
         }
 
-        $content = file_get_contents($this->projectDir . '/' . $sourceFile);
+        $content = file_get_contents($this->projectDir.'/'.$sourceFile);
         $templateParser = new ParsePhpToken($this->tagStorage);
-        $content = $templateParser->parsePhpTokensFromString($content);
 
-        return $content;
+        return $templateParser->parsePhpTokensFromString($content);
     }
 
     /**
-     * Add composer.json file to file storage
+     * Add composer.json file to file storage.
      *
      * @throws \Exception
      */
     protected function addComposerJsonFileToFileStorage(): void
     {
-
         $objComposer = new \stdClass();
 
         // Name
-        $objComposer->name = $this->tagStorage->get('vendorname') . '/' . $this->tagStorage->get('repositoryname');
+        $objComposer->name = $this->tagStorage->get('vendorname').'/'.$this->tagStorage->get('repositoryname');
 
         // Description
         $objComposer->description = $this->tagStorage->get('composerdescription');
@@ -367,8 +354,7 @@ class BundleMaker
         );
 
         // Version
-        if (!empty($this->model->composerpackageversion))
-        {
+        if (!empty($this->model->composerpackageversion)) {
             $objComposer->version = $this->model->composerpackageversion;
         }
 
@@ -379,14 +365,12 @@ class BundleMaker
         // Require-dev
         $objComposer->{'require-dev'} = new \stdClass();
         $objComposer->{'require-dev'}->{'contao/test-case'} = '^4.0';
-        $objComposer->{'require-dev'}->{'contao/php-cs-fixer'} = '^2.2';
         $objComposer->{'require-dev'}->{'contao/manager-plugin'} = '^2.3';
         $objComposer->{'require-dev'}->{'phpunit/phpunit'} = '^8.4';
         $objComposer->{'require-dev'}->{'symfony/phpunit-bridge'} = '4.4.*';
-        $objComposer->{'require-dev'}->{'contao/test-case'} = '^4.0';
-        if($this->model->addEasyCodingStandard)
-        {
-            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} =  '^2.1';
+
+        if ($this->model->addEasyCodingStandard) {
+            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} = '^2.1';
         }
 
         // Autoload
@@ -398,7 +382,7 @@ class BundleMaker
             'src/Resources/contao/config',
             'src/Resources/contao/dca',
             'src/Resources/contao/languages',
-            'src/Resources/contao/templates'
+            'src/Resources/contao/templates',
         ];
 
         // Extra
@@ -412,56 +396,51 @@ class BundleMaker
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $target = sprintf('%s/vendor/%s/%s/composer.json', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFileFromString($target, $content);
-
     }
 
     /**
-     * Add the bundle class to the file storage
+     * Add the bundle class to the file storage.
      *
      * @throws \Exception
      */
     protected function addBundleClassToFileStorage(): void
     {
-
         $source = sprintf('%s/%s/src/Class.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/%s%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asClassName((string) $this->model->vendorname), Str::asClassName((string) $this->model->repositoryname));
         $this->fileStorage->addFile($source, $target);
     }
 
     /**
-     * Add the Dependency Injection Extension class to the file storage
+     * Add the Dependency Injection Extension class to the file storage.
      *
      * @throws \Exception
      */
     protected function addDependencyInjectionExtensionClassToFileStorage(): void
     {
-
         $source = sprintf('%s/%s/src/DependencyInjection/Extension.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/DependencyInjection/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, Str::asDependencyInjectionExtensionClassName((string) $this->model->vendorname, (string) $this->model->repositoryname));
         $this->fileStorage->addFile($source, $target);
     }
 
     /**
-     * Add the Contao Manager plugin class to the file storage
+     * Add the Contao Manager plugin class to the file storage.
      *
      * @throws \Exception
      */
     protected function addContaoManagerPluginClassToFileStorage(): void
     {
-
         $source = sprintf('%s/%s/src/ContaoManager/Plugin.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/ContaoManager/Plugin.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
     }
 
     /**
-     * Add continuous integration to the file storage (phpunit tests, travis, github workflows)
+     * Add continuous integration to the file storage (phpunit tests, travis, github workflows).
      *
      * @throws \Exception
      */
     protected function addContinuousIntegrationToFileStorage(): void
     {
-
         // Add phpunit.xml.dist
         $source = sprintf('%s/%s/phpunit.xml.tpl.dist', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/phpunit.xml.dist', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
@@ -484,48 +463,40 @@ class BundleMaker
     }
 
     /**
-     * Add miscellaneous files to the file storage
+     * Add miscellaneous files to the file storage.
      *
      * @throws \Exception
      */
     protected function addMiscFilesToFileStorage(): void
     {
-
         // src/Resources/config/*.yml yaml config files
         $arrFiles = ['listener.tpl.yml', 'parameters.tpl.yml', 'services.tpl.yml'];
 
-        if ($this->model->addCustomRoute)
-        {
+        if ($this->model->addCustomRoute) {
             $arrFiles[] = 'routes.tpl.yml';
         }
 
-        foreach ($arrFiles as $file)
-        {
+        foreach ($arrFiles as $file) {
             $source = sprintf('%s/%s/src/Resources/config/%s', $this->projectDir, self::SAMPLE_DIR, $file);
             $target = sprintf('%s/vendor/%s/%s/src/Resources/config/%s', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, str_replace('tpl.', '', $file));
             $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
             // Validate config files
-            try
-            {
+            try {
                 $arrYaml = Yaml::parse($this->fileStorage->getContent());
-                if ($file === 'listener.tpl.yml' || $file === 'services.tpl.yml')
-                {
-                    if (!array_key_exists('services', $arrYaml))
-                    {
+
+                if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
+                    if (!\array_key_exists('services', $arrYaml)) {
                         throw new ParseException('Key "services" not found. Please check the indents.');
                     }
                 }
 
-                if ($file === 'parameters.tpl.yml')
-                {
-                    if (!array_key_exists('parameters', $arrYaml))
-                    {
+                if ('parameters.tpl.yml' === $file) {
+                    if (!\array_key_exists('parameters', $arrYaml)) {
                         throw new ParseException('Key "parameters" not found. Please check the indents.');
                     }
                 }
-            } catch (ParseException $exception)
-            {
+            } catch (ParseException $exception) {
                 throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
             }
         }
@@ -552,52 +523,50 @@ class BundleMaker
     }
 
     /**
-     * Add easy coding standard files to the file storage
+     * Add easy coding standard files to the file storage.
      *
      * @throws \Exception
      */
     protected function addEasyCodingStandard(): void
     {
-
-        // ecs/config/set/contao.yaml
-        $source = sprintf('%s/%s/ecs/config/set/contao.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/set/contao.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/set/contao.yaml
+        $source = sprintf('%s/%s/.ecs/config/set/contao.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/contao.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // ecs/config/set/header_comment_fixer.yaml
-        $source = sprintf('%s/%s/ecs/config/set/header_comment_fixer.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/set/header_comment_fixer.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/set/header_comment_fixer.yaml
+        $source = sprintf('%s/%s/.ecs/config/set/header_comment_fixer.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/header_comment_fixer.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // ecs/config/default.yaml
-        $source = sprintf('%s/%s/ecs/config/default.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/default.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/default.yaml
+        $source = sprintf('%s/%s/.ecs/config/default.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/default.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // ecs/config/legacy.yaml
-        $source = sprintf('%s/%s/ecs/config/legacy.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/legacy.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/legacy.yaml
+        $source = sprintf('%s/%s/.ecs/config/legacy.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/legacy.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // ecs/config/self.yaml
-        $source = sprintf('%s/%s/ecs/config/self.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/self.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/self.yaml
+        $source = sprintf('%s/%s/.ecs/config/self.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/self.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
 
-        // ecs/config/template.yaml
-        $source = sprintf('%s/%s/ecs/config/template.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/ecs/config/template.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        // .ecs/config/template.yaml
+        $source = sprintf('%s/%s/.ecs/config/template.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/template.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
     }
 
     /**
-     * Add backend module files to the file storage
+     * Add backend module files to the file storage.
      *
      * @throws \Exception
      */
     protected function addBackendModuleFilesToFileStorage(): void
     {
-
         // Add dca table file
         $source = sprintf('%s/%s/src/Resources/contao/dca/tl_sample_table.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/dca/%s.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname, $this->model->dcatable);
@@ -615,29 +584,28 @@ class BundleMaker
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        if (!$this->fileStorage->hasFile($target))
-        {
+
+        if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        if (!$this->fileStorage->hasFile($target))
-        {
+
+        if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->addFile($source, $target);
         }
     }
 
     /**
-     * Add frontend module files to the file storage
+     * Add frontend module files to the file storage.
      *
      * @throws \Exception
      */
     protected function addFrontendModuleFilesToFileStorage(): void
     {
-
         // Get the frontend module template name
         $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype);
 
@@ -661,29 +629,28 @@ class BundleMaker
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        if (!$this->fileStorage->hasFile($target))
-        {
+
+        if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/modules.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        if (!$this->fileStorage->hasFile($target))
-        {
+
+        if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->addFile($source, $target);
         }
     }
 
     /**
-     * Add content element files to the file storage
+     * Add content element files to the file storage.
      *
      * @throws \Exception
      */
     protected function addContentElementFilesToFileStorage(): void
     {
-
         // Get the content element template name
         $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->model->contentelementtype);
 
@@ -707,21 +674,20 @@ class BundleMaker
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf('%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        if (!$this->fileStorage->hasFile($target))
-        {
+
+        if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf('%s/%s/src/Resources/contao/languages/en/default.tpl.php', $this->projectDir, static::SAMPLE_DIR);
             $this->fileStorage->addFile($source, $target);
         }
     }
 
     /**
-     * Add custom route to the the file storage
+     * Add custom route to the the file storage.
      *
      * @throws \Exception
      */
     protected function addCustomRouteToFileStorage(): void
     {
-
         // Add controller (custom route)
         $source = sprintf('%s/%s/src/Controller/Controller.tpl.php', $this->projectDir, static::SAMPLE_DIR);
         $target = sprintf('%s/vendor/%s/%s/src/Controller/MyCustomController.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
@@ -734,107 +700,93 @@ class BundleMaker
     }
 
     /**
-     * Parse templates
+     * Parse templates.
      *
      * @throws \Exception
      */
     protected function parseTemplates(): void
     {
-
         $arrFiles = $this->fileStorage->getAll();
 
-        foreach ($arrFiles as $arrFile)
-        {
+        foreach ($arrFiles as $arrFile) {
             $this->fileStorage->getFile($arrFile['target']);
 
             // Skip images...
-            if (isset($arrFile['source']) && !empty($arrFile['source']) && strpos(basename($arrFile['source']), '.tpl.') !== false)
-            {
+            if (isset($arrFile['source']) && !empty($arrFile['source']) && false !== strpos(basename($arrFile['source']), '.tpl.')) {
                 $this->fileStorage->replaceTags($this->tagStorage);
             }
         }
     }
 
     /**
-     * Write files from the file storage to the filesystem
+     * Write files from the file storage to the filesystem.
      *
      * @throws \Exception
+     *
      * @todo add a contao hook
      */
     protected function createBundleFiles(): void
     {
-
         $arrFiles = $this->fileStorage->getAll();
-        $i = 0;
 
-        /**
+        /*
          * @todo add a contao hook here
          * Manipulate, remove or add files to the storage
          */
-        foreach ($arrFiles as $arrFile)
-        {
+        foreach ($arrFiles as $arrFile) {
             // Create directory recursive
-            if (!is_dir(dirname($arrFile['target'])))
-            {
-                mkdir(dirname($arrFile['target']), 0777, true);
+            if (!is_dir(\dirname($arrFile['target']))) {
+                mkdir(\dirname($arrFile['target']), 0777, true);
             }
 
             // Create file
             file_put_contents($arrFile['target'], $arrFile['content']);
 
             // Display message in the backend
-            $target = str_replace($this->projectDir . '/', '', $arrFile['target']);
+            $target = str_replace($this->projectDir.'/', '', $arrFile['target']);
             $this->message->addInfo(sprintf('Created file "%s".', $target));
-            $i++;
         }
         // Display message in the backend
         $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
 
     /**
-     * Optionally edit the composer.json file located in the root directory
+     * Optionally edit the composer.json file located in the root directory.
      *
      * @throws \Exception
      */
     protected function editRootComposerJson(): void
     {
-
         $blnModified = false;
 
-        $content = file_get_contents($this->projectDir . '/composer.json');
+        $content = file_get_contents($this->projectDir.'/composer.json');
         $objJSON = json_decode($content);
 
-        if ($this->model->editRootComposer !== '')
-        {
-            if (!isset($objJSON->repositories))
-            {
+        if ('' !== $this->model->editRootComposer) {
+            if (!isset($objJSON->repositories)) {
                 $objJSON->repositories = [];
             }
 
             $objRepositories = new \stdClass();
 
-            if ($this->model->rootcomposerextendrepositorieskey === 'path')
-            {
+            if ('path' === $this->model->rootcomposerextendrepositorieskey) {
                 $objRepositories->type = 'path';
                 $objRepositories->url = sprintf('vendor/%s/%s', $this->model->vendorname, $this->model->repositoryname);
 
                 // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories))
-                {
+                if (!\in_array($objRepositories, $objJSON->repositories, true)) {
                     $blnModified = true;
                     $objJSON->repositories[] = $objRepositories;
                     $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
                 }
             }
 
-            if ($this->model->rootcomposerextendrepositorieskey === 'vcs-github')
-            {
+            if ('vcs-github' === $this->model->rootcomposerextendrepositorieskey) {
                 $objRepositories->type = 'vcs';
                 $objRepositories->url = sprintf('https://github.com/%s/%s', $this->model->vendorname, $this->model->repositoryname);
 
                 // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories))
-                {
+                if (!\in_array($objRepositories, $objJSON->repositories, true)) {
                     $blnModified = true;
                     $objJSON->repositories[] = $objRepositories;
                     $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
@@ -846,19 +798,18 @@ class BundleMaker
             $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
         }
 
-        if ($blnModified)
-        {
+        if ($blnModified) {
             // Make a backup first
             $strBackupPath = sprintf('system/tmp/composer_backup_%s.json', Date::parse('Y-m-d _H-i-s', time()));
             copy(
-                $this->projectDir . DIRECTORY_SEPARATOR . 'composer.json',
-                $this->projectDir . DIRECTORY_SEPARATOR . $strBackupPath
+                $this->projectDir.\DIRECTORY_SEPARATOR.'composer.json',
+                $this->projectDir.\DIRECTORY_SEPARATOR.$strBackupPath
             );
             $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
 
             // Append modifications
             $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            file_put_contents($this->projectDir . '/composer.json', $content);
+            file_put_contents($this->projectDir.'/composer.json', $content);
         }
     }
 }

@@ -1,0 +1,4 @@
+imports:
+    - { resource: set/contao.yaml }
+    - { resource: '../../../../contao/easy-coding-standard/config/legacy.yaml' }
+    - { resource: 'set/header_comment_fixer.yaml' }

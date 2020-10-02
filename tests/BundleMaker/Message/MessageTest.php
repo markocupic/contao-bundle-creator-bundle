@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    RSZ Mein Steckbrief
- * @license    MIT
- * @see        https://github.com/markocupic/rsz-steckbrief-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Message;
 
@@ -21,19 +23,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * Class MessageTest
- *
- * @package Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Message
+ * Class MessageTest.
  */
 class MessageTest extends ContaoTestCase
 {
-
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $tmpTargetFile;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -43,13 +43,11 @@ class MessageTest extends ContaoTestCase
 
     public function testInstantiation(): void
     {
-
         $this->assertInstanceOf(Message::class, $this->message);
     }
 
     public function testAdd(): void
     {
-
         $this->message->addInfo('Info text 1.');
         $this->message->addInfo('Info text 2.');
 

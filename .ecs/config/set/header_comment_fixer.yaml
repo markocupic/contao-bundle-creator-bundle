@@ -1,0 +1,3 @@
+services:
+    PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
+        header: "This file is part of a markocupic Contao Bundle.\n\n(c) Marko Cupic 2020 <m.cupic@gmx.ch>\n@author Marko Cupic\n@package Contao Bundle Creator Bundle\n@license MIT\nFor the full copyright and license information, please view the LICENSE\nfile that was distributed with this source code.\n@see https://github.com/markocupic/conao-bundle-creator-bundle\n\n"

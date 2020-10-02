@@ -1,0 +1,3 @@
+imports:
+    - { resource: '../../../../../contao/easy-coding-standard/config/set/contao.yaml' }
+
