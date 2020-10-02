@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    Contao Bundle Creator
- * @license    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message;
 
@@ -18,91 +20,76 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Class BundleMaker
- *
- * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker
+ * Class BundleMaker.
  */
 class Message
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private const STR_INFO_FLASH_TYPE = 'contao.BE.info';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
 
-    /** @var SessionInterface */
+    /**
+     * @var SessionInterface
+     */
     protected $session;
 
     /**
      * Message constructor.
-     *
-     * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
     {
-
         $this->session = $session;
     }
 
     /**
-     * Add an info message to the contao backend
-     *
-     * @param string $msg
+     * Add an info message to the contao backend.
      */
     public function addInfo(string $msg): void
     {
-
         $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
     }
 
     /**
-     * Add an error message to the contao backend
-     *
-     * @param string $msg
+     * Add an error message to the contao backend.
      */
     public function addError(string $msg): void
     {
-
         $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
     }
 
     /**
-     * Get info messages
-     *
-     * @return array
+     * Get info messages.
      */
     public function getInfo(): array
     {
-
         return $this->getFlashMessages(self::STR_INFO_FLASH_TYPE);
     }
 
     /**
-     * Get error messages
-     *
-     * @return array
+     * Get error messages.
      */
     public function getError(): array
     {
-
         return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
     }
 
     /**
-     * Add a message to the contao backend
-     *
-     * @param string $msg
-     * @param string $type
+     * Add a message to the contao backend.
      */
     private function addFlashMessage(string $msg, string $type): void
     {
-
         /** @var Session $session */
         $session = $this->session;
         $flashBag = $session->getFlashBag();
         $arrFlash = [];
-        if ($flashBag->has($type))
-        {
+
+        if ($flashBag->has($type)) {
             $arrFlash = $flashBag->get($type);
         }
 
@@ -112,24 +99,19 @@ class Message
     }
 
     /**
-     * Get flash messages for the contao backend
-     *
-     * @param string $type
-     * @return array
+     * Get flash messages for the contao backend.
      */
     private function getFlashMessages(string $type): array
     {
-
         /** @var Session $session */
         $session = $this->session;
         $flashBag = $session->getFlashBag();
         $arrFlash = [];
-        if ($flashBag->has($type))
-        {
+
+        if ($flashBag->has($type)) {
             $arrFlash = $flashBag->get($type);
         }
 
         return $arrFlash;
     }
-
 }

@@ -7,11 +7,12 @@
  * @author Marko Cupic
  * @package Contao Bundle Creator Bundle
  * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  * @see https://github.com/markocupic/conao-bundle-creator-bundle
  */
 
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
-
 
 /**
  * Backend modules

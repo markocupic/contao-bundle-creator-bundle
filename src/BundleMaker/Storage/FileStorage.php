@@ -1,16 +1,18 @@
 <?php
 
-/**
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- *
- * @author     Marko Cupic
- * @package    Contao Bundle Creator
- * @license    MIT
- * @see        https://github.com/markocupic/contao-bundle-creator-bundle
- *
- */
-
 declare(strict_types=1);
+
+/*
+ * This file is part of a markocupic Contao Bundle.
+ *
+ * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * @author Marko Cupic
+ * @package Contao Bundle Creator Bundle
+ * @license MIT
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ */
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
@@ -18,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
- * Usage:
+ * Usage:.
  *
  * $fileStorage = new FileStorage();
  *
@@ -45,49 +47,43 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
  *
  *
  * Class FileStorage
- *
- * @package Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage
  */
 class FileStorage
 {
-
-    /** @var array */
+    /**
+     * @var array
+     */
     private $arrStorrage = [];
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $intIndex = -1;
 
     /**
-     * @param string $sourcePath
-     * @param string $targetPath
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function addFile(string $sourcePath, string $targetPath): self
     {
-
-        if (!is_file($sourcePath))
-        {
+        if (!is_file($sourcePath)) {
             throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
         }
 
-        if ($this->hasFile($targetPath))
-        {
+        if ($this->hasFile($targetPath)) {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
         $arrData = [
-            'source'  => $sourcePath,
-            'target'  => $targetPath,
+            'source' => $sourcePath,
+            'target' => $targetPath,
             'content' => file_get_contents($sourcePath),
         ];
 
-        if (($index = $this->getIndexOf($targetPath)) < 0)
-        {
+        if (($index = $this->getIndexOf($targetPath)) < 0) {
             $this->arrStorrage[] = $arrData;
-        }
-        else
-        {
+        } else {
             $this->arrStorrage[$index] = $arrData;
         }
 
@@ -97,49 +93,25 @@ class FileStorage
     }
 
     /**
-     * @param string $targetPath
-     * @return int
-     */
-    private function getIndexOf(string $targetPath): int
-    {
-
-        foreach ($this->arrStorrage as $index => $arrFile)
-        {
-            if ($arrFile['target'] === $targetPath)
-            {
-                return $index;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * @param string $targetPath
-     * @param string $stringContent
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function addFileFromString(string $targetPath, string $stringContent = ''): self
     {
-
-        if ($this->hasFile($targetPath))
-        {
+        if ($this->hasFile($targetPath)) {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
         $arrData = [
-            'source'  => null,
-            'target'  => $targetPath,
+            'source' => null,
+            'target' => $targetPath,
             'content' => $stringContent,
         ];
 
-        if (($index = $this->getIndexOf($targetPath)) < 0)
-        {
+        if (($index = $this->getIndexOf($targetPath)) < 0) {
             $this->arrStorrage[] = $arrData;
-        }
-        else
-        {
+        } else {
             $this->arrStorrage[$index] = $arrData;
         }
 
@@ -149,15 +121,13 @@ class FileStorage
     }
 
     /**
-     * @param string $targetPath
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function getFile(string $targetPath): self
     {
-
-        if (($index = $this->getIndexOf($targetPath)) < 0)
-        {
+        if (($index = $this->getIndexOf($targetPath)) < 0) {
             throw new \Exception(sprintf('File "%s" not found in the storage', $targetPath));
         }
 
@@ -166,15 +136,9 @@ class FileStorage
         return $this;
     }
 
-    /**
-     * @param string $targetPath
-     * @return bool
-     */
     public function hasFile(string $targetPath): bool
     {
-
-        if ($this->getIndexOf($targetPath) < 0)
-        {
+        if ($this->getIndexOf($targetPath) < 0) {
             return false;
         }
 
@@ -186,11 +150,8 @@ class FileStorage
      */
     public function removeFile(): self
     {
-
-        if ($this->intIndex > -1)
-        {
-            if (isset($this->arrStorrage[$this->intIndex]))
-            {
+        if ($this->intIndex > -1) {
+            if (isset($this->arrStorrage[$this->intIndex])) {
                 unset($this->arrStorrage[$this->intIndex]);
             }
         }
@@ -205,7 +166,6 @@ class FileStorage
      */
     public function removeAll(): self
     {
-
         $this->arrStorrage = [];
         $this->intIndex = -1;
 
@@ -213,15 +173,13 @@ class FileStorage
     }
 
     /**
-     * @param string $strContent
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function appendContent(string $strContent): self
     {
-
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
@@ -232,23 +190,12 @@ class FileStorage
 
     /**
      * @throws \Exception
-     */
-    private function sendFilePointerNotSetException()
-    {
-
-        return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::addFile() or FileStorage::addFileFromString()');
-    }
-
-    /**
-     * @param string $strContent
+     *
      * @return FileStorage
-     * @throws \Exception
      */
     public function replaceContent(string $strContent): self
     {
-
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
@@ -258,14 +205,11 @@ class FileStorage
     }
 
     /**
-     * @return string
      * @throws \Exception
      */
     public function getContent(): string
     {
-
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
@@ -273,14 +217,13 @@ class FileStorage
     }
 
     /**
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function truncate(): self
     {
-
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
@@ -294,22 +237,19 @@ class FileStorage
      */
     public function getAll()
     {
-
         return $this->arrStorrage;
     }
 
     /**
-     * Replace tags
+     * Replace tags.
      *
-     * @param TagStorage $tagStorage
-     * @return FileStorage
      * @throws \Exception
+     *
+     * @return FileStorage
      */
     public function replaceTags(TagStorage $tagStorage): self
     {
-
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
@@ -320,4 +260,22 @@ class FileStorage
         return $this;
     }
 
+    private function getIndexOf(string $targetPath): int
+    {
+        foreach ($this->arrStorrage as $index => $arrFile) {
+            if ($arrFile['target'] === $targetPath) {
+                return $index;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function sendFilePointerNotSetException()
+    {
+        return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::addFile() or FileStorage::addFileFromString()');
+    }
 }

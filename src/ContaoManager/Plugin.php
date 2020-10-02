@@ -19,12 +19,11 @@ namespace Markocupic\ContaoBundleCreatorBundle\ContaoManager;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 
 /**
  * Class Plugin.
  */
-class Plugin implements BundlePluginInterface, ConfigPluginInterface
+class Plugin implements BundlePluginInterface
 {
     public function getBundles(ParserInterface $parser)
     {
