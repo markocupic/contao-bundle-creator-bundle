@@ -293,6 +293,14 @@
                 <source>Should a custom route be added to the bundle?</source>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
+                <source>Add easy-coding-standard configuration</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.1">
+                <source>Add easy-coding-standard configuration.</source>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.createBundleButton">
                 <source>Generate bundle</source>
             </trans-unit>
