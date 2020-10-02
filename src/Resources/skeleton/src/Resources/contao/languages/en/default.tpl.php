@@ -2,6 +2,7 @@
 
 <?= $this->phpdoc ?>
 <?php if($this->addContentElement): ?>
+
 /**
  * Content element
  */

@@ -1,6 +1,7 @@
 <?= "<?php\n" ?>
 
 <?= $this->phpdoc ?>
+
 /**
  * Legends
  */

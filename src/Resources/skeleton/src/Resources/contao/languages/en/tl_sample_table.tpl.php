@@ -1,6 +1,7 @@
 <?= "<?php\n" ?>
 
 <?= $this->phpdoc ?>
+
 /**
  * Legends
  */
@@ -35,4 +36,3 @@ $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['secondoption'] = "Zweite Option";
  * Buttons
  */
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['customButton'] = "Custom Routine starten";
-

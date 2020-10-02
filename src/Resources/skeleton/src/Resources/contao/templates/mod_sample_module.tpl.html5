@@ -1,13 +1,9 @@
-<?= '<?php $this->extend("block_searchable"); ?>' ?>
+<?= '<?php $this->extend(\'block_searchable\'); ?>' ?><?= "\n" ?>
 
-
-<?= '<?php $this->block("content"); ?>' ?>
-
+<?= '<?php $this->block(\'content\'); ?>' ?><?= "\n" ?>
 
     <h3><?= '<?= $this->helloTitle ?>' ?></h3>
     <p><?= '<?= $this->helloText ?>' ?></p>
 
-
 <?= '<?php $this->endblock(); ?>' ?>
-
 

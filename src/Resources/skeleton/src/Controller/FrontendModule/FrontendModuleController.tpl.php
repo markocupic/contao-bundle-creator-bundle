@@ -1,7 +1,8 @@
 <?= "<?php\n" ?>
 
-<?= $this->phpdoc ?>
 declare(strict_types=1);
+
+<?= $this->phpdoc ?>
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule;
 
@@ -22,22 +23,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class <?= $this->frontendmoduleclassname ?><?= "\n" ?>
- *
- * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule
  */
 class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
 {
-
-    /** @var SessionInterface */
+    /**
+     * @var SessionInterface
+     */
     protected $session;
 
-    /** @var PageModel */
+    /**
+     * @var PageModel
+     */
     protected $page;
 
     /**
      * <?= $this->frontendmoduleclassname ?> constructor.
-     *
-     * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
     {
@@ -47,13 +47,6 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
     /**
      * This method extends the parent __invoke method,
      * its usage is usually not necessary
-     *
-     * @param Request $request
-     * @param ModuleModel $model
-     * @param string $section
-     * @param array|null $classes
-     * @param PageModel|null $page
-     * @return Response
      */
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
@@ -71,8 +64,6 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
 
     /**
      * Lazyload some services
-     *
-     * @return array
      */
     public static function getSubscribedServices(): array
     {
@@ -88,10 +79,7 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
     }
 
     /**
-     * @param Template $template
-     * @param ModuleModel $model
-     * @param Request $request
-     * @return null|Response
+     * Generate the module
      */
     protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
     {

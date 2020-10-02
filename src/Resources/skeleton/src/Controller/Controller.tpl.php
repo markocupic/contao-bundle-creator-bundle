@@ -1,7 +1,8 @@
 <?= "<?php\n" ?>
 
-<?= $this->phpdoc ?>
 declare(strict_types=1);
+
+<?= $this->phpdoc ?>
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller;
 
@@ -13,8 +14,6 @@ use Twig\Environment as TwigEnvironment;
 /**
  * Class MyCustomController
  *
- * @package Symfony
- *
  * @Route("/my_custom",
  *     name="<?= $this->routeid ?>_my_custom",
  *     defaults={
@@ -25,12 +24,13 @@ use Twig\Environment as TwigEnvironment;
  */
 class MyCustomController extends AbstractController
 {
-    /** @var TwigEnvironment */
+    /**
+     * @var TwigEnvironment
+     */
     private $twig;
 
     /**
      * MyCustomController constructor.
-     * @param TwigEnvironment $twig
      */
     public function __construct(TwigEnvironment $twig)
     {
@@ -38,10 +38,7 @@ class MyCustomController extends AbstractController
     }
 
     /**
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * Generate the response
      */
     public function __invoke()
     {

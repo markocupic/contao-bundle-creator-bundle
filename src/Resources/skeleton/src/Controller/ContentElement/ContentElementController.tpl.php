@@ -1,7 +1,8 @@
 <?= "<?php\n" ?>
 
-<?= $this->phpdoc ?>
 declare(strict_types=1);
+
+<?= $this->phpdoc ?>
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement;
 
@@ -14,21 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class <?= $this->contentelementclassname ?><?= "\n" ?>
- *
- * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement
  */
 class <?= $this->contentelementclassname ?> extends AbstractContentElementController
 {
-
     /**
-     * @param Template $template
-     * @param ContentModel $model
-     * @param Request $request
-     * @return Response|null
+     * Generate the content element
      */
     protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
     {
-
         $template->text = $model->text;
 
         return $template->getResponse();
