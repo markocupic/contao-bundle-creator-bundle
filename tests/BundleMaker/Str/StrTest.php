@@ -29,7 +29,7 @@ class StrTest extends ContaoTestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         // Create temp file
-        $this->tmpPhpdocFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'phpdoc.txt';
+        $this->tmpPhpdocFile = sys_get_temp_dir().DIRECTORY_SEPARATOR.'phpdoc.txt';
     }
 
     protected function tearDown(): void
