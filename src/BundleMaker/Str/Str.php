@@ -155,12 +155,12 @@ final class Str
      * Get the frontend module type (f.ex. my_custom_module)
      * Convention => snakecase with suffix "_module".
      *
-     * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
      * @param string $suffix
      */
     public static function asContaoFrontendModuleType(string $value, $suffix = '_module'): string
     {
-        $value = self::asSnakeCase((string)$value);
+        $value = self::asSnakeCase((string) $value);
 
         $pattern = '/^(module_|module|mod_|mod|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -190,12 +190,12 @@ final class Str
      * Get the content element type (f.ex. my_custom_element)
      * Convention => snakecase with suffix "_element".
      *
-     * @param string $value (requires tl_contao_bundle_creator.contentelementtype)
+     * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
      * @param string $suffix
      */
     public static function asContaoContentElementType(string $value, $suffix = '_element'): string
     {
-        $value = self::asSnakeCase((string)$value);
+        $value = self::asSnakeCase((string) $value);
 
         $pattern = '/^(element_|element|ce_|ce|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -247,7 +247,7 @@ final class Str
      */
     public static function asContaoDcaTable(string $value): string
     {
-        if (!\strlen((string)$value)) {
+        if (!\strlen((string) $value)) {
             throw new \Exception('No dca tablename set.');
         }
 
