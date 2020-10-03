@@ -234,13 +234,25 @@ class StrTest extends ContaoTestCase
     }
 
     /**
-     * Test if method returns the correct header comment
+     * Test if method returns the correct header comment.
      */
     public function testGenerateHeaderCommentFromString(): void
     {
-        file_put_contents($this->tmpPhpdocFile, 'Here comes Line 1.\n\nHere comes Line 2.');
+        file_put_contents($this->tmpPhpdocFile, sprintf(
+            'Here comes Line 1.%s%sHere comes Line 2.',
+            PHP_EOL,
+            PHP_EOL
+        ));
         $content = file_get_contents($this->tmpPhpdocFile);
-        $expected =  '/*'.PHP_EOL .' * Here comes Line 1.\n * \n * Here comes Line 2.' . PHP_EOL . ' */'.PHP_EOL;
+
+        $expected = sprintf(
+            '/*%s * Here comes Line 1.%s * %s * Here comes Line 2.%s */%s',
+            PHP_EOL,
+            PHP_EOL,
+            PHP_EOL,
+            PHP_EOL,
+            PHP_EOL
+        );
         $this->assertSame(Str::generateHeaderCommentFromString($content), $expected);
     }
 }
