@@ -296,13 +296,13 @@ final class Str
      */
     public static function generateHeaderCommentFromString(string $value): string
     {
-        $lines = explode(PHP_EOL, $value);
+        $lines = explode("\n", $value);
 
         return sprintf(
             '%s%s%s',
-            '/*'.PHP_EOL,
+            '/*'."\n",
             implode(
-                PHP_EOL,
+                "\n",
                 array_map(
                     static function ($line) {
                         return ' * '.$line;
@@ -310,7 +310,7 @@ final class Str
                     $lines
                 )
             ),
-            PHP_EOL.' */'.PHP_EOL,
+            "\n".' */'."\n",
             );
     }
 }
