@@ -3,15 +3,13 @@
 declare(strict_types=1);
 
 /*
- * This file is part of a markocupic Contao Bundle.
+ * This file is part of Contao Bundle Creator Bundle.
  *
  * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- * @author Marko Cupic
- * @package Contao Bundle Creator Bundle
  * @license MIT
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Str;
@@ -29,6 +27,16 @@ class StrTest extends ContaoTestCase
     {
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
+
+        // Create temp file
+        $this->tmpPhpdocFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'phpdoc.txt';
+    }
+
+    protected function tearDown(): void
+    {
+        if (true === file_exists($this->tmpPhpdocFile)) {
+            unlink($this->tmpPhpdocFile);
+        }
     }
 
     /**
@@ -223,5 +231,16 @@ class StrTest extends ContaoTestCase
         $repositoryName = 'contao-super-bundle';
         $actual = '@DirtyHarryContaoSuper';
         $this->assertSame(Str::asTwigNamespace($vendorName, $repositoryName), $actual);
+    }
+
+    /**
+     * Test if method returns the correct header comment
+     */
+    public function testGenerateHeaderCommentFromString(): void
+    {
+        file_put_contents($this->tmpPhpdocFile, 'Here comes Line 1.\n\nHere comes Line 2.');
+        $content = file_get_contents($this->tmpPhpdocFile);
+        $expected =  '/*'.PHP_EOL .' * Here comes Line 1.\n * \n * Here comes Line 2.' . PHP_EOL . ' */'.PHP_EOL;
+        $this->assertSame(Str::generateHeaderCommentFromString($content), $expected);
     }
 }

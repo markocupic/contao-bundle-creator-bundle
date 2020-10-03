@@ -3,15 +3,13 @@
 declare(strict_types=1);
 
 /*
- * This file is part of a markocupic Contao Bundle.
+ * This file is part of Contao Bundle Creator Bundle.
  *
  * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- * @author Marko Cupic
- * @package Contao Bundle Creator Bundle
  * @license MIT
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
@@ -283,15 +281,36 @@ final class Str
 
     /**
      * Returns the twig namespace: e.g. @MarkocupicContaoBundleCreator.
-     *
-     * @return string
      */
-    public static function asTwigNamespace(string $vendorName, string $repositoryName)
+    public static function asTwigNamespace(string $vendorName, string $repositoryName): string
     {
         return preg_replace(
             '/Bundle$/',
             '',
             '@'.self::asClassName($vendorName).self::asClassName($repositoryName)
         );
+    }
+
+    /**
+     * Generate phpdoc header comment from string.
+     */
+    public static function generateHeaderCommentFromString(string $value): string
+    {
+        $lines = explode(PHP_EOL, $value);
+
+        return sprintf(
+            '%s%s%s',
+            '/*'.PHP_EOL,
+            implode(
+                PHP_EOL,
+                array_map(
+                    static function ($line) {
+                        return ' * '.$line;
+                    },
+                    $lines
+                )
+            ),
+            PHP_EOL.' */'.PHP_EOL,
+            );
     }
 }

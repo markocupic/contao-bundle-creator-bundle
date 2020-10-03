@@ -3,15 +3,13 @@
 declare(strict_types=1);
 
 /*
- * This file is part of a markocupic Contao Bundle.
+ * This file is part of Contao Bundle Creator Bundle.
  *
  * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
- * @author Marko Cupic
- * @package Contao Bundle Creator Bundle
  * @license MIT
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * @see https://github.com/markocupic/conao-bundle-creator-bundle
+ * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
@@ -230,7 +228,12 @@ class BundleMaker
 
         // Phpdoc
         $this->tagStorage->set('bundlename', (string) $this->model->bundlename);
-        $this->tagStorage->set('phpdoc', $this->getContentFromPartialFile('phpdoc.tpl.txt'));
+        $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($this->getContentFromPartialFile('phpdoc.tpl.txt')));
+        $phpdoclines = explode(PHP_EOL, $this->getContentFromPartialFile('phpdoc.tpl.txt'));
+        $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
+        $this->tagStorage->set('ecsphpdoc', $ecsphpdoc);
+
+        // Current year
         $this->tagStorage->set('year', date('Y'));
 
         // Dca table and backend module
