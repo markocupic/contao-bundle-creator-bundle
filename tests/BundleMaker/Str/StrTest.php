@@ -28,14 +28,12 @@ class StrTest extends ContaoTestCase
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-      
+
     }
 
     protected function tearDown(): void
     {
-        if (true === file_exists($this->tmpPhpdocFile)) {
-            unlink($this->tmpPhpdocFile);
-        }
+        
     }
 
     /**
