@@ -296,7 +296,21 @@ final class Str
      */
     public static function generateHeaderCommentFromString(string $value): string
     {
-        return 'dfs';
-        
+        $lines = explode("\n", $value);
+
+        return sprintf(
+            '%s%s%s',
+            '/*'."\n",
+            implode(
+                "\n",
+                array_map(
+                    static function ($line) {
+                        return ' * '.$line;
+                    },
+                    $lines
+                )
+            ),
+            "\n".' */'."\n",
+            );
     }
 }

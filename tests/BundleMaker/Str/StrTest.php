@@ -28,12 +28,15 @@ class StrTest extends ContaoTestCase
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-
+        // Create temp file
+        $this->tmpPhpdocFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'phpdoc.txt';
     }
 
     protected function tearDown(): void
     {
-        
+        if (true === file_exists($this->tmpPhpdocFile)) {
+            unlink($this->tmpPhpdocFile);
+        }
     }
 
     /**
@@ -230,5 +233,26 @@ class StrTest extends ContaoTestCase
         $this->assertSame(Str::asTwigNamespace($vendorName, $repositoryName), $actual);
     }
 
+    /**
+     * Test if method returns the correct header comment.
+     */
+    public function testGenerateHeaderCommentFromString(): void
+    {
+        file_put_contents($this->tmpPhpdocFile, sprintf(
+            'Here comes Line 1.%s%sHere comes Line 2.',
+            "\n",
+            "\n"
+        ));
+        $content = file_get_contents($this->tmpPhpdocFile);
 
+        $expected = sprintf(
+            '/*%s * Here comes Line 1.%s * %s * Here comes Line 2.%s */%s',
+            "\n",
+            "\n",
+            "\n",
+            "\n",
+            "\n"
+        );
+        $this->assertSame(Str::generateHeaderCommentFromString($content), $expected);
+    }
 }
