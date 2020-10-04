@@ -124,13 +124,13 @@ Unter Windows (Backslashes als directory separator verwenden):
 
 ```
 # Default fixer
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/my-custom-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/default.yaml
 
 # Tests
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/my-custom-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/vendorname/my-custom-bundle/tests --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/default.yaml
 
 # Contao legacy code
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --fix --config vendor/my-custom-bundle/.ecs/config/legacy.yaml
+vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src/Resources/contao --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/legacy.yaml
 
 ```
 [easy-coding-standard](https://github.com/symplify/easy-coding-standard)
