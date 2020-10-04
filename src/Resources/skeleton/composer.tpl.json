@@ -1,0 +1,41 @@
+{
+  "name": "",
+  "description": "",
+  "keywords": [
+    "contao",
+    "bundle",
+    "tag 3",
+    "tag 4"
+  ],
+  "type": "contao-bundle",
+  "license": "",
+  "authors": [],
+  "support": {
+    "issues": "",
+    "source": ""
+  },
+  "require": {
+    "contao/core-bundle": "^4.9"
+  },
+  "require-dev": {
+    "contao/easy-coding-standard": "^2.1",
+    "contao/manager-plugin": "^2.3",
+    "contao/test-case": "^4.0",
+    "phpunit/phpunit": "^8.4",
+    "symfony/http-client": "4.4.*",
+    "symfony/phpunit-bridge": "4.4.*"
+  },
+  "autoload": {
+    "psr-4": {},
+    "classmap": [
+      "src/Resources/contao"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config",
+      "src/Resources/contao/dca",
+      "src/Resources/contao/languages",
+      "src/Resources/contao/templates"
+    ]
+  },
+  "extra": {}
+}

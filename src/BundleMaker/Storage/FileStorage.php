@@ -49,14 +49,27 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 class FileStorage
 {
     /**
+     * @var string
+     */
+    protected $projectDir;
+
+    /**
      * @var array
      */
-    private $arrStorrage = [];
+    protected $arrStorrage = [];
 
     /**
      * @var int
      */
-    private $intIndex = -1;
+    protected $intIndex = -1;
+
+    /**
+     * FileStorage constructor.
+     */
+    public function __construct(string $projectDir)
+    {
+        $this->projectDir = $projectDir;
+    }
 
     /**
      * @throws \Exception
@@ -71,6 +84,16 @@ class FileStorage
 
         if ($this->hasFile($targetPath)) {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
+        }
+
+        // Replace default source with a custom source
+        // stored in the "templates/contao-bundle-creator-bundle/skeleton" directory
+        $search = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources';
+        $replace = 'templates/contao-bundle-creator-bundle';
+        $customSource = str_replace($search, $replace, $sourcePath);
+
+        if (is_file($customSource)) {
+            $sourcePath = $customSource;
         }
 
         $arrData = [

@@ -1,7 +1,7 @@
 ![passed tests at travis-ci.org](https://travis-ci.org/markocupic/contao-bundle-creator-bundle.svg?branch=master "")
 
 
-![Alt text](src/Resources/docs/logo.png?raw=true "Marko Cupic")
+![Marko Cupic](src/Resources/docs/logo.png?raw=true "Marko Cupic")
 
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
@@ -110,6 +110,11 @@ Installtool aufrufen. Fertig!
 ## Anmerkungen
 * Falls man in den Einstellungen definiert, dass das Skript während der Erstellung des Bundles auch die die root composer.json anpasst, speichert das Skript zur Sicherheit ein Backup der composer.json in system/tmp ab.
 * Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package mit dem generierten Bundle abgelegt. Das Package kann per Knopfdruck heruntergeladen werden.
+
+## Templates updatesicher anpassen
+Falls man die Standard-Templates anpassen möchte, die der bundle-maker benötigt, um die PHP-Klassen, Konfigurationsdateien, etc. zu generieren, 
+kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-bundle/skeleton ablegen. 
+![Templates updatesicher überschreiben](src/Resources/docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)

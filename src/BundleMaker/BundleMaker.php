@@ -306,13 +306,18 @@ class BundleMaker
     }
 
     /**
-     * Add composer.json file to file storage.
+     * Add composer.json file to the file storage.
      *
      * @throws \Exception
      */
     protected function addComposerJsonFileToFileStorage(): void
     {
-        $objComposer = new \stdClass();
+        $source = sprintf('%s/%s/composer.tpl.json', $this->projectDir, static::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/composer.json', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        $content = $this->fileStorage->getContent();
+        $objComposer = json_decode($content);
 
         // Name
         $objComposer->name = $this->tagStorage->get('vendorname').'/'.$this->tagStorage->get('repositoryname');
@@ -320,22 +325,13 @@ class BundleMaker
         // Description
         $objComposer->description = $this->tagStorage->get('composerdescription');
 
-        // Keywords
-        $objComposer->keywords = [
-            'contao',
-            'bundle',
-            'tag 3',
-            'tag 4',
-        ];
-
-        // Type
-        $objComposer->type = 'contao-bundle';
-
         // License
         $objComposer->license = $this->tagStorage->get('composerlicense');
 
         //Authors
-        $objComposer->authors = [];
+        if (!isset($objComposer->authors) && !\is_array($objComposer->authors)) {
+            $objComposer->authors = [];
+        }
         $authors = new \stdClass();
         $authors->name = $this->tagStorage->get('composerauthorname');
         $authors->email = $this->tagStorage->get('composerauthoremail');
@@ -344,7 +340,9 @@ class BundleMaker
         $objComposer->authors[] = $authors;
 
         // Support
-        $objComposer->support = new \stdClass();
+        if (!isset($objComposer->support) && !\is_object($objComposer->support)) {
+            $objComposer->support = new \stdClass();
+        }
         $objComposer->support->issues = sprintf(
             'https://github.com/%s/%s/issues',
             $this->tagStorage->get('vendorname'),
@@ -361,35 +359,10 @@ class BundleMaker
             $objComposer->version = $this->model->composerpackageversion;
         }
 
-        // Require
-        $objComposer->require = new \stdClass();
-        $objComposer->require->{'contao/core-bundle'} = '^4.9';
-
-        // Require-dev
-        $objComposer->{'require-dev'} = new \stdClass();
-        $objComposer->{'require-dev'}->{'contao/test-case'} = '^4.0';
-        $objComposer->{'require-dev'}->{'contao/manager-plugin'} = '^2.3';
-        $objComposer->{'require-dev'}->{'phpunit/phpunit'} = '^8.4';
-        $objComposer->{'require-dev'}->{'symfony/phpunit-bridge'} = '4.4.*';
-
-        if ($this->model->addEasyCodingStandard) {
-            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} = '^2.1';
-        }
-
-        // Autoload
-        $objComposer->autoload = new \stdClass();
-        $objComposer->autoload->{'psr-4'} = new \stdClass();
-        $objComposer->autoload->{'psr-4'}->{sprintf('%s\\%s\\', $this->tagStorage->get('toplevelnamespace'), $this->tagStorage->get('sublevelnamespace'))} = 'src/';
-        $objComposer->autoload->{'classmap'} = ['src/Resources/contao'];
-        $objComposer->autoload->{'exclude-from-classmap'} = [
-            'src/Resources/contao/config',
-            'src/Resources/contao/dca',
-            'src/Resources/contao/languages',
-            'src/Resources/contao/templates',
-        ];
-
         // Extra
-        $objComposer->extra = new \stdClass();
+        if (!isset($objComposer->extra) && !\is_object($objComposer->extra)) {
+            $objComposer->extra = new \stdClass();
+        }
         $objComposer->extra->{'contao-manager-plugin'} = sprintf(
             '%s\%s\ContaoManager\Plugin',
             $this->tagStorage->get('toplevelnamespace'),
@@ -397,8 +370,7 @@ class BundleMaker
             );
 
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $target = sprintf('%s/vendor/%s/%s/composer.json', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFileFromString($target, $content);
+        $this->fileStorage->replaceContent($content);
     }
 
     /**
