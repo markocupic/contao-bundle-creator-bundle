@@ -6,7 +6,7 @@ cd..
 cd..
 cd..
 cd..
-:: legacy
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --fix --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/legacy.yaml
+:: templates
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao/templates --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/template.yaml
 ::
 cd vendor/markocupic/contao-bundle-creator-bundle/.ecs./batch/fix
