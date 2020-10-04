@@ -117,6 +117,24 @@ kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-b
 
 ![Templates updatesicher überschreiben](src/Resources/docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
+## Codefixing mit easy-coding-standard
+Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/.ecs" abgelegt. Der Fixer kann nun so aufgerufen werden:
+
+Unter Windows (Backslashes als directory separator verwenden):
+
+```
+# Default fixer
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/my-custom-bundle/.ecs/config/default.yaml
+
+# Tests
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/my-custom-bundle/.ecs/config/default.yaml
+
+# Contao legacy code
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --fix --config vendor/my-custom-bundle/.ecs/config/legacy.yaml
+
+```
+![easy-coding-standard](https://github.com/symplify/easy-coding-standard)
+
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)
 

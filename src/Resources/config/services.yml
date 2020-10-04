@@ -15,12 +15,15 @@ services:
     arguments:
       - '%kernel.project_dir%'
     class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage
+    public: true
 
   markocupic.contao_bundle_creator_bundle.bundle_maker.storage.tag_storage:
     class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage
+    public: true
 
   markocupic.contao_bundle_creator_bundle.bundle_maker.message.message:
     class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message
     arguments:
       - '@session'
+    public: true
 
