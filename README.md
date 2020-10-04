@@ -118,7 +118,7 @@ kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-b
 ![Templates updatesicher überschreiben](src/Resources/docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Codefixing mit easy-coding-standard
-Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/.ecs" abgelegt. Der Fixer kann nun so aufgerufen werden:
+Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/.ecs" abgelegt. Der Fixer kann nun so über das Terminal aufgerufen werden:
 
 Unter Windows (Backslashes als directory separator verwenden):
 
