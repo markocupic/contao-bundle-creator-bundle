@@ -133,7 +133,7 @@ vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix 
 vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --fix --config vendor/my-custom-bundle/.ecs/config/legacy.yaml
 
 ```
-![easy-coding-standard](https://github.com/symplify/easy-coding-standard)
+[easy-coding-standard](https://github.com/symplify/easy-coding-standard)
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)
