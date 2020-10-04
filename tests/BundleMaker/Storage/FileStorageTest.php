@@ -49,7 +49,7 @@ class FileStorageTest extends ContaoTestCase
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
         $this->tagStorage = new TagStorage();
-        $this->fileStorage = new FileStorage();
+        $this->fileStorage = new FileStorage(System::getContainer()->getParameter('kernel.project_dir'));
 
         // Create temp file
         $this->tmpSourceFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source.txt';

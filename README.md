@@ -113,7 +113,8 @@ Installtool aufrufen. Fertig!
 
 ## Templates updatesicher anpassen
 Falls man die Standard-Templates anpassen möchte, die der bundle-maker benötigt, um die PHP-Klassen, Konfigurationsdateien, etc. zu generieren, 
-kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-bundle/skeleton ablegen. 
+kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-bundle/skeleton ablegen.
+
 ![Templates updatesicher überschreiben](src/Resources/docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Last but not least
