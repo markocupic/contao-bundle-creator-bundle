@@ -359,6 +359,22 @@ class BundleMaker
             $objComposer->version = $this->model->composerpackageversion;
         }
 
+        // Autoload
+        if (!isset($objComposer->autoload) && !\is_object($objComposer->autoload)) {
+            $objComposer->autoload = new \stdClass();
+        }
+
+        // Autoload.psr-4
+        if (!isset($objComposer->autoload->{'psr-4'}) && !\is_object($objComposer->autoload->{'psr-4'})) {
+            $objComposer->autoload->{'psr-4'} = new \stdClass();
+        }
+        $psr4Key = sprintf(
+            '%s\\%s\\',
+            $this->tagStorage->get('toplevelnamespace'),
+            $this->tagStorage->get('sublevelnamespace')
+        );
+        $objComposer->autoload->{'psr-4'}->{$psr4Key} = 'src/';
+
         // Extra
         if (!isset($objComposer->extra) && !\is_object($objComposer->extra)) {
             $objComposer->extra = new \stdClass();
@@ -504,35 +520,10 @@ class BundleMaker
      */
     protected function addEasyCodingStandard(): void
     {
-        // .ecs/config/set/contao.yaml
-        $source = sprintf('%s/%s/.ecs/config/set/contao.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/contao.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
-
-        // .ecs/config/set/header_comment_fixer.yaml
-        $source = sprintf('%s/%s/.ecs/config/set/header_comment_fixer.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/header_comment_fixer.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
-
-        // .ecs/config/default.yaml
-        $source = sprintf('%s/%s/.ecs/config/default.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/default.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
-
-        // .ecs/config/legacy.yaml
-        $source = sprintf('%s/%s/.ecs/config/legacy.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/legacy.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
-
-        // .ecs/config/self.yaml
-        $source = sprintf('%s/%s/.ecs/config/self.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/self.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
-
-        // .ecs/config/template.yaml
-        $source = sprintf('%s/%s/.ecs/config/template.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs/config/template.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFile($source, $target);
+        // .ecs/*.*
+        $source = sprintf('%s/%s/.ecs', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFilesFromFolder($source, $target, true);
     }
 
     /**
