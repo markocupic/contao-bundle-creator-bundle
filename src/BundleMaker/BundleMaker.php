@@ -504,10 +504,35 @@ class BundleMaker
      */
     protected function addEasyCodingStandard(): void
     {
-        // .ecs/*.*
-        $source = sprintf('%s/%s/.ecs', $this->projectDir, self::SAMPLE_DIR);
-        $target = sprintf('%s/vendor/%s/%s/.ecs', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
-        $this->fileStorage->addFilesFromFolder($source, $target, true);
+        // .ecs/config/set/contao.yaml
+        $source = sprintf('%s/%s/.ecs/config/set/contao.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/contao.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // .ecs/config/set/header_comment_fixer.yaml
+        $source = sprintf('%s/%s/.ecs/config/set/header_comment_fixer.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/set/header_comment_fixer.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // .ecs/config/default.yaml
+        $source = sprintf('%s/%s/.ecs/config/default.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/default.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // .ecs/config/legacy.yaml
+        $source = sprintf('%s/%s/.ecs/config/legacy.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/legacy.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // .ecs/config/self.yaml
+        $source = sprintf('%s/%s/.ecs/config/self.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/self.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
+
+        // .ecs/config/template.yaml
+        $source = sprintf('%s/%s/.ecs/config/template.tpl.yaml', $this->projectDir, self::SAMPLE_DIR);
+        $target = sprintf('%s/vendor/%s/%s/.ecs/config/template.yaml', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
+        $this->fileStorage->addFile($source, $target);
     }
 
     /**
@@ -744,7 +769,7 @@ class BundleMaker
             }
             // Extend require key
             $blnModified = true;
-            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-master';
+            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-main';
             $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
         }
 

@@ -16,7 +16,6 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Usage:.
@@ -112,28 +111,6 @@ class FileStorage
         $this->intIndex = $this->getIndexOf($targetPath);
 
         return $this;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false): void
-    {
-        if (!is_dir($sourcePath)) {
-            throw new FileNotFoundException(sprintf('Folder "%s" not found.', $sourcePath));
-        }
-
-        $finder = new Finder();
-
-        if (false === $traverseSubdirectories) {
-            $finder->depth('== 0');
-        }
-
-        foreach ($finder->files()->in($sourcePath) as $file) {
-            $basename = str_replace([$sourcePath,'tpl.'], ['',''], $file->getRealPath());
-            //$basename = str_replace('tpl.', '', $basename);
-            $this->addFile($file->getRealPath(), $targetPath.$basename);
-        }
     }
 
     /**

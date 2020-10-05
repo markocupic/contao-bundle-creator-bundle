@@ -51,7 +51,7 @@ Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch e
   "require": {
     ....
     ....
-    "dirtyharrycoding/hello-world-bundle": "dev-master"
+    "dirtyharrycoding/hello-world-bundle": "dev-main"
   },
 ```
 Im require-Teil das neu erstellte Bundle registrieren. 
@@ -76,7 +76,7 @@ In der composer.json den Pfad zum github repo angeben.
   "require": {
     ....
     ....
-    "dirtyharrycoding/hello-world-bundle": "dev-master"
+    "dirtyharrycoding/hello-world-bundle": "dev-main"
   },
 ```
 Im require-Teil das neu erstellte Bundle registrieren. 
