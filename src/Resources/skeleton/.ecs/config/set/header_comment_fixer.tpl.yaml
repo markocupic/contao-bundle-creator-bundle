@@ -1,3 +1,0 @@
-services:
-    PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
-        header: "<?= $this->ecsphpdoc ?>"

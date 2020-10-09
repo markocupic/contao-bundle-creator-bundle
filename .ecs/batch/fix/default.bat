@@ -7,8 +7,8 @@ cd..
 cd..
 cd..
 :: src
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.php
 :: tests
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.php
 ::
 cd vendor/markocupic/contao-bundle-creator-bundle/.ecs./batch/fix

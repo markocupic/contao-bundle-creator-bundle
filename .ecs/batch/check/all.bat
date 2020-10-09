@@ -7,12 +7,12 @@ cd..
 cd..
 cd..
 :: src
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.php
 :: tests
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/default.php
 :: legacy
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/legacy.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/legacy.php
 :: templates
-vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao/templates --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/template.yaml
+vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src/Resources/contao/templates --config vendor/markocupic/contao-bundle-creator-bundle/.ecs/config/template.php
 ::
-cd vendor/markocupic/contao-bundle-creator-bundle/.ecs./batch/fix
+cd vendor/markocupic/contao-bundle-creator-bundle/.ecs./batch/check

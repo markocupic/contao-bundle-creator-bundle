@@ -130,7 +130,7 @@ class FileStorage
         }
 
         foreach ($finder->files()->in($sourcePath) as $file) {
-            $basename = str_replace([$sourcePath,'tpl.'], ['',''], $file->getRealPath());
+            $basename = str_replace([$sourcePath, 'tpl.'], ['', ''], $file->getRealPath());
             //$basename = str_replace('tpl.', '', $basename);
             $this->addFile($file->getRealPath(), $targetPath.$basename);
         }
