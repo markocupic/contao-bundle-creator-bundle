@@ -232,7 +232,7 @@ class BundleMaker
         $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($this->getContentFromPartialFile('phpdoc.tpl.txt')));
         $phpdoclines = explode(PHP_EOL, $this->getContentFromPartialFile('phpdoc.tpl.txt'));
         $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
-        $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc,"\\n"));
+        $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
 
         // Current year
         $this->tagStorage->set('year', date('Y'));
