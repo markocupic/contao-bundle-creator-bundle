@@ -147,6 +147,20 @@ class StrTest extends ContaoTestCase
     }
 
     /**
+     * Test if double quotes are converted to single quotes.
+     */
+    public function testAsComposerDescription(): void
+    {
+        $test = '"Lorem ipsum"';
+        $actual = '\'Lorem ipsum\'';
+        $this->assertSame(Str::asComposerDescription($test), $actual);
+
+        $test = '\'Lorem ipsum\'';
+        $actual = '\'Lorem ipsum\'';
+        $this->assertSame(Str::asComposerDescription($test), $actual);
+    }
+
+    /**
      * Test if strings are correctly converted to frontend module type format.
      */
     public function testAsContaoFrontendModuleType(): void

@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = array(
 			'sorting'   => true,
 			'flag'      => 1,
 			'search'    => true,
-			'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'),
+			'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'cbcb_composerdescription'),
 			'sql'       => "varchar(255) NOT NULL default ''"
 		),
 		'composerpackageversion'            => array(

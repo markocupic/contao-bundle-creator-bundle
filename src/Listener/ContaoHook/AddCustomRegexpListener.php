@@ -71,6 +71,11 @@ class AddCustomRegexpListener
                         $blnTested = true;
                         $fittedInput = Str::asContaoContentElementType($input);
                         break;
+
+                    case 'composerdescription':
+                        $blnTested = true;
+                        $fittedInput = Str::asComposerDescription($input);
+                        break;
                 }
 
                 if ($blnTested && $fittedInput !== $input) {
