@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -28,9 +28,12 @@ use Symfony\Component\Finder\Finder;
  * ->appendContent('bla, bla');
  *
  * or:
+ * // Override file
+ * $fileStorage
+ * ->addFile('somefolder/somefile.txt', 'destination/somefile.txt', true);
  *
- * $fileStorage = new FileStorage();
- *
+ * or:
+ * // Create new file from string
  * $fileStorage
  * ->addFileFromString('destination/somefile.txt', 'Lorem ipsum',);
  *
@@ -77,14 +80,14 @@ class FileStorage
      *
      * @return FileStorage
      */
-    public function addFile(string $sourcePath, string $targetPath): self
+    public function addFile(string $sourcePath, string $targetPath, bool $blnForceOverride = false): self
     {
         if (!is_file($sourcePath)) {
             throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
         }
 
-        if ($this->hasFile($targetPath)) {
-            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
+        if ($this->hasFile($targetPath) && !$blnForceOverride) {
+            throw new \Exception(sprintf('File "%s" is already set. Please use the $blnForceOverride parameter or call FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
         // Replace default source with a custom source
@@ -117,7 +120,7 @@ class FileStorage
     /**
      * @throws \Exception
      */
-    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false): void
+    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false, bool $blnForceOverride = false): void
     {
         if (!is_dir($sourcePath)) {
             throw new FileNotFoundException(sprintf('Folder "%s" not found.', $sourcePath));
@@ -131,8 +134,7 @@ class FileStorage
 
         foreach ($finder->files()->in($sourcePath) as $file) {
             $basename = str_replace([$sourcePath, 'tpl.'], ['', ''], $file->getRealPath());
-            //$basename = str_replace('tpl.', '', $basename);
-            $this->addFile($file->getRealPath(), $targetPath.$basename);
+            $this->addFile($file->getRealPath(), $targetPath.$basename, $blnForceOverride);
         }
     }
 
@@ -141,9 +143,9 @@ class FileStorage
      *
      * @return FileStorage
      */
-    public function addFileFromString(string $targetPath, string $stringContent = ''): self
+    public function addFileFromString(string $targetPath, string $stringContent = '', bool $blnForceOverride = false): self
     {
-        if ($this->hasFile($targetPath)) {
+        if ($this->hasFile($targetPath) && !$blnForceOverride) {
             throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 

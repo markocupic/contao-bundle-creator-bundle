@@ -5,10 +5,10 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
  * @license MIT
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * For the full copyright and license information,
+ * please view the LICENSE file that was distributed with this source code.
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
@@ -109,7 +109,7 @@ class StrTest extends ContaoTestCase
     public function testAsVendorName(): void
     {
         $test = 'vendor_Name8';
-        $actual = 'vendor-Name8';
+        $actual = 'vendor-name8';
         $this->assertSame(Str::asVendorName($test), $actual);
 
         $test = '-vendor--name-';
@@ -117,6 +117,10 @@ class StrTest extends ContaoTestCase
         $this->assertSame(Str::asVendorName($test), $actual);
 
         $test = '--vendor_name--';
+        $actual = 'vendor-name';
+        $this->assertSame(Str::asVendorName($test), $actual);
+
+        $test = 'Vendor_Name--';
         $actual = 'vendor-name';
         $this->assertSame(Str::asVendorName($test), $actual);
     }

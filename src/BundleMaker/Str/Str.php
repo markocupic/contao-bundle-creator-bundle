@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2020 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -76,16 +76,17 @@ final class Str
     }
 
     /**
-     * Sanitize vendorname (github restrictions)
-     * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name
-     * But allow Vendor-Name, vendor-name.
+     * Sanitize vendorname (github 6 packagist restrictions)
+     * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name, Vendorname
+     * But allow vendor-name.
      */
     public static function asVendorName(string $value): string
     {
         $value = preg_replace('/_/', '-', $value);
         $value = preg_replace('/[\-]{2,}/', '-', $value);
+        $value = preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $value);
 
-        return preg_replace('/^-+|_+|[^A-Za-z0-9\-]|-+$/', '', $value);
+        return strtolower($value);
     }
 
     /**
