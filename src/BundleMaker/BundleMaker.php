@@ -424,7 +424,6 @@ class BundleMaker
         $source = sprintf('%s/src/ContaoManager/Plugin.tpl.php', $this->skeletonPath);
         $target = sprintf('%s/vendor/%s/%s/src/ContaoManager/Plugin.php', $this->projectDir, $this->model->vendorname, $this->model->repositoryname);
         $this->fileStorage->addFile($source, $target);
-        $this->fileStorage->addFile($source, $target, true);
     }
 
     /**
