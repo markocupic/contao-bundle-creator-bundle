@@ -6,5 +6,5 @@ cd..
 cd..
 cd..
 cd..
-vendor\bin\ecs check vendor/<?= $this->vendorname ?>/<?= $this->repositoryname ?>/src/Resources/contao --fix --config vendor/<?= $this->vendorname ?>/<?= $this->repositoryname ?>/.ecs/config/default.php
+vendor\bin\ecs check vendor/<?= $this->vendorname ?>/<?= $this->repositoryname ?>/src/Resources/contao --fix --config vendor/<?= $this->vendorname ?>/<?= $this->repositoryname ?>/.ecs/config/legacy.php
 cd vendor/<?= $this->vendorname ?>/<?= $this->repositoryname ?>/.ecs./batch/fix
