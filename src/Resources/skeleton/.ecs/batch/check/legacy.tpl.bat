@@ -2,7 +2,7 @@
 :: Install inside PhpStorm the  "Batch Script Support" plugin
 cd..
 cd..
-cd..
+cd...
 cd..
 cd..
 cd..
