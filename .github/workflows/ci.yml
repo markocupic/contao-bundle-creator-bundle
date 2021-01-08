@@ -26,7 +26,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-          tools: prestissimo, flex
+          tools: flex
           coverage: none
 
       - name: Checkout
