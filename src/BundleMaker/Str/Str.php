@@ -104,7 +104,7 @@ final class Str
 
     /**
      * Sanitize composer description text
-     * Replace double quotes with single quotes
+     * Replace double quotes with single quotes.
      */
     public static function asComposerDescription(string $value): string
     {
