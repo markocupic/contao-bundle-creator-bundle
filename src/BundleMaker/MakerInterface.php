@@ -19,5 +19,5 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
  */
 interface MakerInterface
 {
-    public function addToFileStorage():void;
+    public function addFilesToStorage(): void;
 }

@@ -118,46 +118,46 @@ class BundleMaker
         $this->setTags();
 
         // Add the composer.json file to file storage
-        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Add the bundle class to file storage
-        (new BundleClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new BundleClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Add the Dependency Injection Extension class to file storage
-        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Add the Contao Manager Plugin class to file storage
-        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Add unit tests to file storage
-        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Config files, assets, etc.
-        (new MiscFilesMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+        (new MiscFilesMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
 
         // Add ecs config files to the bundle
         if ($this->input->addEasyCodingStandard) {
-            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
         }
 
         // Add backend module files to file storage
         if ($this->input->addBackendModule && '' !== $this->input->dcatable) {
-            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
         }
 
         // Add frontend module files to file storage
         if ($this->input->addFrontendModule) {
-            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
         }
 
         // Add content element files to file storage
         if ($this->input->addContentElement) {
-            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
         }
 
         // Add a custom route to the file storage
         if ($this->input->addCustomRoute) {
-            (new CustomRouteMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
+            (new CustomRouteMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
         }
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists()) {

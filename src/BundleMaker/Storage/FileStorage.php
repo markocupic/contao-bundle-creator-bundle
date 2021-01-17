@@ -120,7 +120,7 @@ class FileStorage
     /**
      * @throws \Exception
      */
-    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false, bool $blnForceOverride = false): void
+    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false, bool $blnForceOverride = false): array
     {
         if (!is_dir($sourcePath)) {
             throw new FileNotFoundException(sprintf('Folder "%s" not found.', $sourcePath));
@@ -132,10 +132,15 @@ class FileStorage
             $finder->depth('== 0');
         }
 
-        foreach ($finder->files()->in($sourcePath) as $file) {
+        $arrFiles = [];
+
+        foreach ($finder->files()->ignoreDotFiles(false)->in($sourcePath) as $file) {
             $basename = str_replace([$sourcePath, 'tpl.'], ['', ''], $file->getRealPath());
             $this->addFile($file->getRealPath(), $targetPath.$basename, $blnForceOverride);
+            $arrFiles[] = $targetPath.$basename;
         }
+
+        return $arrFiles;
     }
 
     /**
@@ -293,30 +298,43 @@ class FileStorage
      *
      * @return FileStorage
      */
-    public function replaceTags(TagStorage $tagStorage): self
+    public function replaceTags(TagStorage $tagStorage, array $filePatternFilter = []): self
     {
         if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
         }
 
-        if (isset($this->arrStorrage[$this->intIndex]['source']) && !empty($this->arrStorrage[$this->intIndex]['source']) && false !== strpos(basename($this->arrStorrage[$this->intIndex]['source']), '.tpl.')) {
+        if (isset($this->arrStorrage[$this->intIndex]['source'])) {
+            if (!empty($this->arrStorrage[$this->intIndex]['source'])) {
+                $blnReplace = true;
 
-            $content = $this->arrStorrage[$this->intIndex]['content'];
-            $templateParser = new ParsePhpToken($tagStorage);
-            $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
+                if (\count($filePatternFilter)) {
+                    $blnReplace = false;
+
+                    foreach ($filePatternFilter as $pattern) {
+                        if (false !== strpos(basename($this->arrStorrage[$this->intIndex]['source']), $pattern)) {
+                            $blnReplace = true;
+                        }
+                    }
+                }
+
+                if ($blnReplace) {
+                    $content = $this->arrStorrage[$this->intIndex]['content'];
+                    $templateParser = new ParsePhpToken($tagStorage);
+                    $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
+                }
+            }
         }
+
         return $this;
     }
 
-    public function replaceTagsAll(TagStorage $tagStorage): void
+    public function replaceTagsAll(TagStorage $tagStorage, $filePatternFilter = []): void
     {
         $arrFiles = $this->getAll();
 
         foreach ($arrFiles as $arrFile) {
-            // Skip images...
-            if (isset($arrFile['source']) && !empty($arrFile['source']) && false !== strpos(basename($arrFile['source']), '.tpl.')) {
-                $this->getFile($arrFile['target'])->replaceTags($tagStorage);
-            }
+            $this->getFile($arrFile['target'])->replaceTags($tagStorage, $filePatternFilter);
         }
     }
 

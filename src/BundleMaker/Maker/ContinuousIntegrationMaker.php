@@ -19,7 +19,7 @@ class ContinuousIntegrationMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function addToFileStorage(): void
+    public function addFilesToStorage(): void
     {
         // Add phpunit.xml.dist
         $source = sprintf(
@@ -34,7 +34,7 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add plugin test
         $source = sprintf(
@@ -49,7 +49,7 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add .travis.yml
         $source = sprintf(
@@ -64,7 +64,7 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add github workflow file
         $source = sprintf(
@@ -79,6 +79,6 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
     }
 }

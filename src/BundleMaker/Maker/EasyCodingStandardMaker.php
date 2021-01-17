@@ -19,7 +19,7 @@ class EasyCodingStandardMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function addToFileStorage(): void
+    public function addFilesToStorage(): void
     {
         // .ecs/*.*
         $source = sprintf(
@@ -33,7 +33,12 @@ class EasyCodingStandardMaker extends AbstractMaker
             $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname')
         );
+        // Add to storage
+        $arrFiles = $this->fileStorage->addFilesFromFolder($source, $target, true);
 
-        $this->fileStorage->addFilesFromFolder($source, $target, true);
+        // Replace tags
+        foreach ($arrFiles as $strTargetPath) {
+            $this->fileStorage->getFile($strTargetPath)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }

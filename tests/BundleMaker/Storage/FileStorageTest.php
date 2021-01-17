@@ -173,6 +173,6 @@ class FileStorageTest extends ContaoTestCase
         $target1 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target1.txt';
         $this->fileStorage->addFileFromString($target1, $strContent);
 
-        $this->assertSame($strExpected, $this->fileStorage->replaceTags($this->tagStorage)->getContent());
+        $this->assertSame($strExpected, $this->fileStorage->replaceTags($this->tagStorage, [])->getContent());
     }
 }

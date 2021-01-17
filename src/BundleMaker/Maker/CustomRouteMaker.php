@@ -19,7 +19,7 @@ class CustomRouteMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function addToFileStorage(): void
+    public function addFilesToStorage(): void
     {
         // Add controller (custom route)
         $source = sprintf(
@@ -34,7 +34,7 @@ class CustomRouteMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add twig template
         $source = sprintf(
@@ -49,6 +49,6 @@ class CustomRouteMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
     }
 }

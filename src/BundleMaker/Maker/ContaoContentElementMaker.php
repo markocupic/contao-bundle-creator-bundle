@@ -21,7 +21,7 @@ class ContaoContentElementMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function addToFileStorage(): void
+    public function addFilesToStorage(): void
     {
         // Get the content element template name
         $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->tagStorage->get('contentelementtype'));
@@ -43,7 +43,7 @@ class ContaoContentElementMaker extends AbstractMaker
             $strContentElementClassname
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add content element template
         $source = sprintf(
@@ -59,7 +59,7 @@ class ContaoContentElementMaker extends AbstractMaker
             $strContentElementTemplateName
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add src/Resources/contao/dca/tl_content.php
         $source = sprintf(
@@ -74,7 +74,7 @@ class ContaoContentElementMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
@@ -90,7 +90,7 @@ class ContaoContentElementMaker extends AbstractMaker
                 $this->skeletonPath
             );
 
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
         }
     }
 }

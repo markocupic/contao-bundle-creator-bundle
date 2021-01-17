@@ -22,7 +22,7 @@ class MiscFilesMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function addToFileStorage(): void
+    public function addFilesToStorage(): void
     {
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
@@ -49,7 +49,7 @@ class MiscFilesMaker extends AbstractMaker
                 str_replace('tpl.', '', $file)
             );
 
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
             // Validate config files
             try {
@@ -84,7 +84,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add logo
         $source = sprintf(
@@ -98,7 +98,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Readme.md
         $source = sprintf(
@@ -113,7 +113,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // .gitattributes
         $source = sprintf(
@@ -128,6 +128,6 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
     }
 }
