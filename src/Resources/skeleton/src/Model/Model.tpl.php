@@ -1,7 +1,8 @@
 <?= "<?php\n" ?>
 
-<?= $this->phpdoc ?>
 declare(strict_types=1);
+
+<?= $this->phpdoc ?>
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Model;
 

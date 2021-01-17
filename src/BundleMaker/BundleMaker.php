@@ -17,7 +17,6 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 use Contao\Date;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
@@ -25,7 +24,6 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -115,7 +113,8 @@ class BundleMaker
         $this->setTags();
 
         // Keep the application extensible
-        // and use subscribers to add files via maker classes to the bundle
+        // and use maker classes to add files to the bundle.
+        // Implement these makers as event subscribers.
         $param = new \stdClass();
         $param->tagStorage = $this->tagStorage;
         $param->fileStorage = $this->fileStorage;
@@ -241,8 +240,6 @@ class BundleMaker
             $this->tagStorage->set('addCustomRoute', '0');
         }
     }
-
-   
 
     protected function createBackup(): void
     {
@@ -372,6 +369,7 @@ class BundleMaker
                     $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
                 }
             }
+
             // Extend require key
             $blnModified = true;
             $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = 'dev-main';
