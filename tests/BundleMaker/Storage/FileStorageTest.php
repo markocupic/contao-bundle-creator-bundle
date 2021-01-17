@@ -37,7 +37,7 @@ class FileStorageTest extends ContaoTestCase
     /**
      * @var string
      */
-    protected $tmpSourceFile;
+    protected $tmpSourceFile1;
 
     /**
      * @var string
@@ -52,17 +52,22 @@ class FileStorageTest extends ContaoTestCase
         $this->fileStorage = new FileStorage(System::getContainer()->getParameter('kernel.project_dir'));
 
         // Create temp file
-        $this->tmpSourceFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source.txt';
-        file_put_contents($this->tmpSourceFile, 'Here comes the content.');
+        $this->tmpSourceFile1 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source1.txt';
+        file_put_contents($this->tmpSourceFile1, 'Here comes the content.');
 
         // Set target file path
-        $this->tmpTargetFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target.txt';
+        $this->tmpTargetFile = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'target1.txt';
+
+        // Create temp file
+        $this->tmpSourceFile2 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source2.txt';
+        file_put_contents($this->tmpSourceFile1, '<?= $actor ?> is a famous actor.');
+        $this->tagStorage->set('actor', 'Charles Bronson');
     }
 
     protected function tearDown(): void
     {
-        if (true === file_exists($this->tmpSourceFile)) {
-            unlink($this->tmpSourceFile);
+        if (true === file_exists($this->tmpSourceFile1)) {
+            unlink($this->tmpSourceFile1);
         }
     }
 
@@ -76,14 +81,14 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testAddFile(): void
     {
-        $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile);
+        $this->fileStorage->addFile($this->tmpSourceFile1, $this->tmpTargetFile);
         $this->assertTrue(true === $this->fileStorage->hasFile($this->tmpTargetFile));
         $this->assertInstanceOf(FileStorage::class, $this->fileStorage->getFile($this->tmpTargetFile));
         $this->assertSame('Here comes the content.', $this->fileStorage->getContent());
 
         // Do not allow overwriting files
         $this->expectException(\Exception::class);
-        $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile);
+        $this->fileStorage->addFile($this->tmpSourceFile1, $this->tmpTargetFile);
     }
 
     /**
@@ -109,7 +114,7 @@ class FileStorageTest extends ContaoTestCase
     {
         $this->assertSame(
             'Bar',
-            $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile)
+            $this->fileStorage->addFile($this->tmpSourceFile1, $this->tmpTargetFile)
                 ->replaceContent('Bar')
                 ->getContent()
         );
@@ -133,7 +138,7 @@ class FileStorageTest extends ContaoTestCase
         // Another file
         $this->assertSame(
             '',
-            $this->fileStorage->addFile($this->tmpSourceFile, $this->tmpTargetFile)
+            $this->fileStorage->addFile($this->tmpSourceFile1, $this->tmpTargetFile)
                 ->truncate()
                 ->getContent()
         );
@@ -174,5 +179,15 @@ class FileStorageTest extends ContaoTestCase
         $this->fileStorage->addFileFromString($target1, $strContent);
 
         $this->assertSame($strExpected, $this->fileStorage->replaceTags($this->tagStorage, [])->getContent());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testGetTagReplacedContentFromFilePath(): void
+    {
+        $this->tagStorage->set('actor', 'Charles Bronson');
+        $strExpected = 'Charles Bronson is a famous actor.';
+        $this->assertSame($strExpected, $this->fileStorage->getTagReplacedContentFromFilePath($this->tmpSourceFile2, $this->tagStorage));
     }
 }
