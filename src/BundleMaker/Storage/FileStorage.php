@@ -329,13 +329,22 @@ class FileStorage
         return $this;
     }
 
-    public function replaceTagsAll(TagStorage $tagStorage, $filePatternFilter = []): void
+    /**
+     * Replace php tags and return content from partials.
+     *
+     * @throws \Exception
+     */
+    public function getTagReplacedContentFromFilePath(string $strPath, TagStorage $tagStorage): string
     {
-        $arrFiles = $this->getAll();
-
-        foreach ($arrFiles as $arrFile) {
-            $this->getFile($arrFile['target'])->replaceTags($tagStorage, $filePatternFilter);
+        if (!is_file($strPath)) {
+            throw new FileNotFoundException(sprintf('File "%s" not found.', $strPath));
         }
+
+        if (false === ($content = file_get_contents($strPath))) {
+            throw new \Exception(sprintf('Could not read content from file "%s".', $strPath));
+        }
+
+        return (new ParsePhpToken($tagStorage))->parsePhpTokensFromString($content);
     }
 
     /**

@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
+namespace Markocupic\ContaoBundleCreatorBundle;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 

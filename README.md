@@ -136,7 +136,8 @@ vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src/Resources/contao --f
 [easy-coding-standard](https://github.com/symplify/easy-coding-standard)
 
 ## App erweitern
-Mit Subscribern können weitere Maker hinzugefügt werden. Dazu muss lediglich eine Subscriberklasse angelegt und diese registriert werden. 
+Die Bundle-Dateien werden in dieser App über Maker dem neu zu erstellenden Bundle hinzugefügt.
+Mit Subscribern können weitere Maker-Klassen hinzugefügt werden. Dazu muss lediglich eine Subscriberklasse angelegt und diese registriert werden. 
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)

@@ -102,7 +102,6 @@ class BundleMaker
     public function run(ContaoBundleCreatorModel $input): void
     {
         $this->input = $input;
-        $arrInput = $input->row();
 
         if ($this->bundleExists() && !$this->input->overwriteexisting) {
             $this->message->addError('An extension with the same name already exists. Please set the "override extension flag".');
@@ -120,7 +119,7 @@ class BundleMaker
         $param = new \stdClass();
         $param->tagStorage = $this->tagStorage;
         $param->fileStorage = $this->fileStorage;
-        $param->arrInput = $arrInput;
+        $param->arrInput = $this->input->row();
         $event = new AddMakerEvent($param);
         $this->eventDispatcher->dispatch($event, 'markocupic_contao_bundle_creator_bundle_add_maker');
 
@@ -184,8 +183,9 @@ class BundleMaker
 
         // Phpdoc
         $this->tagStorage->set('bundlename', (string) $this->input->bundlename);
-        $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($this->getContentFromPartialFile('phpdoc.tpl.txt')));
-        $phpdoclines = explode(PHP_EOL, $this->getContentFromPartialFile('phpdoc.tpl.txt'));
+        $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
+        $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($strPhpdoc));
+        $phpdoclines = explode(PHP_EOL, $strPhpdoc);
         $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
         $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
 
@@ -242,27 +242,7 @@ class BundleMaker
         }
     }
 
-    /**
-     * Replace php tags and return content from partials.
-     *
-     * @throws \Exception
-     */
-    protected function getContentFromPartialFile(string $strFilename): string
-    {
-        $sourceFile = $this->skeletonPath.'/partials/'.$strFilename;
-
-        if (!is_file($sourceFile)) {
-            throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
-        }
-
-        if (false === ($content = file_get_contents($sourceFile))) {
-            throw new \Exception(sprintf('Could not read content from file "%s".', $sourceFile));
-        }
-
-        $templateParser = new ParsePhpToken($this->tagStorage);
-
-        return $templateParser->parsePhpTokensFromString($content);
-    }
+   
 
     protected function createBackup(): void
     {
