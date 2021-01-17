@@ -30,8 +30,8 @@ class ContinuousIntegrationMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/phpunit.xml.dist',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -45,8 +45,8 @@ class ContinuousIntegrationMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/tests/ContaoManager/PluginTest.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -60,8 +60,8 @@ class ContinuousIntegrationMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/.travis.yml',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -75,8 +75,8 @@ class ContinuousIntegrationMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/.github/workflows/ci.yml',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

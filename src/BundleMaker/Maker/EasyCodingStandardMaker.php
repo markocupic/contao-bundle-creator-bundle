@@ -30,8 +30,8 @@ class EasyCodingStandardMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/.ecs',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
         // Add to storage
         $arrFiles = $this->fileStorage->addFilesFromFolder($source, $target, true);

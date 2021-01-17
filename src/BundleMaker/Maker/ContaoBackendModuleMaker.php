@@ -32,9 +32,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/dca/%s.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
-            $this->tagStorage->get('dcatable')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
+            $this->arrInput['dcatable']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -47,9 +47,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/%s.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
-            $this->tagStorage->get('dcatable')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
+            $this->arrInput['dcatable']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -63,9 +63,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Model/%s.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
-            Str::asContaoModelClassName((string) $this->tagStorage->get('dcatable'))
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
+            Str::asContaoModelClassName((string) $this->arrInput['dcatable'])
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -74,8 +74,8 @@ class ContaoBackendModuleMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         if (!$this->fileStorage->hasFile($target)) {
@@ -91,8 +91,8 @@ class ContaoBackendModuleMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         if (!$this->fileStorage->hasFile($target)) {

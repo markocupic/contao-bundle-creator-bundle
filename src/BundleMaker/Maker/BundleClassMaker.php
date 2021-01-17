@@ -31,10 +31,10 @@ class BundleClassMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/%s%s.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
-            Str::asClassName((string) $this->tagStorage->get('vendorname')),
-            Str::asClassName((string) $this->tagStorage->get('repositoryname'))
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
+            Str::asClassName((string) $this->arrInput['vendorname']),
+            Str::asClassName((string) $this->arrInput['repositoryname'])
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

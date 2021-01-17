@@ -31,7 +31,7 @@ class MiscFilesMaker extends AbstractMaker
             'services.tpl.yml',
         ];
 
-        if ($this->tagStorage->get('addCustomRoute')) {
+        if ($this->arrInput['addCustomRoute']) {
             $arrFiles[] = 'routes.tpl.yml';
         }
 
@@ -44,8 +44,8 @@ class MiscFilesMaker extends AbstractMaker
             $target = sprintf(
                 '%s/vendor/%s/%s/src/Resources/config/%s',
                 $this->projectDir,
-                $this->tagStorage->get('vendorname'),
-                $this->tagStorage->get('repositoryname'),
+                $this->arrInput['vendorname'],
+                $this->arrInput['repositoryname'],
                 str_replace('tpl.', '', $file)
             );
 
@@ -80,8 +80,8 @@ class MiscFilesMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/config/config.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -94,8 +94,8 @@ class MiscFilesMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/public/logo.png',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -109,8 +109,8 @@ class MiscFilesMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/README.md',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -124,8 +124,8 @@ class MiscFilesMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/.gitattributes',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

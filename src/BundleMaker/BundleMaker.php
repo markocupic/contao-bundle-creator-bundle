@@ -105,6 +105,7 @@ class BundleMaker
     public function run(ContaoBundleCreatorModel $input): void
     {
         $this->input = $input;
+        $arrInput = $input->row();
 
         if ($this->bundleExists() && !$this->input->overwriteexisting) {
             $this->message->addError('An extension with the same name already exists. Please set the "override extension flag".');
@@ -118,46 +119,46 @@ class BundleMaker
         $this->setTags();
 
         // Add the composer.json file to file storage
-        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Add the bundle class to file storage
-        (new BundleClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new BundleClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Add the Dependency Injection Extension class to file storage
-        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Add the Contao Manager Plugin class to file storage
-        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Add unit tests to file storage
-        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Config files, assets, etc.
-        (new MiscFilesMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        (new MiscFilesMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
 
         // Add ecs config files to the bundle
         if ($this->input->addEasyCodingStandard) {
-            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
         }
 
         // Add backend module files to file storage
-        if ($this->input->addBackendModule && '' !== $this->input->dcatable) {
-            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+        if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
+            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
         }
 
         // Add frontend module files to file storage
         if ($this->input->addFrontendModule) {
-            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
         }
 
         // Add content element files to file storage
         if ($this->input->addContentElement) {
-            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
         }
 
         // Add a custom route to the file storage
         if ($this->input->addCustomRoute) {
-            (new CustomRouteMaker($this->tagStorage, $this->fileStorage))->addFilesToStorage();
+            (new CustomRouteMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
         }
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists()) {
@@ -192,9 +193,9 @@ class BundleMaker
     protected function setTags(): void
     {
         // Store input values into the tag storage
-        $arrModel = $this->input->row();
+        $arrInput = $this->input->row();
 
-        foreach ($arrModel as $fieldname => $value) {
+        foreach ($arrInput as $fieldname => $value) {
             $this->tagStorage->set((string) $fieldname, (string) $value);
         }
 
@@ -228,7 +229,7 @@ class BundleMaker
         $this->tagStorage->set('year', date('Y'));
 
         // Dca table and backend module
-        if ($this->input->addBackendModule && '' !== $this->input->dcatable) {
+        if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
             $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
             $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->input->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);
@@ -389,7 +390,7 @@ class BundleMaker
         $content = file_get_contents($this->projectDir.'/composer.json');
         $objJSON = json_decode($content);
 
-        if ('' !== $this->input->editRootComposer) {
+        if (!empty($this->input->editRootComposer)) {
             if (!isset($objJSON->repositories)) {
                 $objJSON->repositories = [];
             }

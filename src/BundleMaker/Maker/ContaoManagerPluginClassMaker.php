@@ -29,8 +29,8 @@ class ContaoManagerPluginClassMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/ContaoManager/Plugin.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

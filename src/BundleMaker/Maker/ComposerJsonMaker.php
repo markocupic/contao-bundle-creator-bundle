@@ -29,8 +29,8 @@ class ComposerJsonMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/composer.json',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -39,22 +39,22 @@ class ComposerJsonMaker extends AbstractMaker
         $objComposer = json_decode($content);
 
         // Name
-        $objComposer->name = $this->tagStorage->get('vendorname').'/'.$this->tagStorage->get('repositoryname');
+        $objComposer->name = $this->arrInput['vendorname'].'/'.$this->arrInput['repositoryname'];
 
         // Description
-        $objComposer->description = $this->tagStorage->get('composerdescription');
+        $objComposer->description = $this->arrInput['composerdescription'];
 
         // License
-        $objComposer->license = $this->tagStorage->get('composerlicense');
+        $objComposer->license = $this->arrInput['composerlicense'];
 
         //Authors
         if (!isset($objComposer->authors) && !\is_array($objComposer->authors)) {
             $objComposer->authors = [];
         }
         $authors = new \stdClass();
-        $authors->name = $this->tagStorage->get('composerauthorname');
-        $authors->email = $this->tagStorage->get('composerauthoremail');
-        $authors->homepage = $this->tagStorage->get('composerauthorwebsite');
+        $authors->name = $this->arrInput['composerauthorname'];
+        $authors->email = $this->arrInput['composerauthoremail'];
+        $authors->homepage = $this->arrInput['composerauthorwebsite'];
         $authors->role = 'Developer';
         $objComposer->authors[] = $authors;
 
@@ -64,18 +64,18 @@ class ComposerJsonMaker extends AbstractMaker
         }
         $objComposer->support->issues = sprintf(
             'https://github.com/%s/%s/issues',
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
         $objComposer->support->source = sprintf(
             'https://github.com/%s/%s',
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
         );
 
         // Version
         if ($this->tagStorage->has('composerpackageversion')) {
-            $objComposer->version = $this->tagStorage->get('composerpackageversion');
+            $objComposer->version = $this->arrInput['composerpackageversion'];
         }
 
         // Autoload
@@ -89,8 +89,8 @@ class ComposerJsonMaker extends AbstractMaker
         }
         $psr4Key = sprintf(
             '%s\\%s\\',
-            $this->tagStorage->get('toplevelnamespace'),
-            $this->tagStorage->get('sublevelnamespace')
+            $this->arrInput['toplevelnamespace'],
+            $this->arrInput['sublevelnamespace']
         );
         $objComposer->autoload->{'psr-4'}->{$psr4Key} = 'src/';
 
@@ -100,8 +100,8 @@ class ComposerJsonMaker extends AbstractMaker
         }
         $objComposer->extra->{'contao-manager-plugin'} = sprintf(
             '%s\%s\ContaoManager\Plugin',
-            $this->tagStorage->get('toplevelnamespace'),
-            $this->tagStorage->get('sublevelnamespace')
+            $this->arrInput['toplevelnamespace'],
+            $this->arrInput['sublevelnamespace']
         );
 
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

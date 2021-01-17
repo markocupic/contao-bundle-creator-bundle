@@ -28,9 +28,9 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/DependencyInjection/%s.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname'),
-            Str::asDependencyInjectionExtensionClassName((string) $this->tagStorage->get('vendorname'), (string) $this->tagStorage->get('repositoryname'))
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname'],
+            Str::asDependencyInjectionExtensionClassName((string) $this->arrInput['vendorname'], (string) $this->arrInput['repositoryname'])
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

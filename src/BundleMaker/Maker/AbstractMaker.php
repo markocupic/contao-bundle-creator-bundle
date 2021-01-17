@@ -31,6 +31,11 @@ abstract class AbstractMaker implements MakerInterface
     protected $fileStorage;
 
     /**
+     * @var array
+     */
+    protected $arrInput;
+
+    /**
      * @var false|string
      */
     protected $projectDir;
@@ -43,10 +48,11 @@ abstract class AbstractMaker implements MakerInterface
     /**
      * AbstractMaker constructor.
      */
-    public function __construct(TagStorage $tagStorage, FileStorage $fileStorage)
+    public function __construct(TagStorage $tagStorage, FileStorage $fileStorage, array $arrInput)
     {
         $this->tagStorage = $tagStorage;
         $this->fileStorage = $fileStorage;
+        $this->arrInput = $arrInput;
         $this->projectDir = realpath(__DIR__.'/../../../../../../');
         $this->skeletonPath = realpath(__DIR__.'/../../Resources/skeleton');
     }

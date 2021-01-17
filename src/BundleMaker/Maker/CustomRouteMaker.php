@@ -30,8 +30,8 @@ class CustomRouteMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Controller/MyCustomController.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
@@ -45,8 +45,8 @@ class CustomRouteMaker extends AbstractMaker
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.html.twig',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'),
-            $this->tagStorage->get('repositoryname')
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
