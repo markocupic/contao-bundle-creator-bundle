@@ -304,26 +304,26 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        if (isset($this->arrStorrage[$this->intIndex]['source'])) {
-            if (!empty($this->arrStorrage[$this->intIndex]['source'])) {
-                $blnReplace = true;
+        $blnReplace = true;
 
-                if (\count($filePatternFilter)) {
-                    $blnReplace = false;
+        if (\count($filePatternFilter) > 0) {
+            $blnReplace = false;
 
-                    foreach ($filePatternFilter as $pattern) {
+            foreach ($filePatternFilter as $pattern) {
+                if (isset($this->arrStorrage[$this->intIndex]['source'])) {
+                    if (!empty($this->arrStorrage[$this->intIndex]['source'])) {
                         if (false !== strpos(basename($this->arrStorrage[$this->intIndex]['source']), $pattern)) {
                             $blnReplace = true;
                         }
                     }
                 }
-
-                if ($blnReplace) {
-                    $content = $this->arrStorrage[$this->intIndex]['content'];
-                    $templateParser = new ParsePhpToken($tagStorage);
-                    $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
-                }
             }
+        }
+
+        if ($blnReplace) {
+            $content = $this->arrStorrage[$this->intIndex]['content'];
+            $templateParser = new ParsePhpToken($tagStorage);
+            $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
         }
 
         return $this;
