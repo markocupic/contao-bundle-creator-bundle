@@ -60,7 +60,7 @@ class FileStorageTest extends ContaoTestCase
 
         // Create temp file
         $this->tmpSourceFile2 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source2.txt';
-        file_put_contents($this->tmpSourceFile2, '<?= $actor ?> is a famous actor.');
+        file_put_contents($this->tmpSourceFile2, '<?= $this->actor ?> is a famous actor.');
         $this->tagStorage->set('actor', 'Charles Bronson');
     }
 
@@ -68,6 +68,10 @@ class FileStorageTest extends ContaoTestCase
     {
         if (true === file_exists($this->tmpSourceFile1)) {
             unlink($this->tmpSourceFile1);
+        }
+
+        if (true === file_exists($this->tmpSourceFile2)) {
+            unlink($this->tmpSourceFile2);
         }
     }
 
@@ -186,7 +190,6 @@ class FileStorageTest extends ContaoTestCase
      */
     public function testGetTagReplacedContentFromFilePath(): void
     {
-        $this->tagStorage->set('actor', 'Charles Bronson');
         $strExpected = 'Charles Bronson is a famous actor.';
         $this->assertSame($strExpected, $this->fileStorage->getTagReplacedContentFromFilePath($this->tmpSourceFile2, $this->tagStorage));
     }
