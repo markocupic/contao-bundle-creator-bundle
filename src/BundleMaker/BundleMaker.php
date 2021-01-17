@@ -76,7 +76,7 @@ class BundleMaker
     /**
      * @var ContaoBundleCreatorModel
      */
-    protected $model;
+    protected $input;
 
     /**
      * @var string
@@ -102,114 +102,73 @@ class BundleMaker
      *
      * @throws \Exception
      */
-    public function run(ContaoBundleCreatorModel $model): void
+    public function run(ContaoBundleCreatorModel $input): void
     {
-        $this->model = $model;
+        $this->input = $input;
 
-        if ($this->bundleExists() && !$this->model->overwriteexisting) {
+        if ($this->bundleExists() && !$this->input->overwriteexisting) {
             $this->message->addError('An extension with the same name already exists. Please set the "override extension flag".');
 
             return;
         }
 
-        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->model->vendorname, $this->model->repositoryname));
+        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
 
         // Set the php template tags
         $this->setTags();
 
         // Add the composer.json file to file storage
-        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Add the bundle class to file storage
-        (new BundleClassMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new BundleClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Add the Dependency Injection Extension class to file storage
-        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Add the Contao Manager Plugin class to file storage
-        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Add unit tests to file storage
-        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Config files, assets, etc.
-        (new MiscFilesMaker($this->tagStorage, $this->fileStorage))->generate();
+        (new MiscFilesMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
 
         // Add ecs config files to the bundle
-        if ($this->model->addEasyCodingStandard) {
-            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage))->generate();
+        if ($this->input->addEasyCodingStandard) {
+            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
         }
 
         // Add backend module files to file storage
-        if ($this->model->addBackendModule && '' !== $this->model->dcatable) {
-            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage))->generate();
+        if ($this->input->addBackendModule && '' !== $this->input->dcatable) {
+            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
         }
 
         // Add frontend module files to file storage
-        if ($this->model->addFrontendModule) {
-            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage))->generate();
+        if ($this->input->addFrontendModule) {
+            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
         }
 
         // Add content element files to file storage
-        if ($this->model->addContentElement) {
-            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage))->generate();
+        if ($this->input->addContentElement) {
+            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
         }
 
         // Add a custom route to the file storage
-        if ($this->model->addCustomRoute) {
-            (new CustomRouteMaker($this->tagStorage, $this->fileStorage))->generate();
+        if ($this->input->addCustomRoute) {
+            (new CustomRouteMaker($this->tagStorage, $this->fileStorage))->addToFileStorage();
         }
-
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists()) {
-            $zipSource = sprintf(
-                '%s/vendor/%s/%s',
-                $this->projectDir,
-                $this->model->vendorname,
-                $this->model->repositoryname
-            );
-
-            $zipTarget = sprintf(
-                '%s/system/tmp/%s.zip',
-                $this->projectDir,
-                $this->model->repositoryname.'_backup_'.Date::parse('Y-m-d _H-i-s', time())
-            );
-
-            $this->zip
-                ->stripSourcePath($zipSource)
-                ->addDirRecursive($zipSource)
-                ->run($zipTarget)
-            ;
+            $this->createBackup();
         }
-
-        // Replace php tokens in file storage
-        $this->parseTemplates();
 
         // Copy all the bundle files from the storage to the destination directories in vendor/vendorname/bundlename
         $this->createBundleFiles();
 
         // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
-        $zipSource = sprintf(
-            '%s/vendor/%s/%s',
-            $this->projectDir,
-            $this->model->vendorname,
-            $this->model->repositoryname
-        );
-
-        $zipTarget = sprintf(
-            '%s/system/tmp/%s.zip',
-            $this->projectDir,
-            $this->model->repositoryname
-        );
-
-        $zip = $this->zip
-            ->stripSourcePath($zipSource)
-            ->addDirRecursive($zipSource)
-        ;
-
-        if ($zip->run($zipTarget)) {
-            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir.'/', '', $zipTarget));
-        }
+        $this->generateZipArchive();
 
         // Optionally extend the composer.json file located in the root directory
         $this->editRootComposerJson();
@@ -220,7 +179,7 @@ class BundleMaker
      */
     protected function bundleExists(): bool
     {
-        return is_dir($this->projectDir.'/vendor/'.$this->model->vendorname.'/'.$this->model->repositoryname);
+        return is_dir($this->projectDir.'/vendor/'.$this->input->vendorname.'/'.$this->input->repositoryname);
     }
 
     /**
@@ -232,34 +191,34 @@ class BundleMaker
      */
     protected function setTags(): void
     {
-        // Store model values into the tag storage
-        $arrModel = $this->model->row();
+        // Store input values into the tag storage
+        $arrModel = $this->input->row();
 
         foreach ($arrModel as $fieldname => $value) {
             $this->tagStorage->set((string) $fieldname, (string) $value);
         }
 
         // Tags
-        $this->tagStorage->set('vendorname', (string) $this->model->vendorname);
-        $this->tagStorage->set('repositoryname', (string) $this->model->repositoryname);
-        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->model->vendorname, (string) $this->model->repositoryname));
+        $this->tagStorage->set('vendorname', (string) $this->input->vendorname);
+        $this->tagStorage->set('repositoryname', (string) $this->input->repositoryname);
+        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         // Namespaces
-        $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->model->vendorname));
-        $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->model->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->input->vendorname));
+        $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->input->repositoryname));
 
         // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->model->vendorname, (string) $this->model->repositoryname));
+        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         // Composer
-        $this->tagStorage->set('composerdescription', (string) $this->model->composerdescription);
-        $this->tagStorage->set('composerlicense', (string) $this->model->composerlicense);
-        $this->tagStorage->set('composerauthorname', (string) $this->model->composerauthorname);
-        $this->tagStorage->set('composerauthoremail', (string) $this->model->composerauthoremail);
-        $this->tagStorage->set('composerauthorwebsite', (string) $this->model->composerauthorwebsite);
+        $this->tagStorage->set('composerdescription', (string) $this->input->composerdescription);
+        $this->tagStorage->set('composerlicense', (string) $this->input->composerlicense);
+        $this->tagStorage->set('composerauthorname', (string) $this->input->composerauthorname);
+        $this->tagStorage->set('composerauthoremail', (string) $this->input->composerauthoremail);
+        $this->tagStorage->set('composerauthorwebsite', (string) $this->input->composerauthorwebsite);
 
         // Phpdoc
-        $this->tagStorage->set('bundlename', (string) $this->model->bundlename);
+        $this->tagStorage->set('bundlename', (string) $this->input->bundlename);
         $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($this->getContentFromPartialFile('phpdoc.tpl.txt')));
         $phpdoclines = explode(PHP_EOL, $this->getContentFromPartialFile('phpdoc.tpl.txt'));
         $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
@@ -269,34 +228,34 @@ class BundleMaker
         $this->tagStorage->set('year', date('Y'));
 
         // Dca table and backend module
-        if ($this->model->addBackendModule && '' !== $this->model->dcatable) {
-            $this->tagStorage->set('dcatable', (string) $this->model->dcatable);
-            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->model->dcatable));
-            $this->tagStorage->set('backendmoduletype', (string) $this->model->backendmoduletype);
-            $this->tagStorage->set('backendmodulecategory', (string) $this->model->backendmodulecategory);
-            $arrLabel = StringUtil::deserialize($this->model->backendmoduletrans, true);
+        if ($this->input->addBackendModule && '' !== $this->input->dcatable) {
+            $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
+            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->input->dcatable));
+            $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);
+            $this->tagStorage->set('backendmodulecategory', (string) $this->input->backendmodulecategory);
+            $arrLabel = StringUtil::deserialize($this->input->backendmoduletrans, true);
             $this->tagStorage->set('backendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->set('backendmoduletrans_1', $arrLabel[1]);
         }
 
         // Frontend module
-        if ($this->model->addFrontendModule) {
-            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->model->frontendmoduletype));
-            $this->tagStorage->set('frontendmoduletype', (string) $this->model->frontendmoduletype);
-            $this->tagStorage->set('frontendmodulecategory', (string) $this->model->frontendmodulecategory);
-            $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->model->frontendmoduletype));
-            $arrLabel = StringUtil::deserialize($this->model->frontendmoduletrans, true);
+        if ($this->input->addFrontendModule) {
+            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
+            $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
+            $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
+            $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
+            $arrLabel = StringUtil::deserialize($this->input->frontendmoduletrans, true);
             $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
             $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
         }
 
         // Content element
-        if ($this->model->addContentElement) {
-            $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->model->contentelementtype));
-            $this->tagStorage->set('contentelementtype', (string) $this->model->contentelementtype);
-            $this->tagStorage->set('contentelementcategory', (string) $this->model->contentelementcategory);
-            $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->model->contentelementtype));
-            $arrLabel = StringUtil::deserialize($this->model->contentelementtrans, true);
+        if ($this->input->addContentElement) {
+            $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
+            $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
+            $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
+            $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
+            $arrLabel = StringUtil::deserialize($this->input->contentelementtrans, true);
             $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
             $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
         }
@@ -304,14 +263,14 @@ class BundleMaker
         // Custom route
         $subject = sprintf(
             '%s_%s',
-            strtolower($this->model->vendorname),
-            strtolower($this->model->repositoryname)
+            strtolower($this->input->vendorname),
+            strtolower($this->input->repositoryname)
         );
         $subject = preg_replace('/-bundle$/', '', $subject);
         $routeId = preg_replace('/-/', '_', $subject);
         $this->tagStorage->set('routeid', $routeId);
 
-        if ($this->model->addCustomRoute) {
+        if ($this->input->addCustomRoute) {
             $this->tagStorage->set('addCustomRoute', '1');
         } else {
             $this->tagStorage->set('addCustomRoute', '0');
@@ -331,28 +290,61 @@ class BundleMaker
             throw new FileNotFoundException(sprintf('Partial file "%s" not found.', $sourceFile));
         }
 
-        $content = file_get_contents($sourceFile);
+        if (false === ($content = file_get_contents($sourceFile))) {
+            throw new \Exception(sprintf('Could not read content from file "%s".', $sourceFile));
+        }
+
         $templateParser = new ParsePhpToken($this->tagStorage);
 
         return $templateParser->parsePhpTokensFromString($content);
     }
 
-    /**
-     * Parse templates.
-     *
-     * @throws \Exception
-     */
-    protected function parseTemplates(): void
+    protected function createBackup(): void
     {
-        $arrFiles = $this->fileStorage->getAll();
+        $zipSource = sprintf(
+            '%s/vendor/%s/%s',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname
+        );
 
-        foreach ($arrFiles as $arrFile) {
-            $this->fileStorage->getFile($arrFile['target']);
+        $zipTarget = sprintf(
+            '%s/system/tmp/%s.zip',
+            $this->projectDir,
+            $this->input->repositoryname.'_backup_'.Date::parse('Y-m-d_H-i-s', time())
+        );
 
-            // Skip images...
-            if (isset($arrFile['source']) && !empty($arrFile['source']) && false !== strpos(basename($arrFile['source']), '.tpl.')) {
-                $this->fileStorage->replaceTags($this->tagStorage);
-            }
+        $this->zip
+            ->stripSourcePath($zipSource)
+            ->addDirRecursive($zipSource)
+            ->run($zipTarget)
+        ;
+    }
+
+    protected function generateZipArchive(): void
+    {
+        // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
+        $zipSource = sprintf(
+            '%s/vendor/%s/%s',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname
+        );
+
+        $zipTarget = sprintf(
+            '%s/system/tmp/%s.zip',
+            $this->projectDir,
+            $this->input->repositoryname
+        );
+
+        $zip = $this->zip
+            ->ignoreDotFiles(false)
+            ->stripSourcePath($zipSource)
+            ->addDirRecursive($zipSource)
+        ;
+
+        if ($zip->run($zipTarget)) {
+            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir.'/', '', $zipTarget));
         }
     }
 
@@ -372,18 +364,15 @@ class BundleMaker
          * Manipulate, remove or add files to the storage
          */
         foreach ($arrFiles as $arrFile) {
-            // Create directory recursive
-            if (!is_dir(\dirname($arrFile['target']))) {
-                mkdir(\dirname($arrFile['target']), 0777, true);
+            if (false !== $this->fileStorage->createFile($arrFile['target'])) {
+                // Display message in the backend
+                $this->message->addInfo(sprintf('Created file "%s/%s".', $this->projectDir, $arrFile['target']));
+            } else {
+                // Display message in the backend
+                $this->message->addError(sprintf('Could not create file "%s/%s".', $this->projectDir, $arrFile['target']));
             }
-
-            // Create file
-            file_put_contents($arrFile['target'], $arrFile['content']);
-
-            // Display message in the backend
-            $target = str_replace($this->projectDir.'/', '', $arrFile['target']);
-            $this->message->addInfo(sprintf('Created file "%s".', $target));
         }
+
         // Display message in the backend
         $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
@@ -400,19 +389,19 @@ class BundleMaker
         $content = file_get_contents($this->projectDir.'/composer.json');
         $objJSON = json_decode($content);
 
-        if ('' !== $this->model->editRootComposer) {
+        if ('' !== $this->input->editRootComposer) {
             if (!isset($objJSON->repositories)) {
                 $objJSON->repositories = [];
             }
 
             $objRepositories = new \stdClass();
 
-            if ('path' === $this->model->rootcomposerextendrepositorieskey) {
+            if ('path' === $this->input->rootcomposerextendrepositorieskey) {
                 $objRepositories->type = 'path';
                 $objRepositories->url = sprintf(
                     'vendor/%s/%s',
-                    $this->model->vendorname,
-                    $this->model->repositoryname
+                    $this->input->vendorname,
+                    $this->input->repositoryname
                 );
 
                 // Prevent duplicate entries
@@ -423,12 +412,12 @@ class BundleMaker
                 }
             }
 
-            if ('vcs-github' === $this->model->rootcomposerextendrepositorieskey) {
+            if ('vcs-github' === $this->input->rootcomposerextendrepositorieskey) {
                 $objRepositories->type = 'vcs';
                 $objRepositories->url = sprintf(
                     'https://github.com/%s/%s',
-                    $this->model->vendorname,
-                    $this->model->repositoryname
+                    $this->input->vendorname,
+                    $this->input->repositoryname
                 );
 
                 // Prevent duplicate entries
@@ -440,7 +429,7 @@ class BundleMaker
             }
             // Extend require key
             $blnModified = true;
-            $objJSON->require->{sprintf('%s/%s', $this->model->vendorname, $this->model->repositoryname)} = 'dev-main';
+            $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = 'dev-main';
             $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
         }
 

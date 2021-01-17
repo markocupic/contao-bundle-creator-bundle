@@ -299,11 +299,47 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        $content = $this->arrStorrage[$this->intIndex]['content'];
-        $templateParser = new ParsePhpToken($tagStorage);
-        $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
+        if (isset($this->arrStorrage[$this->intIndex]['source']) && !empty($this->arrStorrage[$this->intIndex]['source']) && false !== strpos(basename($this->arrStorrage[$this->intIndex]['source']), '.tpl.')) {
 
+            $content = $this->arrStorrage[$this->intIndex]['content'];
+            $templateParser = new ParsePhpToken($tagStorage);
+            $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
+        }
         return $this;
+    }
+
+    public function replaceTagsAll(TagStorage $tagStorage): void
+    {
+        $arrFiles = $this->getAll();
+
+        foreach ($arrFiles as $arrFile) {
+            // Skip images...
+            if (isset($arrFile['source']) && !empty($arrFile['source']) && false !== strpos(basename($arrFile['source']), '.tpl.')) {
+                $this->getFile($arrFile['target'])->replaceTags($tagStorage);
+            }
+        }
+    }
+
+    /**
+     * Create the file in the target directory in vendor/vendorname/bundlename.
+     *
+     * @return false|int
+     */
+    public function createFile(string $targetPath)
+    {
+        if (!$this->hasFile($targetPath)) {
+            return false;
+        }
+
+        $arrFile = $this->arrStorrage[$this->getIndexOf($targetPath)];
+
+        // Create directory recursive
+        if (!is_dir(\dirname($arrFile['target']))) {
+            mkdir(\dirname($arrFile['target']), 0777, true);
+        }
+
+        // Create file
+        return file_put_contents($arrFile['target'], $arrFile['content']);
     }
 
     private function getIndexOf(string $targetPath): int

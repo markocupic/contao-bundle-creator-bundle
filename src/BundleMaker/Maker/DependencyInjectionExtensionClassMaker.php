@@ -18,7 +18,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 
 class DependencyInjectionExtensionClassMaker extends AbstractMaker
 {
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         $source = sprintf(
             '%s/src/DependencyInjection/Extension.tpl.php',
@@ -33,6 +33,6 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker
             Str::asDependencyInjectionExtensionClassName((string) $this->tagStorage->get('vendorname'), (string) $this->tagStorage->get('repositoryname'))
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
     }
 }

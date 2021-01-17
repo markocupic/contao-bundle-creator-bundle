@@ -19,36 +19,36 @@ class CustomRouteMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         // Add controller (custom route)
         $source = sprintf(
-            '%s/src/Controller/Controller.tpl.php', 
+            '%s/src/Controller/Controller.tpl.php',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
             '%s/vendor/%s/%s/src/Controller/MyCustomController.php',
-            $this->projectDir, 
+            $this->projectDir,
             $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname')
         );
-        
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add twig template
         $source = sprintf(
             '%s/src/Resources/views/MyCustom/my_custom.html.tpl.twig',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.html.twig', 
+            '%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.html.twig',
             $this->projectDir,
             $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname')
         );
-        
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
     }
 }

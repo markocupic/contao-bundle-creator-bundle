@@ -21,7 +21,7 @@ class ContaoContentElementMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         // Get the content element template name
         $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->tagStorage->get('contentelementtype'));
@@ -34,63 +34,63 @@ class ContaoContentElementMaker extends AbstractMaker
             '%s/src/Controller/ContentElement/ContentElementController.tpl.php',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Controller/ContentElement/%s.php', 
-            $this->projectDir, 
+            '%s/vendor/%s/%s/src/Controller/ContentElement/%s.php',
+            $this->projectDir,
             $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname'),
             $strContentElementClassname
         );
-        
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add content element template
         $source = sprintf(
             '%s/src/Resources/contao/templates/ce_sample_element.tpl.html5',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5', 
-            $this->projectDir, 
-            $this->tagStorage->get('vendorname'), 
-            $this->tagStorage->get('repositoryname'), 
+            '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
+            $this->projectDir,
+            $this->tagStorage->get('vendorname'),
+            $this->tagStorage->get('repositoryname'),
             $strContentElementTemplateName
         );
-        
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add src/Resources/contao/dca/tl_content.php
         $source = sprintf(
             '%s/src/Resources/contao/dca/tl_content.tpl.php',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/dca/tl_content.php',
-            $this->projectDir, 
+            $this->projectDir,
             $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname')
         );
-        
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
             $this->projectDir,
-            $this->tagStorage->get('vendorname'), 
+            $this->tagStorage->get('vendorname'),
             $this->tagStorage->get('repositoryname')
         );
 
         if (!$this->fileStorage->hasFile($target)) {
             $source = sprintf(
-                '%s/src/Resources/contao/languages/en/default.tpl.php', 
+                '%s/src/Resources/contao/languages/en/default.tpl.php',
                 $this->skeletonPath
             );
-            
-            $this->fileStorage->addFile($source, $target);
+
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
         }
     }
 }

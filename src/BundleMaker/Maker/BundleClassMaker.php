@@ -21,7 +21,7 @@ class BundleClassMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         $source = sprintf(
             '%s/src/Class.tpl.php',
@@ -36,6 +36,7 @@ class BundleClassMaker extends AbstractMaker
             Str::asClassName((string) $this->tagStorage->get('vendorname')),
             Str::asClassName((string) $this->tagStorage->get('repositoryname'))
         );
-        $this->fileStorage->addFile($source, $target);
+
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
     }
 }

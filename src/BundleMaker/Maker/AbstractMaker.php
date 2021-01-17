@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
 
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\MakerInterface;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\MakerInterface;
 
 abstract class AbstractMaker implements MakerInterface
 {

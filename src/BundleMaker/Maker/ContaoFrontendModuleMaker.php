@@ -21,7 +21,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         // Get the frontend module template name
         $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->tagStorage->get('frontendmoduletype'));
@@ -43,7 +43,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
             $strFrontendModuleClassname
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add frontend module template
         $source = sprintf(
@@ -59,7 +59,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
             $strFrontenModuleTemplateName
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add src/Resources/contao/dca/tl_module.php
         $source = sprintf(
@@ -74,7 +74,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
@@ -90,7 +90,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
                 $this->skeletonPath
             );
 
-            $this->fileStorage->addFile($source, $target);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
@@ -107,7 +107,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker
                 $this->skeletonPath
             );
 
-            $this->fileStorage->addFile($source, $target);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
         }
     }
 }

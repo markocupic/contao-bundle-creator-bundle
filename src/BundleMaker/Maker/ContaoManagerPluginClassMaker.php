@@ -19,7 +19,7 @@ class ContaoManagerPluginClassMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         $source = sprintf(
             '%s/src/ContaoManager/Plugin.tpl.php',
@@ -33,6 +33,6 @@ class ContaoManagerPluginClassMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
     }
 }

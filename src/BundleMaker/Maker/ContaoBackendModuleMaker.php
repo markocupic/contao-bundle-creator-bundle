@@ -21,7 +21,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         // Add dca table file
         $source = sprintf(
@@ -37,7 +37,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->tagStorage->get('dcatable')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add dca table translation file
         $source = sprintf(
@@ -52,7 +52,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->tagStorage->get('dcatable')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add a sample model
         $source = sprintf(
@@ -68,7 +68,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
             Str::asContaoModelClassName((string) $this->tagStorage->get('dcatable'))
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
@@ -84,7 +84,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
                 $this->skeletonPath
             );
 
-            $this->fileStorage->addFile($source, $target);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
@@ -101,7 +101,7 @@ class ContaoBackendModuleMaker extends AbstractMaker
                 $this->skeletonPath
             );
 
-            $this->fileStorage->addFile($source, $target);
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
         }
     }
 }

@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
 
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -23,13 +22,13 @@ class MiscFilesMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
             'listener.tpl.yml',
             'parameters.tpl.yml',
-            'services.tpl.yml'
+            'services.tpl.yml',
         ];
 
         if ($this->tagStorage->get('addCustomRoute')) {
@@ -85,7 +84,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Add logo
         $source = sprintf(
@@ -99,7 +98,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // Readme.md
         $source = sprintf(
@@ -114,7 +113,7 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         // .gitattributes
         $source = sprintf(
@@ -129,7 +128,6 @@ class MiscFilesMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
     }
 }
-

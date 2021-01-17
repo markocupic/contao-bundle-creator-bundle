@@ -19,7 +19,7 @@ class ComposerJsonMaker extends AbstractMaker
     /**
      * @throws \Exception
      */
-    public function generate(): void
+    public function addToFileStorage(): void
     {
         $source = sprintf(
             '%s/composer.tpl.json',
@@ -33,7 +33,7 @@ class ComposerJsonMaker extends AbstractMaker
             $this->tagStorage->get('repositoryname')
         );
 
-        $this->fileStorage->addFile($source, $target);
+        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage);
 
         $content = $this->fileStorage->getContent();
         $objComposer = json_decode($content);
