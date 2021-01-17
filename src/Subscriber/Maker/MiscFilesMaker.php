@@ -12,18 +12,23 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class MiscFilesMaker extends AbstractMaker
 {
     /**
+     * Add config files, assets, etc.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
             'listener.tpl.yml',
@@ -91,6 +96,7 @@ class MiscFilesMaker extends AbstractMaker
             '%s/src/Resources/public/logo.png',
             $this->skeletonPath
         );
+        
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/public/logo.png',
             $this->projectDir,

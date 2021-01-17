@@ -1,0 +1,45 @@
+services:
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ComposerJsonMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 1000 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\BundleClassMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 990 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\DependencyInjectionExtensionClassMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 980 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ContaoManagerPluginClassMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 970 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ContinuousIntegrationMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 960 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\MiscFilesMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 950 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\EasyCodingStandardMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 940 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ContaoBackendModuleMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 930 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ContaoFrontendModuleMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 920 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\ContaoContentElementMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 910 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\CustomRouteMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 900 }

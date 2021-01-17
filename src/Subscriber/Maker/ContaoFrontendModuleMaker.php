@@ -12,42 +12,51 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
-class ContaoContentElementMaker extends AbstractMaker
+class ContaoFrontendModuleMaker extends AbstractMaker
 {
     /**
+     * Add frontend module files to file storage.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
-        // Get the content element template name
-        $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->arrInput['contentelementtype']);
+        parent::addFilesToStorage($event);
 
-        // Get the content element classname
-        $strContentElementClassname = Str::asContaoContentElementClassName((string) $this->arrInput['contentelementtype']);
+        if (!$this->arrInput['addFrontendModule']) {
+            return;
+        }
 
-        // Add content element class to src/Controller/ContentElement
+        // Get the frontend module template name
+        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->arrInput['frontendmoduletype']);
+
+        // Get the frontend module classname
+        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->arrInput['frontendmoduletype']);
+
+        // Add frontend module class to src/Controller/FrontendModuleController
         $source = sprintf(
-            '%s/src/Controller/ContentElement/ContentElementController.tpl.php',
+            '%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Controller/ContentElement/%s.php',
+            '%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname'],
-            $strContentElementClassname
+            $strFrontendModuleClassname
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
-        // Add content element template
+        // Add frontend module template
         $source = sprintf(
-            '%s/src/Resources/contao/templates/ce_sample_element.tpl.html5',
+            '%s/src/Resources/contao/templates/mod_sample_module.tpl.html5',
             $this->skeletonPath
         );
 
@@ -56,19 +65,19 @@ class ContaoContentElementMaker extends AbstractMaker
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname'],
-            $strContentElementTemplateName
+            $strFrontenModuleTemplateName
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
-        // Add src/Resources/contao/dca/tl_content.php
+        // Add src/Resources/contao/dca/tl_module.php
         $source = sprintf(
-            '%s/src/Resources/contao/dca/tl_content.tpl.php',
+            '%s/src/Resources/contao/dca/tl_module.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/dca/tl_content.php',
+            '%s/vendor/%s/%s/src/Resources/contao/dca/tl_module.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname']
@@ -77,6 +86,23 @@ class ContaoContentElementMaker extends AbstractMaker
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
+        $target = sprintf(
+            '%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php',
+            $this->projectDir,
+            $this->arrInput['vendorname'],
+            $this->arrInput['repositoryname']
+        );
+
+        if (!$this->fileStorage->hasFile($target)) {
+            $source = sprintf(
+                '%s/src/Resources/contao/languages/en/modules.tpl.php',
+                $this->skeletonPath
+            );
+
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
+
+        // Add src/Resources/contao/languages/en/default.php to file storage
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
             $this->projectDir,

@@ -16,24 +16,15 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
 use Contao\Date;
 use Contao\StringUtil;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\BundleClassMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ComposerJsonMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ContaoBackendModuleMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ContaoContentElementMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ContaoFrontendModuleMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ContaoManagerPluginClassMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\ContinuousIntegrationMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\CustomRouteMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\DependencyInjectionExtensionClassMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\EasyCodingStandardMaker;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker\MiscFilesMaker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Markocupic\ZipBundle\Zip\Zip;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -57,6 +48,11 @@ class BundleMaker
      * @var TagStorage
      */
     protected $tagStorage;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
 
     /**
      * @var Message
@@ -86,11 +82,12 @@ class BundleMaker
     /**
      * BundleMaker constructor.
      */
-    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, Message $message, Zip $zip, string $projectDir)
+    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
     {
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
+        $this->eventDispatcher = $eventDispatcher;
         $this->message = $message;
         $this->zip = $zip;
         $this->projectDir = $projectDir;
@@ -118,48 +115,15 @@ class BundleMaker
         // Set the php template tags
         $this->setTags();
 
-        // Add the composer.json file to file storage
-        (new ComposerJsonMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
+        // Keep the application extensible
+        // and use subscribers to add files via maker classes to the bundle
+        $param = new \stdClass();
+        $param->tagStorage = $this->tagStorage;
+        $param->fileStorage = $this->fileStorage;
+        $param->arrInput = $arrInput;
+        $event = new AddMakerEvent($param);
+        $this->eventDispatcher->dispatch($event, 'markocupic_contao_bundle_creator_bundle_add_maker');
 
-        // Add the bundle class to file storage
-        (new BundleClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-
-        // Add the Dependency Injection Extension class to file storage
-        (new DependencyInjectionExtensionClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-
-        // Add the Contao Manager Plugin class to file storage
-        (new ContaoManagerPluginClassMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-
-        // Add unit tests to file storage
-        (new ContinuousIntegrationMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-
-        // Config files, assets, etc.
-        (new MiscFilesMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-
-        // Add ecs config files to the bundle
-        if ($this->input->addEasyCodingStandard) {
-            (new EasyCodingStandardMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-        }
-
-        // Add backend module files to file storage
-        if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
-            (new ContaoBackendModuleMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-        }
-
-        // Add frontend module files to file storage
-        if ($this->input->addFrontendModule) {
-            (new ContaoFrontendModuleMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-        }
-
-        // Add content element files to file storage
-        if ($this->input->addContentElement) {
-            (new ContaoContentElementMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-        }
-
-        // Add a custom route to the file storage
-        if ($this->input->addCustomRoute) {
-            (new CustomRouteMaker($this->tagStorage, $this->fileStorage, $arrInput))->addFilesToStorage();
-        }
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists()) {
             $this->createBackup();

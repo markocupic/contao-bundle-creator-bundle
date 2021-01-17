@@ -37,5 +37,6 @@ class MarkocupicContaoBundleCreatorExtension extends Extension
         $loader->load('parameters.yml');
         $loader->load('services.yml');
         $loader->load('listener.yml');
+        $loader->load('subscriber.yml');
     }
 }

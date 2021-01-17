@@ -12,15 +12,25 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
+
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 class CustomRouteMaker extends AbstractMaker
 {
     /**
+     * Add a custom route to the file storage.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
+        if (!$this->arrInput['addCustomRoute']) {
+            return;
+        }
+
         // Add controller (custom route)
         $source = sprintf(
             '%s/src/Controller/Controller.tpl.php',

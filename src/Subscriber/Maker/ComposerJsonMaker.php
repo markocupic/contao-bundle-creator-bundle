@@ -12,15 +12,21 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
+
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 class ComposerJsonMaker extends AbstractMaker
 {
     /**
+     * Add the composer.json file to file storage.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
         $source = sprintf(
             '%s/composer.tpl.json',
             $this->skeletonPath
@@ -62,11 +68,13 @@ class ComposerJsonMaker extends AbstractMaker
         if (!isset($objComposer->support) && !\is_object($objComposer->support)) {
             $objComposer->support = new \stdClass();
         }
+
         $objComposer->support->issues = sprintf(
             'https://github.com/%s/%s/issues',
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname']
         );
+
         $objComposer->support->source = sprintf(
             'https://github.com/%s/%s',
             $this->arrInput['vendorname'],
@@ -87,17 +95,20 @@ class ComposerJsonMaker extends AbstractMaker
         if (!isset($objComposer->autoload->{'psr-4'}) && !\is_object($objComposer->autoload->{'psr-4'})) {
             $objComposer->autoload->{'psr-4'} = new \stdClass();
         }
+
         $psr4Key = sprintf(
             '%s\\%s\\',
             $this->arrInput['toplevelnamespace'],
             $this->arrInput['sublevelnamespace']
         );
+
         $objComposer->autoload->{'psr-4'}->{$psr4Key} = 'src/';
 
         // Extra
         if (!isset($objComposer->extra) && !\is_object($objComposer->extra)) {
             $objComposer->extra = new \stdClass();
         }
+
         $objComposer->extra->{'contao-manager-plugin'} = sprintf(
             '%s\%s\ContaoManager\Plugin',
             $this->arrInput['toplevelnamespace'],
@@ -105,6 +116,7 @@ class ComposerJsonMaker extends AbstractMaker
         );
 
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
         $this->fileStorage->replaceContent($content);
     }
 }

@@ -14,16 +14,12 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 /**
  * Interface that all maker commands must implement.
  */
 interface MakerInterface
 {
-    
-    public function __construct(TagStorage $tagStorage, FileStorage $fileStorage, array $arrInput);
-
-    public function addFilesToStorage(): void;
+    public function addFilesToStorage(AddMakerEvent $event): void;
 }

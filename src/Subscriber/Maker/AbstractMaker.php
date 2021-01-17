@@ -12,11 +12,12 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\MakerInterface;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 abstract class AbstractMaker implements MakerInterface
 {
@@ -45,14 +46,11 @@ abstract class AbstractMaker implements MakerInterface
      */
     protected $skeletonPath;
 
-    /**
-     * AbstractMaker constructor.
-     */
-    public function __construct(TagStorage $tagStorage, FileStorage $fileStorage, array $arrInput)
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
-        $this->tagStorage = $tagStorage;
-        $this->fileStorage = $fileStorage;
-        $this->arrInput = $arrInput;
+        $this->tagStorage = $event->getTagStorage();
+        $this->fileStorage = $event->getFileStorage();
+        $this->arrInput = $event->getArrInput();
         $this->projectDir = realpath(__DIR__.'/../../../../../../');
         $this->skeletonPath = realpath(__DIR__.'/../../Resources/skeleton');
     }

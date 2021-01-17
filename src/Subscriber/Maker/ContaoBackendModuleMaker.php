@@ -12,66 +12,70 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
-class ContaoFrontendModuleMaker extends AbstractMaker
+class ContaoBackendModuleMaker extends AbstractMaker
 {
     /**
+     * Add backend module files to file storage.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
-        // Get the frontend module template name
-        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->arrInput['frontendmoduletype']);
+        parent::addFilesToStorage($event);
 
-        // Get the frontend module classname
-        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->arrInput['frontendmoduletype']);
+        if (!$this->arrInput['addBackendModule'] || empty($this->arrInput['dcatable'])) {
+            return;
+        }
 
-        // Add frontend module class to src/Controller/FrontendModuleController
+        // Add dca table file
         $source = sprintf(
-            '%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php',
-            $this->skeletonPath
-        );
+            '%s/src/Resources/contao/dca/tl_sample_table.tpl.php',
+            $this->skeletonPath)
+        ;
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php',
+            '%s/vendor/%s/%s/src/Resources/contao/dca/%s.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname'],
-            $strFrontendModuleClassname
+            $this->arrInput['dcatable']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
-        // Add frontend module template
+        // Add dca table translation file
         $source = sprintf(
-            '%s/src/Resources/contao/templates/mod_sample_module.tpl.html5',
+            '%s/src/Resources/contao/languages/en/tl_sample_table.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
+            '%s/vendor/%s/%s/src/Resources/contao/languages/en/%s.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname'],
-            $strFrontenModuleTemplateName
+            $this->arrInput['dcatable']
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
-        // Add src/Resources/contao/dca/tl_module.php
+        // Add a sample model
         $source = sprintf(
-            '%s/src/Resources/contao/dca/tl_module.tpl.php',
+            '%s/src/Model/Model.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/dca/tl_module.php',
+            '%s/vendor/%s/%s/src/Model/%s.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->arrInput['repositoryname'],
+            Str::asContaoModelClassName((string) $this->arrInput['dcatable'])
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);

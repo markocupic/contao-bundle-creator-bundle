@@ -12,15 +12,21 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
+
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 class ContaoManagerPluginClassMaker extends AbstractMaker
 {
     /**
+     * Add the Contao Manager Plugin class to file storage.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
         $source = sprintf(
             '%s/src/ContaoManager/Plugin.tpl.php',
             $this->skeletonPath

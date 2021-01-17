@@ -12,15 +12,25 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
+
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
 class EasyCodingStandardMaker extends AbstractMaker
 {
     /**
+     * Add easy coding standard config files to the bundle.
+     *
      * @throws \Exception
      */
-    public function addFilesToStorage(): void
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
+        if (!$this->arrInput['addEasyCodingStandard']) {
+            return;
+        }
+
         // .ecs/*.*
         $source = sprintf(
             '%s/.ecs',
@@ -33,6 +43,7 @@ class EasyCodingStandardMaker extends AbstractMaker
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname']
         );
+        
         // Add to storage
         $arrFiles = $this->fileStorage->addFilesFromFolder($source, $target, true);
 

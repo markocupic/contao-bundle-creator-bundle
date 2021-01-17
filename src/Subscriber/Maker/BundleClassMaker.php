@@ -12,25 +12,34 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Maker;
+namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 
-class DependencyInjectionExtensionClassMaker extends AbstractMaker
+class BundleClassMaker extends AbstractMaker
 {
-    public function addFilesToStorage(): void
+    /**
+     * Add the bundle class to file storage.
+     *
+     * @throws \Exception
+     */
+    public function addFilesToStorage(AddMakerEvent $event): void
     {
+        parent::addFilesToStorage($event);
+
         $source = sprintf(
-            '%s/src/DependencyInjection/Extension.tpl.php',
+            '%s/src/Class.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/DependencyInjection/%s.php',
+            '%s/vendor/%s/%s/src/%s%s.php',
             $this->projectDir,
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname'],
-            Str::asDependencyInjectionExtensionClassName((string) $this->arrInput['vendorname'], (string) $this->arrInput['repositoryname'])
+            Str::asClassName((string) $this->arrInput['vendorname']),
+            Str::asClassName((string) $this->arrInput['repositoryname'])
         );
 
         $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
