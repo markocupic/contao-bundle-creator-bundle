@@ -60,7 +60,7 @@ class FileStorageTest extends ContaoTestCase
 
         // Create temp file
         $this->tmpSourceFile2 = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'source2.txt';
-        file_put_contents($this->tmpSourceFile1, '<?= $actor ?> is a famous actor.');
+        file_put_contents($this->tmpSourceFile2, '<?= $actor ?> is a famous actor.');
         $this->tagStorage->set('actor', 'Charles Bronson');
     }
 
