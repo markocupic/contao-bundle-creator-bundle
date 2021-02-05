@@ -78,7 +78,7 @@ class ComposerJsonMaker extends AbstractMaker
         $objComposer->support->source = sprintf(
             'https://github.com/%s/%s',
             $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
+            $this->arrInput['repositoryname']
         );
 
         // Version

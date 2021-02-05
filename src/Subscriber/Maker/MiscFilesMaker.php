@@ -96,7 +96,7 @@ class MiscFilesMaker extends AbstractMaker
             '%s/src/Resources/public/logo.png',
             $this->skeletonPath
         );
-        
+
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/public/logo.png',
             $this->projectDir,

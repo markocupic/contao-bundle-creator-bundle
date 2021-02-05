@@ -43,7 +43,7 @@ class EasyCodingStandardMaker extends AbstractMaker
             $this->arrInput['vendorname'],
             $this->arrInput['repositoryname']
         );
-        
+
         // Add to storage
         $arrFiles = $this->fileStorage->addFilesFromFolder($source, $target, true);
 
