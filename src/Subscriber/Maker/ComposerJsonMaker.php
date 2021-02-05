@@ -98,8 +98,8 @@ class ComposerJsonMaker extends AbstractMaker
 
         $psr4Key = sprintf(
             '%s\\%s\\',
-            $this->arrInput['toplevelnamespace'],
-            $this->arrInput['sublevelnamespace']
+            $this->tagStorage->get('toplevelnamespace'),
+            $this->tagStorage->get('sublevelnamespace')
         );
 
         $objComposer->autoload->{'psr-4'}->{$psr4Key} = 'src/';
@@ -111,8 +111,8 @@ class ComposerJsonMaker extends AbstractMaker
 
         $objComposer->extra->{'contao-manager-plugin'} = sprintf(
             '%s\%s\ContaoManager\Plugin',
-            $this->arrInput['toplevelnamespace'],
-            $this->arrInput['sublevelnamespace']
+            $this->tagStorage->get('toplevelnamespace'),
+            $this->tagStorage->get('sublevelnamespace')
         );
 
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
