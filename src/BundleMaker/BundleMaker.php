@@ -193,6 +193,11 @@ class BundleMaker
 
         // Dca table and backend module
         if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
+            if (class_exists($this->input->dcatable)) {
+                $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable.'_custom');
+            } else {
+                $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable);
+            }
             $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
             $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->input->dcatable));
             $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);

@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
     ),
     'edit'        => array(
         'buttons_callback' => array(
-            array('<?= $this->dcatable ?>', 'buttonsCallback')
+            array('<?= $this->dcaclassname ?>', 'buttonsCallback')
         )
     ),
     'list'        => array(
@@ -153,9 +153,9 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
 );
 
 /**
- * Class <?= $this->dcatable . "\n" ?>
+ * Class <?= $this->dcaclassname . "\n" ?>
  */
-class <?= $this->dcatable ?> extends Backend
+class <?= $this->dcaclassname ?> extends Backend
 {
     /**
      * @param $arrButtons
