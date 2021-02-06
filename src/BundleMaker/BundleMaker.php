@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
@@ -32,6 +34,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class BundleMaker
 {
+    /**
+     * @var ContaoFramework
+     */
+    protected $framework;
+
     /**
      * @var SessionInterface
      */
@@ -80,8 +87,9 @@ class BundleMaker
     /**
      * BundleMaker constructor.
      */
-    public function __construct(Session $session, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
+    public function __construct(ContaoFramework $framework, Session $session, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
     {
+        $this->framework = $framework;
         $this->session = $session;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
@@ -193,6 +201,10 @@ class BundleMaker
 
         // Dca table and backend module
         if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
+            /** @var Controller $controllerAdapter */
+            $controllerAdapter = $this->framework->getAdapter(Controller::class);
+            $controllerAdapter->loadDataContainer($this->input->dcatable);
+
             if (class_exists($this->input->dcatable)) {
                 $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable.'_custom');
             } else {

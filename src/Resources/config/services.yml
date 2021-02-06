@@ -3,6 +3,7 @@ services:
   markocupic.contao_bundle_creator_bundle.bundle_maker.bundle_maker:
     class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker
     arguments:
+      - '@contao.framework'
       - '@session'
       - '@markocupic.contao_bundle_creator_bundle.bundle_maker.storage.file_storage'
       - '@markocupic.contao_bundle_creator_bundle.bundle_maker.storage.tag_storage'
