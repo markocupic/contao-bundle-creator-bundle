@@ -6,6 +6,10 @@ declare(strict_types=1);
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>;
 
+<?php if($this->addSessionAttribute == "1"): ?>
+use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\Compiler\AddSessionBagsPass;
+<?php endif; ?>
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -13,4 +17,14 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?> extends Bundle
 {
+	/**
+	 * {@inheritdoc}
+	 */
+	public function build(ContainerBuilder $container): void
+	{
+		parent::build($container);
+		<?php if($this->addSessionAttribute == "1"): ?><?= "\n" ?>
+		$container->addCompilerPass(new AddSessionBagsPass());
+		<?php endif; ?><?= "\n" ?>
+	}
 }

@@ -256,6 +256,11 @@ class BundleMaker
         } else {
             $this->tagStorage->set('addCustomRoute', '0');
         }
+
+        // Session attribute bag
+        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
+        $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
     }
 
     protected function createBackup(): void

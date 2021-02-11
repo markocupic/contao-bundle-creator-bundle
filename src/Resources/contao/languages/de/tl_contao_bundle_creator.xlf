@@ -76,6 +76,11 @@
                 <target>Custom Route Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.custom_session_attribute_settings_legend">
+                <source>Session attribute settings</source>
+                <target>Session-Attribut-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
                 <source>Coding Style Tools</source>
                 <target>Coding Style Tools</target>
@@ -388,6 +393,16 @@
             <trans-unit id="tl_contao_bundle_creator.downloadBundleButton">
                 <source>Download bundle</source>
                 <target>Bundle herunterladen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.0">
+                <source>Add extra session attribute (session bag)</source>
+                <target>Custom Session Bag registrieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.1">
+                <source>Add an extra session attribute (session bag).</source>
+                <target>Geben Sie an, ob Sie eine Custom Session Bag registrieren möchten.</target>
             </trans-unit>
 
         </body>

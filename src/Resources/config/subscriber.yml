@@ -43,3 +43,8 @@ services:
   Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\CustomRouteMaker:
     tags:
       - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 900 }
+
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\SessionAttributeBagMaker:
+    tags:
+      - { name: kernel.event_listener, event: markocupic_contao_bundle_creator_bundle_add_maker, method: addFilesToStorage, priority: 890 }
+

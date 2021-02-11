@@ -6,8 +6,8 @@ services:
         arguments:
             - '@session'
         tags:
-            - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
-            - { name: container.service_subscriber }
+        - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
+        - { name: container.service_subscriber }
         public: true
 <?php endif; ?>
 
@@ -27,3 +27,14 @@ services:
             - '@twig'
         public: true
 <?php endif; ?>
+
+<?php if($this->addSessionAttribute): ?>
+    # Add a session bag
+    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag:
+        arguments:
+            - <?= $this->sessionAttributeKey ?><?="\n" ?>
+        calls:
+            - [ setName, [ <?= $this->sessionAttributeName ?> ] ]
+<?php endif; ?>
+
+

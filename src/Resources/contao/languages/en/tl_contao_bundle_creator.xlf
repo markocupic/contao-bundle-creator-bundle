@@ -61,6 +61,10 @@
                 <source>Custom route settings</source>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.custom_session_attribute_settings_legend">
+                <source>Session attribute settings</source>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
                 <source>Coding Style Tools</source>
             </trans-unit>
@@ -310,6 +314,14 @@
 
             <trans-unit id="tl_contao_bundle_creator.downloadBundleButton">
                 <source>Download bundle</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.0">
+                <source>Add extra session attribute (session bag)</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.1">
+                <source>Add an extra session attribute (session bag).</source>
             </trans-unit>
 
         </body>

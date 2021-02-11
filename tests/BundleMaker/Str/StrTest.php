@@ -273,4 +273,14 @@ class StrTest extends ContaoTestCase
         );
         $this->assertSame(Str::generateHeaderCommentFromString($content), $expected);
     }
+
+    /**
+     * Test if method returns the correct session attribute name.
+     */
+    public function testAsSessionAttributeName(): void
+    {
+        $test = '_Charles-Bronson88?#_is cool__-';
+        $actual = 'charles_bronson88_is_cool';
+        $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
+    }
 }

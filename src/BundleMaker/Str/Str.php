@@ -316,4 +316,17 @@ final class Str
 
         return sprintf('%s%s%s', '/*'."\n", implode("\n", $lines), "\n".' */'."\n");
     }
+
+    /**
+     * Converts string into session attribute name f.eg markocupic_my_bundle_attribute.
+     */
+    public static function asSessionAttributeName(string $value): string
+    {
+        $value = strtolower($value);
+        $value = preg_replace('/[^a-z0-9]/i', '_', $value);
+        $value = preg_replace('/_{2,}/', '_', $value);
+        $value = preg_replace('/^_{1}/', '', $value);
+
+        return preg_replace('/_{1}$/', '', $value);
+    }
 }

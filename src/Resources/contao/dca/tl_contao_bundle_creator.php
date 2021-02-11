@@ -93,6 +93,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = array(
         {frontendmodule_settings_legend},addFrontendModule;
         {contentelement_settings_legend},addContentElement;
         {custom_route_settings_legend},addCustomRoute;
+        {custom_session_attribute_settings_legend},addSessionAttribute;
         {coding_style_legend},addEasyCodingStandard'
 	),
 	// Subpalettes
@@ -357,6 +358,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = array(
 			'sql'       => "char(1) NOT NULL default ''"
 		),
 		'addEasyCodingStandard'                    => array(
+			'exclude'   => true,
+			'inputType' => 'checkbox',
+			'eval'      => array('submitOnChange' => false, 'tl_class' => 'w50 clr'),
+			'sql'       => "char(1) NOT NULL default ''"
+		),
+		'addSessionAttribute'                    => array(
 			'exclude'   => true,
 			'inputType' => 'checkbox',
 			'eval'      => array('submitOnChange' => false, 'tl_class' => 'w50 clr'),
