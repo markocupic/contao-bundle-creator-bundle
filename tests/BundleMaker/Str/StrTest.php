@@ -281,6 +281,6 @@ class StrTest extends ContaoTestCase
     {
         $test = '_Charles-Bronson88?#_is cool__-';
         $actual = 'charles_bronson88_is_cool';
-        $this->assertSame(Str::asContaoFrontendModuleTemplateName($test, 'mod_'), $actual);
+        $this->assertSame(Str::asSessionAttributeName($test), $actual);
     }
 }
