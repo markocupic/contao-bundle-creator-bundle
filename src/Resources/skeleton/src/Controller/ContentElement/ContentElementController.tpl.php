@@ -8,7 +8,6 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contro
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
-use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

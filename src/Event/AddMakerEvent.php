@@ -20,6 +20,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AddMakerEvent extends Event
 {
+    public const NAME = 'maker.added';
+
     private $fileStorage;
 
     private $tagStorage;

@@ -15,9 +15,17 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CustomRouteMaker extends AbstractMaker
+class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 900],
+        ];
+    }
+
     /**
      * Add a custom route to the file storage.
      *
@@ -44,7 +52,9 @@ class CustomRouteMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add twig template
         $source = sprintf(
@@ -59,6 +69,8 @@ class CustomRouteMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }

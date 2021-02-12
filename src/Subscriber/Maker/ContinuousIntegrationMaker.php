@@ -15,9 +15,17 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContinuousIntegrationMaker extends AbstractMaker
+class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 960],
+        ];
+    }
+
     /**
      * Add unit tests to the file storage.
      *
@@ -40,7 +48,9 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add plugin test
         $source = sprintf(
@@ -55,7 +65,9 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add .travis.yml
         $source = sprintf(
@@ -70,7 +82,9 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add github workflow file
         $source = sprintf(
@@ -85,6 +99,8 @@ class ContinuousIntegrationMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }

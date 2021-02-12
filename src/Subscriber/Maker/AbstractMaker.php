@@ -46,6 +46,10 @@ abstract class AbstractMaker implements MakerInterface
      */
     protected $skeletonPath;
 
+    public function setTags(AddMakerEvent $event): void
+    {
+    }
+
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         $this->tagStorage = $event->getTagStorage();
@@ -53,5 +57,7 @@ abstract class AbstractMaker implements MakerInterface
         $this->arrInput = $event->getArrInput();
         $this->projectDir = realpath(__DIR__.'/../../../../../../');
         $this->skeletonPath = realpath(__DIR__.'/../../Resources/skeleton');
+
+        $this->setTags($event);
     }
 }

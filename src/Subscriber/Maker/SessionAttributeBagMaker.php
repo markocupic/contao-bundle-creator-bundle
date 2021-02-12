@@ -16,9 +16,17 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SessionAttributeBagMaker extends AbstractMaker
+class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 1010],
+        ];
+    }
+
     /**
      * Add a custom route to the file storage.
      *
@@ -31,6 +39,10 @@ class SessionAttributeBagMaker extends AbstractMaker
         if (!$this->arrInput['addSessionAttribute']) {
             return;
         }
+
+        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
+        $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
 
         // Add attribute bag
         $source = sprintf(

@@ -16,9 +16,17 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContaoBackendModuleMaker extends AbstractMaker
+class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 930],
+        ];
+    }
+
     /**
      * Add backend module files to file storage.
      *
@@ -46,7 +54,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->arrInput['dcatable']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add dca table translation file
         $source = sprintf(
@@ -62,7 +72,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->arrInput['dcatable']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add a sample model
         $source = sprintf(
@@ -78,7 +90,9 @@ class ContaoBackendModuleMaker extends AbstractMaker
             Str::asContaoModelClassName((string) $this->arrInput['dcatable'])
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
@@ -88,12 +102,12 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
-            $source = sprintf(
-                '%s/src/Resources/contao/languages/en/modules.tpl.php',
-                $this->skeletonPath
-            );
+        $source = sprintf(
+            '%s/src/Resources/contao/languages/en/modules.tpl.php',
+            $this->skeletonPath
+        );
 
+        if (!$this->fileStorage->hasFile($target)) {
             $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
         }
 
@@ -105,12 +119,12 @@ class ContaoBackendModuleMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
-            $source = sprintf(
-                '%s/src/Resources/contao/languages/en/default.tpl.php',
-                $this->skeletonPath
-            );
+        $source = sprintf(
+            '%s/src/Resources/contao/languages/en/default.tpl.php',
+            $this->skeletonPath
+        );
 
+        if (!$this->fileStorage->hasFile($target)) {
             $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
         }
     }

@@ -16,9 +16,17 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DependencyInjectionExtensionClassMaker extends AbstractMaker
+class DependencyInjectionExtensionClassMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 980],
+        ];
+    }
+
     /**
      * Add the Dependency Injection Extension class to file storage.
      *
@@ -41,6 +49,8 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker
             Str::asDependencyInjectionExtensionClassName((string) $this->arrInput['vendorname'], (string) $this->arrInput['repositoryname'])
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }

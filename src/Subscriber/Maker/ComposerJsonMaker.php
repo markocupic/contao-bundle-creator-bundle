@@ -15,9 +15,17 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ComposerJsonMaker extends AbstractMaker
+class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 1000],
+        ];
+    }
+
     /**
      * Add the composer.json file to file storage.
      *
@@ -39,7 +47,9 @@ class ComposerJsonMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         $content = $this->fileStorage->getContent();
         $objComposer = json_decode($content);

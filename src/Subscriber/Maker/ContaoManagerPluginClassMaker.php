@@ -15,9 +15,17 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContaoManagerPluginClassMaker extends AbstractMaker
+class ContaoManagerPluginClassMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 970],
+        ];
+    }
+
     /**
      * Add the Contao Manager Plugin class to file storage.
      *
@@ -39,6 +47,8 @@ class ContaoManagerPluginClassMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }

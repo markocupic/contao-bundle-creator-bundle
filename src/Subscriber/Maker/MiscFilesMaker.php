@@ -15,11 +15,19 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
-class MiscFilesMaker extends AbstractMaker
+class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
 {
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AddMakerEvent::NAME => ['addFilesToStorage', 950],
+        ];
+    }
+
     /**
      * Add config files, assets, etc.
      *
@@ -54,25 +62,27 @@ class MiscFilesMaker extends AbstractMaker
                 str_replace('tpl.', '', $file)
             );
 
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            if (!$this->fileStorage->hasFile($target)) {
+                $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
 
-            // Validate config files
-            try {
-                $arrYaml = Yaml::parse($this->fileStorage->getContent());
+                // Validate config files
+                try {
+                    $arrYaml = Yaml::parse($this->fileStorage->getContent());
 
-                if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
-                    if (!\array_key_exists('services', $arrYaml)) {
-                        throw new ParseException('Key "services" not found. Please check the indents.');
+                    if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
+                        if (!\array_key_exists('services', $arrYaml)) {
+                            throw new ParseException('Key "services" not found. Please check the indents.');
+                        }
                     }
-                }
 
-                if ('parameters.tpl.yml' === $file) {
-                    if (!\array_key_exists('parameters', $arrYaml)) {
-                        throw new ParseException('Key "parameters" not found. Please check the indents.');
+                    if ('parameters.tpl.yml' === $file) {
+                        if (!\array_key_exists('parameters', $arrYaml)) {
+                            throw new ParseException('Key "parameters" not found. Please check the indents.');
+                        }
                     }
+                } catch (ParseException $exception) {
+                    throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
                 }
-            } catch (ParseException $exception) {
-                throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
             }
         }
 
@@ -89,7 +99,9 @@ class MiscFilesMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Add logo
         $source = sprintf(
@@ -104,7 +116,9 @@ class MiscFilesMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // Readme.md
         $source = sprintf(
@@ -119,7 +133,9 @@ class MiscFilesMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
 
         // .gitattributes
         $source = sprintf(
@@ -134,6 +150,8 @@ class MiscFilesMaker extends AbstractMaker
             $this->arrInput['repositoryname']
         );
 
-        $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+        }
     }
 }
