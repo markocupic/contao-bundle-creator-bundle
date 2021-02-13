@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberInterface
@@ -23,8 +24,23 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 1010],
             AddMakerEvent::NAME => ['addFilesToStorage', 1010],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
+
+        if (!$this->input->addSessionAttribute) {
+            return;
+        }
+
+        // Set tags
+        $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
     }
 
     /**
@@ -35,15 +51,6 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
-
-        if (!$this->input->addSessionAttribute) {
-            return;
-        }
-
-        // Set tags
-        $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
-        $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
-        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
 
         // Add attribute bag
         $source = sprintf(

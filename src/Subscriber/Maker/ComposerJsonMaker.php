@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterface
@@ -22,8 +23,20 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 1000],
             AddMakerEvent::NAME => ['addFilesToStorage', 1000],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
+
+        $this->tagStorage->set('composerdescription', (string) $this->input->composerdescription);
+        $this->tagStorage->set('composerlicense', (string) $this->input->composerlicense);
+        $this->tagStorage->set('composerauthorname', (string) $this->input->composerauthorname);
+        $this->tagStorage->set('composerauthoremail', (string) $this->input->composerauthoremail);
+        $this->tagStorage->set('composerauthorwebsite', (string) $this->input->composerauthorwebsite);
     }
 
     /**
@@ -36,11 +49,6 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
         parent::addFilesToStorage($event);
 
         // Set tags
-        $this->tagStorage->set('composerdescription', (string) $this->input->composerdescription);
-        $this->tagStorage->set('composerlicense', (string) $this->input->composerlicense);
-        $this->tagStorage->set('composerauthorname', (string) $this->input->composerauthorname);
-        $this->tagStorage->set('composerauthoremail', (string) $this->input->composerauthoremail);
-        $this->tagStorage->set('composerauthorwebsite', (string) $this->input->composerauthorwebsite);
 
         $source = sprintf(
             '%s/composer.tpl.json',

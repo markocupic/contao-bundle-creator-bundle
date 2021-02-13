@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
@@ -23,8 +24,28 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 900],
             AddMakerEvent::NAME => ['addFilesToStorage', 900],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
+
+        if (!$this->input->addCustomRoute) {
+            return;
+        }
+
+        $subject = sprintf(
+            '%s_%s',
+            strtolower($this->input->vendorname),
+            strtolower($this->input->repositoryname)
+        );
+        $subject = preg_replace('/-bundle$/', '', $subject);
+        $routeId = preg_replace('/-/', '_', $subject);
+        $this->tagStorage->set('routeid', $routeId);
+        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
     }
 
     /**
@@ -39,17 +60,6 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
         if (!$this->input->addCustomRoute) {
             return;
         }
-
-        // Set tags
-        $subject = sprintf(
-            '%s_%s',
-            strtolower($this->input->vendorname),
-            strtolower($this->input->repositoryname)
-        );
-        $subject = preg_replace('/-bundle$/', '', $subject);
-        $routeId = preg_replace('/-/', '_', $subject);
-        $this->tagStorage->set('routeid', $routeId);
-        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         // Add controller (custom route)
         $source = sprintf(

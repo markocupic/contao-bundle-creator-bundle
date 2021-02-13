@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
@@ -23,8 +24,14 @@ class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 990],
             AddMakerEvent::NAME => ['addFilesToStorage', 990],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
     }
 
     /**

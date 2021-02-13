@@ -19,6 +19,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Markocupic\ContaoBundleCreatorBundle\MakerInterface;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -66,6 +67,19 @@ abstract class AbstractMaker implements MakerInterface
     protected $projectDir;
 
     public function addFilesToStorage(AddMakerEvent $event): void
+    {
+        $this->initialize($event);
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        $this->initialize($event);
+    }
+
+    /**
+     * @param AddTagsEvent|AddMakerEvent $event
+     */
+    private function initialize($event): void
     {
         $this->framework = $event->getFramework();
         $this->session = $event->getSession();

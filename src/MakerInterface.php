@@ -15,11 +15,14 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleCreatorBundle;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 /**
  * Interface that all maker commands must implement.
  */
 interface MakerInterface
 {
+    public function addTagsToStorage(AddTagsEvent $event): void;
+
     public function addFilesToStorage(AddMakerEvent $event): void;
 }

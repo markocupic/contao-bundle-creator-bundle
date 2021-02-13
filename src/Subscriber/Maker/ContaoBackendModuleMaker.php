@@ -18,6 +18,7 @@ use Contao\Controller;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberInterface
@@ -25,18 +26,14 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 930],
             AddMakerEvent::NAME => ['addFilesToStorage', 930],
         ];
     }
 
-    /**
-     * Add backend module files to file storage.
-     *
-     * @throws \Exception
-     */
-    public function addFilesToStorage(AddMakerEvent $event): void
+    public function addTagsToStorage(AddTagsEvent $event): void
     {
-        parent::addFilesToStorage($event);
+        parent::addTagsToStorage($event);
 
         if (!$this->input->addBackendModule || empty($this->input->dcatable)) {
             return;
@@ -60,6 +57,20 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
         $arrLabel = $stringUtilAdapter->deserialize($this->input->backendmoduletrans, true);
         $this->tagStorage->set('backendmoduletrans_0', $arrLabel[0]);
         $this->tagStorage->set('backendmoduletrans_1', $arrLabel[1]);
+    }
+
+    /**
+     * Add backend module files to file storage.
+     *
+     * @throws \Exception
+     */
+    public function addFilesToStorage(AddMakerEvent $event): void
+    {
+        parent::addFilesToStorage($event);
+
+        if (!$this->input->addBackendModule || empty($this->input->dcatable)) {
+            return;
+        }
 
         // Add dca table file
         $source = sprintf(

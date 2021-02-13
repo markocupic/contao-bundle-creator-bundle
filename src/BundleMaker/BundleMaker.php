@@ -19,8 +19,8 @@ use Contao\Date;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -113,30 +113,19 @@ class BundleMaker
             return;
         }
 
-        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
-
-        // Set the php template tags
-        $this->setTags();
-
-        // Keep the application extensible
-        // and use maker classes to add files to the bundle.
-        // Implement these makers as event subscribers.
-        $param = new \stdClass();
-        $param->framework = $this->framework;
-        $param->session = $this->session;
-        $param->tagStorage = $this->tagStorage;
-        $param->fileStorage = $this->fileStorage;
-        $param->input = $this->input;
-        $param->message = $this->message;
-        $param->skeletonPath = $this->skeletonPath;
-        $param->projectDir = $this->projectDir;
-        $event = new AddMakerEvent($param);
-        $this->eventDispatcher->dispatch($event, AddMakerEvent::NAME);
-
         // Create a backup of the old bundle that will be overwritten now
         if ($this->bundleExists()) {
             $this->createBackup();
         }
+
+        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
+
+        // Keep the application extensible.
+        // Add maker classes to add tags & files to the bundle.
+        // Store maker classes in src/Subscriber/Maker
+        // Implement these makers as event subscribers.
+        $this->eventDispatcher->dispatch(new AddTagsEvent((object) get_object_vars($this)), AddTagsEvent::NAME);
+        $this->eventDispatcher->dispatch(new AddMakerEvent((object) get_object_vars($this)), AddMakerEvent::NAME);
 
         // replace tags in file storage
         $this->replaceTags();
@@ -157,35 +146,6 @@ class BundleMaker
     protected function bundleExists(): bool
     {
         return is_dir($this->projectDir.'/vendor/'.$this->input->vendorname.'/'.$this->input->repositoryname);
-    }
-
-    /**
-     * Set all the tags here.
-     *
-     * @throws \Exception
-     *
-     * @todo add a contao hook
-     */
-    protected function setTags(): void
-    {
-        // Store input values into the tag storage
-        foreach ($this->input->row() as $fieldname => $value) {
-            $this->tagStorage->set((string) $fieldname, (string) $value);
-        }
-
-        // Namespaces
-        $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->input->vendorname));
-        $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->input->repositoryname));
-
-        // Current year
-        $this->tagStorage->set('year', date('Y'));
-
-        // Phpdoc
-        $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
-        $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($strPhpdoc));
-        $phpdoclines = explode(PHP_EOL, $strPhpdoc);
-        $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
-        $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
     }
 
     protected function createBackup(): void
@@ -283,7 +243,7 @@ class BundleMaker
         $content = file_get_contents($this->projectDir.'/composer.json');
         $objJSON = json_decode($content);
 
-        if (!empty($this->input->editRootComposer)) {
+        if ($this->input->editRootComposer) {
             if (!isset($objJSON->repositories)) {
                 $objJSON->repositories = [];
             }

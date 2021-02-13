@@ -45,6 +45,8 @@ services:
 
   Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\CustomRouteMaker:
     tags:
-      - { name: kernel.event_subscriber,  priority: 900 }
+      - { name: kernel.event_subscriber }
 
-
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\AddStandardTagsMaker:
+    tags:
+      - { name: kernel.event_subscriber }

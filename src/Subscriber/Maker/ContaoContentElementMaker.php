@@ -17,6 +17,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ContaoContentElementMaker extends AbstractMaker implements EventSubscriberInterface
@@ -24,8 +25,27 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 910],
             AddMakerEvent::NAME => ['addFilesToStorage', 910],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
+
+        if (!$this->input->addContentElement) {
+            return;
+        }
+
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+        $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
+        $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
+        $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
+        $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
+        $arrLabel = $stringUtilAdapter->deserialize($this->input->contentelementtrans, true);
+        $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
+        $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
     }
 
     /**
@@ -40,16 +60,6 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
         if (!$this->input->addContentElement) {
             return;
         }
-
-        // Add tags
-        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
-        $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
-        $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
-        $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
-        $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
-        $arrLabel = $stringUtilAdapter->deserialize($this->input->contentelementtrans, true);
-        $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
-        $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
 
         // Get the content element template name
         $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype);

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\Event;
 
-class AddMakerEvent extends AbstractEvent
+class AddTagsEvent extends AbstractEvent
 {
-    public const NAME = 'markocupic.contao_bundle_creator_bundle.maker.added';
+    public const NAME = 'markocupic.contao_bundle_creator_bundle.tags.added';
 }

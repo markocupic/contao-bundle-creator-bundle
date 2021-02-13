@@ -17,6 +17,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriberInterface
@@ -24,18 +25,14 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 920],
             AddMakerEvent::NAME => ['addFilesToStorage', 920],
         ];
     }
 
-    /**
-     * Add frontend module files to file storage.
-     *
-     * @throws \Exception
-     */
-    public function addFilesToStorage(AddMakerEvent $event): void
+    public function addTagsToStorage(AddTagsEvent $event): void
     {
-        parent::addFilesToStorage($event);
+        parent::addTagsToStorage($event);
 
         if (!$this->input->addFrontendModule) {
             return;
@@ -50,6 +47,16 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         $arrLabel = $stringUtilAdaper->deserialize($this->input->frontendmoduletrans, true);
         $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
         $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
+    }
+
+    /**
+     * Add frontend module files to file storage.
+     *
+     * @throws \Exception
+     */
+    public function addFilesToStorage(AddMakerEvent $event): void
+    {
+        parent::addFilesToStorage($event);
 
         // Get the frontend module template name
         $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype);

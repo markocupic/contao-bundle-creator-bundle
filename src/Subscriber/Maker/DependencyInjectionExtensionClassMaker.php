@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
+use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DependencyInjectionExtensionClassMaker extends AbstractMaker implements EventSubscriberInterface
@@ -23,8 +24,16 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
     public static function getSubscribedEvents(): array
     {
         return [
+            AddTagsEvent::NAME => ['addTagsToStorage', 980],
             AddMakerEvent::NAME => ['addFilesToStorage', 980],
         ];
+    }
+
+    public function addTagsToStorage(AddTagsEvent $event): void
+    {
+        parent::addTagsToStorage($event);
+
+        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
     }
 
     /**
@@ -35,9 +44,6 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
-
-        // Set tags
-        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         $source = sprintf(
             '%s/src/DependencyInjection/Extension.tpl.php',
