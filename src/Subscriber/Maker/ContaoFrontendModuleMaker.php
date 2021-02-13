@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
+use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,15 +37,25 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
     {
         parent::addFilesToStorage($event);
 
-        if (!$this->arrInput['addFrontendModule']) {
+        if (!$this->input->addFrontendModule) {
             return;
         }
 
+        // Add tags
+        $stringUtilAdaper = $this->framework->getAdapter(StringUtil::class);
+        $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
+        $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
+        $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
+        $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
+        $arrLabel = $stringUtilAdaper->deserialize($this->input->frontendmoduletrans, true);
+        $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
+        $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
+
         // Get the frontend module template name
-        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->arrInput['frontendmoduletype']);
+        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype);
 
         // Get the frontend module classname
-        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->arrInput['frontendmoduletype']);
+        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendModuleController
         $source = sprintf(
@@ -55,13 +66,13 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
+            $this->input->vendorname,
+            $this->input->repositoryname,
             $strFrontendModuleClassname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add frontend module template
@@ -73,13 +84,13 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
+            $this->input->vendorname,
+            $this->input->repositoryname,
             $strFrontenModuleTemplateName
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/dca/tl_module.php
@@ -91,20 +102,20 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/dca/tl_module.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         $source = sprintf(
@@ -113,15 +124,15 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/default.php to file storage
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         $source = sprintf(
@@ -130,7 +141,7 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

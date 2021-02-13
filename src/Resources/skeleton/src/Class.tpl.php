@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>;
 
-<?php if($this->addSessionAttribute == "1"): ?>
+<?php if($this->addSessionAttribute): ?>
 use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\Compiler\AddSessionBagsPass;
 <?php endif; ?>
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +23,7 @@ class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?> extends Bun
 	public function build(ContainerBuilder $container): void
 	{
 		parent::build($container);
-		<?php if($this->addSessionAttribute == "1"): ?><?= "\n" ?>
+		<?php if($this->addSessionAttribute): ?><?= "\n" ?>
 		$container->addCompilerPass(new AddSessionBagsPass());
 		<?php endif; ?><?= "\n" ?>
 	}

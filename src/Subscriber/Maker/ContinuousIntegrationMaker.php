@@ -44,12 +44,12 @@ class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscribe
         $target = sprintf(
             '%s/vendor/%s/%s/phpunit.xml.dist',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add plugin test
@@ -61,12 +61,12 @@ class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscribe
         $target = sprintf(
             '%s/vendor/%s/%s/tests/ContaoManager/PluginTest.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add .travis.yml
@@ -78,12 +78,12 @@ class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscribe
         $target = sprintf(
             '%s/vendor/%s/%s/.travis.yml',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add github workflow file
@@ -95,12 +95,12 @@ class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscribe
         $target = sprintf(
             '%s/vendor/%s/%s/.github/workflows/ci.yml',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

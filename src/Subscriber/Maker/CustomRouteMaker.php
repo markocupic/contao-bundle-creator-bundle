@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -35,9 +36,20 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
     {
         parent::addFilesToStorage($event);
 
-        if (!$this->arrInput['addCustomRoute']) {
+        if (!$this->input->addCustomRoute) {
             return;
         }
+
+        // Set tags
+        $subject = sprintf(
+            '%s_%s',
+            strtolower($this->input->vendorname),
+            strtolower($this->input->repositoryname)
+        );
+        $subject = preg_replace('/-bundle$/', '', $subject);
+        $routeId = preg_replace('/-/', '_', $subject);
+        $this->tagStorage->set('routeid', $routeId);
+        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         // Add controller (custom route)
         $source = sprintf(
@@ -48,12 +60,12 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/src/Controller/MyCustomController.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add twig template
@@ -65,12 +77,12 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.html.twig',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

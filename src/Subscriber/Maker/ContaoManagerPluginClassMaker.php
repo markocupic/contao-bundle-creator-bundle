@@ -43,12 +43,12 @@ class ContaoManagerPluginClassMaker extends AbstractMaker implements EventSubscr
         $target = sprintf(
             '%s/vendor/%s/%s/src/ContaoManager/Plugin.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

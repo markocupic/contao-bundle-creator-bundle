@@ -9,20 +9,16 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contao
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-<?php if($this->addCustomRoute == "1"): ?>
+<?php if($this->addCustomRoute): ?>
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-<?php endif; ?>
-<?php if($this->addCustomRoute == "1"): ?>
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-<?php endif; ?>
-<?php if($this->addCustomRoute == "1"): ?>
 use Symfony\Component\HttpKernel\KernelInterface;
 <?php endif; ?>
 
 /**
  * Class Plugin
  */
-class Plugin implements BundlePluginInterface<?php if($this->addCustomRoute == "1"): ?>, RoutingPluginInterface<?php endif; ?><?= "\n" ?>
+class Plugin implements BundlePluginInterface<?php if($this->addCustomRoute): ?>, RoutingPluginInterface<?php endif; ?><?= "\n" ?>
 {
     /**
      * @return array
@@ -34,7 +30,7 @@ class Plugin implements BundlePluginInterface<?php if($this->addCustomRoute == "
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
         ];
     }
-<?php if($this->addCustomRoute == "1"): ?>
+<?php if($this->addCustomRoute): ?>
 
     /**
      * @return null|\Symfony\Component\Routing\RouteCollection

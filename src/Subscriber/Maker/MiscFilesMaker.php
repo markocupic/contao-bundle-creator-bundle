@@ -44,7 +44,7 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
             'services.tpl.yml',
         ];
 
-        if ($this->arrInput['addCustomRoute']) {
+        if ($this->input->addCustomRoute) {
             $arrFiles[] = 'routes.tpl.yml';
         }
 
@@ -57,13 +57,13 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
             $target = sprintf(
                 '%s/vendor/%s/%s/src/Resources/config/%s',
                 $this->projectDir,
-                $this->arrInput['vendorname'],
-                $this->arrInput['repositoryname'],
+                $this->input->vendorname,
+                $this->input->repositoryname,
                 str_replace('tpl.', '', $file)
             );
 
             if (!$this->fileStorage->hasFile($target)) {
-                $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+                $this->fileStorage->addFile($source, $target);
 
                 // Validate config files
                 try {
@@ -95,12 +95,12 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/config/config.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add logo
@@ -112,12 +112,12 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/public/logo.png',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Readme.md
@@ -129,12 +129,12 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/README.md',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // .gitattributes
@@ -146,12 +146,12 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/.gitattributes',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
+use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,15 +37,25 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
     {
         parent::addFilesToStorage($event);
 
-        if (!$this->arrInput['addContentElement']) {
+        if (!$this->input->addContentElement) {
             return;
         }
 
+        // Add tags
+        $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+        $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
+        $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
+        $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
+        $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
+        $arrLabel = $stringUtilAdapter->deserialize($this->input->contentelementtrans, true);
+        $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
+        $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
+
         // Get the content element template name
-        $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->arrInput['contentelementtype']);
+        $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype);
 
         // Get the content element classname
-        $strContentElementClassname = Str::asContaoContentElementClassName((string) $this->arrInput['contentelementtype']);
+        $strContentElementClassname = Str::asContaoContentElementClassName((string) $this->input->contentelementtype);
 
         // Add content element class to src/Controller/ContentElement
         $source = sprintf(
@@ -55,13 +66,13 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Controller/ContentElement/%s.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
+            $this->input->vendorname,
+            $this->input->repositoryname,
             $strContentElementClassname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add content element template
@@ -73,13 +84,13 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
+            $this->input->vendorname,
+            $this->input->repositoryname,
             $strContentElementTemplateName
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/dca/tl_content.php
@@ -91,20 +102,20 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/dca/tl_content.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add src/Resources/contao/languages/en/modules.php to file storage
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         $source = sprintf(
@@ -113,7 +124,7 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

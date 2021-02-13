@@ -44,14 +44,14 @@ class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
         $target = sprintf(
             '%s/vendor/%s/%s/src/%s%s.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
-            Str::asClassName((string) $this->arrInput['vendorname']),
-            Str::asClassName((string) $this->arrInput['repositoryname'])
+            $this->input->vendorname,
+            $this->input->repositoryname,
+            Str::asClassName((string) $this->input->vendorname),
+            Str::asClassName((string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

@@ -36,13 +36,14 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
     {
         parent::addFilesToStorage($event);
 
-        if (!$this->arrInput['addSessionAttribute']) {
+        if (!$this->input->addSessionAttribute) {
             return;
         }
 
-        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
+        // Set tags
         $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
         $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
 
         // Add attribute bag
         $source = sprintf(
@@ -53,12 +54,12 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
         $target = sprintf(
             '%s/vendor/%s/%s/src/Session/Attribute/ArrayAttributeBag.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add AddSessionBagsPass
@@ -70,12 +71,12 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
         $target = sprintf(
             '%s/vendor/%s/%s/src/DependencyInjection/Compiler/AddSessionBagsPass.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add BundleClass
@@ -87,14 +88,14 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
         $target = sprintf(
             '%s/vendor/%s/%s/src/%s%s.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
-            Str::asClassName((string) $this->arrInput['vendorname']),
-            Str::asClassName((string) $this->arrInput['repositoryname'])
+            $this->input->vendorname,
+            $this->input->repositoryname,
+            Str::asClassName((string) $this->input->vendorname),
+            Str::asClassName((string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         // Add config/services.yml
@@ -106,12 +107,12 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
         $target = sprintf(
             '%s/vendor/%s/%s/src/Resources/config/services.yml',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

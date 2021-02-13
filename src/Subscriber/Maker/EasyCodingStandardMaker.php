@@ -35,7 +35,7 @@ class EasyCodingStandardMaker extends AbstractMaker implements EventSubscriberIn
     {
         parent::addFilesToStorage($event);
 
-        if (!$this->arrInput['addEasyCodingStandard']) {
+        if (!$this->input->addEasyCodingStandard) {
             return;
         }
 
@@ -48,8 +48,8 @@ class EasyCodingStandardMaker extends AbstractMaker implements EventSubscriberIn
         $target = sprintf(
             '%s/vendor/%s/%s/.ecs',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         // Add to storage
@@ -57,7 +57,7 @@ class EasyCodingStandardMaker extends AbstractMaker implements EventSubscriberIn
 
         // Replace tags
         foreach ($arrFiles as $strTargetPath) {
-            $this->fileStorage->getFile($strTargetPath)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->getFile($strTargetPath);
         }
     }
 }

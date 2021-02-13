@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
-use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
@@ -124,9 +122,14 @@ class BundleMaker
         // and use maker classes to add files to the bundle.
         // Implement these makers as event subscribers.
         $param = new \stdClass();
+        $param->framework = $this->framework;
+        $param->session = $this->session;
         $param->tagStorage = $this->tagStorage;
         $param->fileStorage = $this->fileStorage;
-        $param->arrInput = $this->input->row();
+        $param->input = $this->input;
+        $param->message = $this->message;
+        $param->skeletonPath = $this->skeletonPath;
+        $param->projectDir = $this->projectDir;
         $event = new AddMakerEvent($param);
         $this->eventDispatcher->dispatch($event, AddMakerEvent::NAME);
 
@@ -134,6 +137,9 @@ class BundleMaker
         if ($this->bundleExists()) {
             $this->createBackup();
         }
+
+        // replace tags in file storage
+        $this->replaceTags();
 
         // Copy all the bundle files from the storage to the destination directories in vendor/vendorname/bundlename
         $this->createBundleFiles();
@@ -163,99 +169,23 @@ class BundleMaker
     protected function setTags(): void
     {
         // Store input values into the tag storage
-        $arrInput = $this->input->row();
-
-        foreach ($arrInput as $fieldname => $value) {
+        foreach ($this->input->row() as $fieldname => $value) {
             $this->tagStorage->set((string) $fieldname, (string) $value);
         }
-
-        // Tags
-        $this->tagStorage->set('vendorname', (string) $this->input->vendorname);
-        $this->tagStorage->set('repositoryname', (string) $this->input->repositoryname);
-        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
 
         // Namespaces
         $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->input->vendorname));
         $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->input->repositoryname));
 
-        // Twig namespace @Vendor/Bundlename
-        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
-
-        // Composer
-        $this->tagStorage->set('composerdescription', (string) $this->input->composerdescription);
-        $this->tagStorage->set('composerlicense', (string) $this->input->composerlicense);
-        $this->tagStorage->set('composerauthorname', (string) $this->input->composerauthorname);
-        $this->tagStorage->set('composerauthoremail', (string) $this->input->composerauthoremail);
-        $this->tagStorage->set('composerauthorwebsite', (string) $this->input->composerauthorwebsite);
+        // Current year
+        $this->tagStorage->set('year', date('Y'));
 
         // Phpdoc
-        $this->tagStorage->set('bundlename', (string) $this->input->bundlename);
         $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
         $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($strPhpdoc));
         $phpdoclines = explode(PHP_EOL, $strPhpdoc);
         $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
         $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
-
-        // Current year
-        $this->tagStorage->set('year', date('Y'));
-
-        // Dca table and backend module
-        if ($this->input->addBackendModule && !empty($this->input->dcatable)) {
-            /** @var Controller $controllerAdapter */
-            $controllerAdapter = $this->framework->getAdapter(Controller::class);
-            $controllerAdapter->loadDataContainer($this->input->dcatable);
-
-            if (class_exists($this->input->dcatable)) {
-                $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable.'_custom');
-            } else {
-                $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable);
-            }
-            $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
-            $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->input->dcatable));
-            $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);
-            $this->tagStorage->set('backendmodulecategory', (string) $this->input->backendmodulecategory);
-            $arrLabel = StringUtil::deserialize($this->input->backendmoduletrans, true);
-            $this->tagStorage->set('backendmoduletrans_0', $arrLabel[0]);
-            $this->tagStorage->set('backendmoduletrans_1', $arrLabel[1]);
-        }
-
-        // Frontend module
-        if ($this->input->addFrontendModule) {
-            $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
-            $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
-            $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
-            $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
-            $arrLabel = StringUtil::deserialize($this->input->frontendmoduletrans, true);
-            $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
-            $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
-        }
-
-        // Content element
-        if ($this->input->addContentElement) {
-            $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
-            $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
-            $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
-            $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
-            $arrLabel = StringUtil::deserialize($this->input->contentelementtrans, true);
-            $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
-            $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
-        }
-
-        // Custom route
-        $subject = sprintf(
-            '%s_%s',
-            strtolower($this->input->vendorname),
-            strtolower($this->input->repositoryname)
-        );
-        $subject = preg_replace('/-bundle$/', '', $subject);
-        $routeId = preg_replace('/-/', '_', $subject);
-        $this->tagStorage->set('routeid', $routeId);
-
-        if ($this->input->addCustomRoute) {
-            $this->tagStorage->set('addCustomRoute', '1');
-        } else {
-            $this->tagStorage->set('addCustomRoute', '0');
-        }
     }
 
     protected function createBackup(): void
@@ -308,27 +238,32 @@ class BundleMaker
     }
 
     /**
+     * Replace tags in file storage.
+     */
+    protected function replaceTags(): void
+    {
+        foreach ($this->fileStorage->getAll() as $arrFile) {
+            if ($this->fileStorage->hasFile($arrFile['target'])) {
+                $this->fileStorage
+                    ->getFile($arrFile['target'])
+                    ->replaceTags($this->tagStorage, ['.tpl.'])
+                    ;
+            }
+        }
+    }
+
+    /**
      * Write files from the file storage to the filesystem.
-     *
-     * @throws \Exception
-     *
-     * @todo add a contao hook
      */
     protected function createBundleFiles(): void
     {
-        $arrFiles = $this->fileStorage->getAll();
-
-        /*
-         * @todo add a contao hook here
-         * Manipulate, remove or add files to the storage
-         */
-        foreach ($arrFiles as $arrFile) {
+        foreach ($this->fileStorage->getAll() as $arrFile) {
             if (false !== $this->fileStorage->createFile($arrFile['target'])) {
                 // Display message in the backend
-                $this->message->addInfo(sprintf('Created file "%s/%s".', $this->projectDir, $arrFile['target']));
+                $this->message->addInfo(sprintf('Created file "%s".', $arrFile['target']));
             } else {
                 // Display message in the backend
-                $this->message->addError(sprintf('Could not create file "%s/%s".', $this->projectDir, $arrFile['target']));
+                $this->message->addError(sprintf('Could not create file "%s".', $arrFile['target']));
             }
         }
 

@@ -36,6 +36,9 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
     {
         parent::addFilesToStorage($event);
 
+        // Set tags
+        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
+
         $source = sprintf(
             '%s/src/DependencyInjection/Extension.tpl.php',
             $this->skeletonPath
@@ -44,13 +47,13 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
         $target = sprintf(
             '%s/vendor/%s/%s/src/DependencyInjection/%s.php',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname'],
-            Str::asDependencyInjectionExtensionClassName((string) $this->arrInput['vendorname'], (string) $this->arrInput['repositoryname'])
+            $this->input->vendorname,
+            $this->input->repositoryname,
+            Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
     }
 }

@@ -35,6 +35,13 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
     {
         parent::addFilesToStorage($event);
 
+        // Set tags
+        $this->tagStorage->set('composerdescription', (string) $this->input->composerdescription);
+        $this->tagStorage->set('composerlicense', (string) $this->input->composerlicense);
+        $this->tagStorage->set('composerauthorname', (string) $this->input->composerauthorname);
+        $this->tagStorage->set('composerauthoremail', (string) $this->input->composerauthoremail);
+        $this->tagStorage->set('composerauthorwebsite', (string) $this->input->composerauthorwebsite);
+
         $source = sprintf(
             '%s/composer.tpl.json',
             $this->skeletonPath
@@ -43,34 +50,34 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
         $target = sprintf(
             '%s/vendor/%s/%s/composer.json',
             $this->projectDir,
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target)->replaceTags($this->tagStorage, ['.tpl.']);
+            $this->fileStorage->addFile($source, $target);
         }
 
         $content = $this->fileStorage->getContent();
         $objComposer = json_decode($content);
 
         // Name
-        $objComposer->name = $this->arrInput['vendorname'].'/'.$this->arrInput['repositoryname'];
+        $objComposer->name = $this->input->vendorname.'/'.$this->input->repositoryname;
 
         // Description
-        $objComposer->description = $this->arrInput['composerdescription'];
+        $objComposer->description = $this->input->composerdescription;
 
         // License
-        $objComposer->license = $this->arrInput['composerlicense'];
+        $objComposer->license = $this->input->composerlicense;
 
         //Authors
         if (!isset($objComposer->authors) && !\is_array($objComposer->authors)) {
             $objComposer->authors = [];
         }
         $authors = new \stdClass();
-        $authors->name = $this->arrInput['composerauthorname'];
-        $authors->email = $this->arrInput['composerauthoremail'];
-        $authors->homepage = $this->arrInput['composerauthorwebsite'];
+        $authors->name = $this->input->composerauthorname;
+        $authors->email = $this->input->composerauthoremail;
+        $authors->homepage = $this->input->composerauthorwebsite;
         $authors->role = 'Developer';
         $objComposer->authors[] = $authors;
 
@@ -81,19 +88,19 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
 
         $objComposer->support->issues = sprintf(
             'https://github.com/%s/%s/issues',
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         $objComposer->support->source = sprintf(
             'https://github.com/%s/%s',
-            $this->arrInput['vendorname'],
-            $this->arrInput['repositoryname']
+            $this->input->vendorname,
+            $this->input->repositoryname
         );
 
         // Version
         if ($this->tagStorage->has('composerpackageversion')) {
-            $objComposer->version = $this->arrInput['composerpackageversion'];
+            $objComposer->version = $this->input->composerpackageversion;
         }
 
         // Autoload

@@ -14,13 +14,27 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\MakerInterface;
+use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractMaker implements MakerInterface
 {
+    /**
+     * @var ContaoFramework;
+     */
+    protected $framework;
+
+    /**
+     * @var SessionInterface
+     */
+    protected $session;
+
     /**
      * @var TagStorage
      */
@@ -32,32 +46,34 @@ abstract class AbstractMaker implements MakerInterface
     protected $fileStorage;
 
     /**
-     * @var array
+     * @var ContaoBundleCreatorModel
      */
-    protected $arrInput;
+    protected $input;
 
     /**
-     * @var false|string
+     * @var Message
      */
-    protected $projectDir;
+    protected $message;
 
     /**
-     * @var false|string
+     * @var string
      */
     protected $skeletonPath;
 
-    public function setTags(AddMakerEvent $event): void
-    {
-    }
+    /**
+     * @var string
+     */
+    protected $projectDir;
 
     public function addFilesToStorage(AddMakerEvent $event): void
     {
+        $this->framework = $event->getFramework();
+        $this->session = $event->getSession();
         $this->tagStorage = $event->getTagStorage();
         $this->fileStorage = $event->getFileStorage();
-        $this->arrInput = $event->getArrInput();
-        $this->projectDir = realpath(__DIR__.'/../../../../../../');
-        $this->skeletonPath = realpath(__DIR__.'/../../Resources/skeleton');
-
-        $this->setTags($event);
+        $this->input = $event->getInput();
+        $this->message = $event->getMessage();
+        $this->skeletonPath = $event->getSkeletonPath();
+        $this->projectDir = $event->getProjectDir();
     }
 }

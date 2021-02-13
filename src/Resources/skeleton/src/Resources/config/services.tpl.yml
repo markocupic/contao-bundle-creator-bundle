@@ -6,8 +6,8 @@ services:
         arguments:
             - '@session'
         tags:
-        - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
-        - { name: container.service_subscriber }
+            - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
+            - { name: container.service_subscriber }
         public: true
 <?php endif; ?>
 
