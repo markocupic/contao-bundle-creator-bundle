@@ -17,9 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DependencyInjectionExtensionClassMaker extends AbstractMaker implements EventSubscriberInterface
+final class DependencyInjectionExtensionClassMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -33,7 +32,10 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
     {
         parent::addTagsToStorage($event);
 
-        $this->tagStorage->set('dependencyinjectionextensionclassname', Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
+        $this->tagStorage->set('dependencyinjectionextensionclassname', $strAdapter->asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname));
     }
 
     /**
@@ -45,6 +47,9 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
     {
         parent::addFilesToStorage($event);
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         $source = sprintf(
             '%s/src/DependencyInjection/Extension.tpl.php',
             $this->skeletonPath
@@ -55,7 +60,7 @@ class DependencyInjectionExtensionClassMaker extends AbstractMaker implements Ev
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            Str::asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname)
+            $strAdapter->asDependencyInjectionExtensionClassName((string) $this->input->vendorname, (string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {

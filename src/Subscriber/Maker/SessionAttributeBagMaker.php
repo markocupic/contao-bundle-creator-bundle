@@ -17,9 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberInterface
+final class SessionAttributeBagMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -37,9 +36,11 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
             return;
         }
 
-        // Set tags
-        $this->tagStorage->set('sessionAttributeName', Str::asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
-        $this->tagStorage->set('sessionAttributeKey', '_'.Str::asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
+        $this->tagStorage->set('sessionAttributeName', $strAdapter->asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeKey', '_'.$strAdapter->asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
         $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
     }
 
@@ -51,6 +52,9 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
+
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
 
         // Add attribute bag
         $source = sprintf(
@@ -97,8 +101,8 @@ class SessionAttributeBagMaker extends AbstractMaker implements EventSubscriberI
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            Str::asClassName((string) $this->input->vendorname),
-            Str::asClassName((string) $this->input->repositoryname)
+            $strAdapter->asClassName((string) $this->input->vendorname),
+            $strAdapter->asClassName((string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {

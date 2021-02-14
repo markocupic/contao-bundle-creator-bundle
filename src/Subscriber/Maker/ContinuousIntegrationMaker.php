@@ -16,9 +16,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContinuousIntegrationMaker extends AbstractMaker implements EventSubscriberInterface
+final class ContinuousIntegrationMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {

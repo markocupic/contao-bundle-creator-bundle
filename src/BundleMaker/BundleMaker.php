@@ -275,7 +275,7 @@ class BundleMaker
                 );
 
                 // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories, true)) {
+                if (!\in_array($objRepositories, $objJSON->repositories, false)) {
                     $blnModified = true;
                     $objJSON->repositories[] = $objRepositories;
                     $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');

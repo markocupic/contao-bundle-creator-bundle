@@ -18,9 +18,8 @@ use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriberInterface
+final class ContaoFrontendModuleMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -38,12 +37,14 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
             return;
         }
 
-        // Add tags
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         $stringUtilAdaper = $this->framework->getAdapter(StringUtil::class);
-        $this->tagStorage->set('frontendmoduleclassname', Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
+        $this->tagStorage->set('frontendmoduleclassname', $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
         $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
         $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
-        $this->tagStorage->set('frontendmoduletemplate', Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
+        $this->tagStorage->set('frontendmoduletemplate', $strAdapter->asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
         $arrLabel = $stringUtilAdaper->deserialize($this->input->frontendmoduletrans, true);
         $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
         $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
@@ -58,11 +59,14 @@ class ContaoFrontendModuleMaker extends AbstractMaker implements EventSubscriber
     {
         parent::addFilesToStorage($event);
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         // Get the frontend module template name
-        $strFrontenModuleTemplateName = Str::asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype);
+        $strFrontenModuleTemplateName = $strAdapter->asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype);
 
         // Get the frontend module classname
-        $strFrontendModuleClassname = Str::asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
+        $strFrontendModuleClassname = $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
 
         // Add frontend module class to src/Controller/FrontendModuleController
         $source = sprintf(

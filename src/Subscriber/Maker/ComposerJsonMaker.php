@@ -16,9 +16,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterface
+final class ComposerJsonMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -47,8 +46,6 @@ class ComposerJsonMaker extends AbstractMaker implements EventSubscriberInterfac
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
-
-        // Set tags
 
         $source = sprintf(
             '%s/composer.tpl.json',

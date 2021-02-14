@@ -17,9 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AddStandardTagsMaker extends AbstractMaker implements EventSubscriberInterface
+final class AddStandardTagsMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -44,16 +43,19 @@ class AddStandardTagsMaker extends AbstractMaker implements EventSubscriberInter
             $this->tagStorage->set((string) $fieldname, (string) $value);
         }
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         // Namespaces
-        $this->tagStorage->set('toplevelnamespace', Str::asClassName((string) $this->input->vendorname));
-        $this->tagStorage->set('sublevelnamespace', Str::asClassName((string) $this->input->repositoryname));
+        $this->tagStorage->set('toplevelnamespace', $strAdapter->asClassName((string) $this->input->vendorname));
+        $this->tagStorage->set('sublevelnamespace', $strAdapter->asClassName((string) $this->input->repositoryname));
 
         // Current year
         $this->tagStorage->set('year', date('Y'));
 
         // Phpdoc
         $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
-        $this->tagStorage->set('phpdoc', Str::generateHeaderCommentFromString($strPhpdoc));
+        $this->tagStorage->set('phpdoc', $strAdapter->generateHeaderCommentFromString($strPhpdoc));
         $phpdoclines = explode(PHP_EOL, $strPhpdoc);
         $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
         $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));

@@ -17,9 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
+final class BundleClassMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -43,6 +42,9 @@ class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
     {
         parent::addFilesToStorage($event);
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         $source = sprintf(
             '%s/src/Class.tpl.php',
             $this->skeletonPath
@@ -53,8 +55,8 @@ class BundleClassMaker extends AbstractMaker implements EventSubscriberInterface
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            Str::asClassName((string) $this->input->vendorname),
-            Str::asClassName((string) $this->input->repositoryname)
+            $strAdapter->asClassName((string) $this->input->vendorname),
+            $strAdapter->asClassName((string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {

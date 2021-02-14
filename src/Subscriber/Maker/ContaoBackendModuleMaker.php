@@ -19,9 +19,8 @@ use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberInterface
+final class ContaoBackendModuleMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -39,9 +38,14 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
             return;
         }
 
-        // Add tags
+        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
+
+        /** @var StringUtil $stringUtilAdapter */
         $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
+
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
 
         $controllerAdapter->loadDataContainer($this->input->dcatable);
 
@@ -51,7 +55,7 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
             $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable);
         }
         $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
-        $this->tagStorage->set('modelclassname', (string) Str::asContaoModelClassName((string) $this->input->dcatable));
+        $this->tagStorage->set('modelclassname', (string) $strAdapter->asContaoModelClassName((string) $this->input->dcatable));
         $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);
         $this->tagStorage->set('backendmodulecategory', (string) $this->input->backendmodulecategory);
         $arrLabel = $stringUtilAdapter->deserialize($this->input->backendmoduletrans, true);
@@ -71,6 +75,9 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
         if (!$this->input->addBackendModule || empty($this->input->dcatable)) {
             return;
         }
+
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
 
         // Add dca table file
         $source = sprintf(
@@ -119,7 +126,7 @@ class ContaoBackendModuleMaker extends AbstractMaker implements EventSubscriberI
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            Str::asContaoModelClassName((string) $this->input->dcatable)
+            $strAdapter->asContaoModelClassName((string) $this->input->dcatable)
         );
 
         if (!$this->fileStorage->hasFile($target)) {

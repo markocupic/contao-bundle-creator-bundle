@@ -16,11 +16,10 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
-class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
+final class MiscFilesMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -43,6 +42,9 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
+
+        /** @var Yaml $yamlAdapter */
+        $yamlAdapter = $this->framework->getAdapter(Yaml::class);
 
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
@@ -74,7 +76,7 @@ class MiscFilesMaker extends AbstractMaker implements EventSubscriberInterface
 
                 // Validate config files
                 try {
-                    $arrYaml = Yaml::parse($this->fileStorage->getContent());
+                    $arrYaml = $yamlAdapter->parse($this->fileStorage->getContent());
 
                     if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
                         if (!\array_key_exists('services', $arrYaml)) {

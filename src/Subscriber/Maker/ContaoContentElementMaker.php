@@ -18,9 +18,8 @@ use Contao\StringUtil;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ContaoContentElementMaker extends AbstractMaker implements EventSubscriberInterface
+final class ContaoContentElementMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -38,11 +37,16 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
             return;
         }
 
+        /** @var StringUtil $stringUtilAdapter */
         $stringUtilAdapter = $this->framework->getAdapter(StringUtil::class);
-        $this->tagStorage->set('contentelementclassname', Str::asContaoContentElementClassName((string) $this->input->contentelementtype));
+
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
+        $this->tagStorage->set('contentelementclassname', $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype));
         $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
         $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
-        $this->tagStorage->set('contentelementtemplate', Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype));
+        $this->tagStorage->set('contentelementtemplate', $strAdapter->asContaoContentElementTemplateName((string) $this->input->contentelementtype));
         $arrLabel = $stringUtilAdapter->deserialize($this->input->contentelementtrans, true);
         $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
         $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
@@ -61,11 +65,14 @@ class ContaoContentElementMaker extends AbstractMaker implements EventSubscriber
             return;
         }
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         // Get the content element template name
-        $strContentElementTemplateName = Str::asContaoContentElementTemplateName((string) $this->input->contentelementtype);
+        $strContentElementTemplateName = $strAdapter->asContaoContentElementTemplateName((string) $this->input->contentelementtype);
 
         // Get the content element classname
-        $strContentElementClassname = Str::asContaoContentElementClassName((string) $this->input->contentelementtype);
+        $strContentElementClassname = $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype);
 
         // Add content element class to src/Controller/ContentElement
         $source = sprintf(

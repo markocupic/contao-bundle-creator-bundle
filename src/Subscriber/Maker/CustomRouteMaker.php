@@ -17,9 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
+final class CustomRouteMaker extends AbstractMaker
 {
     public static function getSubscribedEvents(): array
     {
@@ -37,6 +36,9 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
             return;
         }
 
+        /** @var Str $strAdapter */
+        $strAdapter = $this->framework->getAdapter(Str::class);
+
         $subject = sprintf(
             '%s_%s',
             strtolower($this->input->vendorname),
@@ -45,7 +47,7 @@ class CustomRouteMaker extends AbstractMaker implements EventSubscriberInterface
         $subject = preg_replace('/-bundle$/', '', $subject);
         $routeId = preg_replace('/-/', '_', $subject);
         $this->tagStorage->set('routeid', $routeId);
-        $this->tagStorage->set('twignamespace', Str::asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
+        $this->tagStorage->set('twignamespace', $strAdapter->asTwigNameSpace((string) $this->input->vendorname, (string) $this->input->repositoryname));
     }
 
     /**

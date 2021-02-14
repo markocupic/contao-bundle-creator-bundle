@@ -22,9 +22,10 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Markocupic\ContaoBundleCreatorBundle\MakerInterface;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-abstract class AbstractMaker implements MakerInterface
+abstract class AbstractMaker implements MakerInterface, EventSubscriberInterface
 {
     /**
      * @var ContaoFramework;
