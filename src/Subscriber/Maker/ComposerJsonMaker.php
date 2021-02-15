@@ -109,8 +109,8 @@ final class ComposerJsonMaker extends AbstractMaker
         }
 
         // Add contao/easy-coding-standard
-        if($this->input->addEasyCodingStandard) {
-            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} = "^3.0";
+        if ($this->input->addEasyCodingStandard) {
+            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} = '^3.0';
         }
 
         // Autoload
