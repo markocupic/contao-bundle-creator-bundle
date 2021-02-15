@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
             'filter'    => true,
             'sorting'   => true,
             'eval'      => array('rte' => 'tinyMCE', 'tl_class' => 'clr'),
-            'sql'       => 'text NOT NULL'
+            'sql'       => 'text NULL'
         )
     )
 );
