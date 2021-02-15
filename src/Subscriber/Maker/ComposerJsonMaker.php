@@ -108,6 +108,11 @@ final class ComposerJsonMaker extends AbstractMaker
             $objComposer->version = trim((string) $this->input->composerpackageversion);
         }
 
+        // Add contao/easy-coding-standard
+        if($this->input->addEasyCodingStandard) {
+            $objComposer->{'require-dev'}->{'contao/easy-coding-standard'} = "^3.0";
+        }
+
         // Autoload
         if (!isset($objComposer->autoload) && !\is_object($objComposer->autoload)) {
             $objComposer->autoload = new \stdClass();
