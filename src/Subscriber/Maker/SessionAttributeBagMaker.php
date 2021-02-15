@@ -53,6 +53,10 @@ final class SessionAttributeBagMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
+        if (!$this->input->addSessionAttribute) {
+            return;
+        }
+
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 

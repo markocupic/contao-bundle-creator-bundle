@@ -26,6 +26,7 @@ use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class BundleMaker.
@@ -127,8 +128,11 @@ class BundleMaker
         $this->eventDispatcher->dispatch(new AddTagsEvent((object) get_object_vars($this)), AddTagsEvent::NAME);
         $this->eventDispatcher->dispatch(new AddMakerEvent((object) get_object_vars($this)), AddMakerEvent::NAME);
 
-        // replace tags in file storage
+        // Replace tags in file storage
         $this->replaceTags();
+
+        // Check yaml files
+        $this->checkYamlFiles();
 
         // Copy all the bundle files from the storage to the destination directories in vendor/vendorname/bundlename
         $this->createBundleFiles();
@@ -209,6 +213,51 @@ class BundleMaker
                     ->replaceTags($this->tagStorage, ['.tpl.'])
                     ;
             }
+        }
+    }
+
+    protected function checkYamlFiles(): void
+    {
+        /** @var Yaml $yamlAdapter */
+        $yamlAdapter = $this->framework->getAdapter(Yaml::class);
+
+        foreach ($this->fileStorage->getAll() as $arrFile) {
+            if ($this->fileStorage->hasFile($arrFile['target'])) {
+                $info = new \SplFileInfo($arrFile['target']);
+
+                if ('yaml' === $info->getExtension() || 'yml' === $info->getExtension()) {
+                    $strYaml = $this->fileStorage
+                        ->getFile($arrFile['target'])
+                        ->getContent()
+                    ;
+
+                    // Try to parse yaml file
+                    try {
+                        $yamlAdapter->parse($strYaml);
+                    } catch (ParseException $exception) {
+                        throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $arrFile['target'], $exception->getMessage()));
+                    }
+                }
+            }
+        }
+
+        // Validate config files
+        try {
+            $arrYaml = $yamlAdapter->parse($strYaml);
+
+            if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
+                if (!\array_key_exists('services', $arrYaml)) {
+                    throw new ParseException('Key "services" not found. Please check the indents.');
+                }
+            }
+
+            if ('parameters.tpl.yml' === $file) {
+                if (!\array_key_exists('parameters', $arrYaml)) {
+                    throw new ParseException('Key "parameters" not found. Please check the indents.');
+                }
+            }
+        } catch (ParseException $exception) {
+            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
         }
     }
 

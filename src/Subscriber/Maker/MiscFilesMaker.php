@@ -16,7 +16,6 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 final class MiscFilesMaker extends AbstractMaker
@@ -42,9 +41,6 @@ final class MiscFilesMaker extends AbstractMaker
     public function addFilesToStorage(AddMakerEvent $event): void
     {
         parent::addFilesToStorage($event);
-
-        /** @var Yaml $yamlAdapter */
-        $yamlAdapter = $this->framework->getAdapter(Yaml::class);
 
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
@@ -73,25 +69,6 @@ final class MiscFilesMaker extends AbstractMaker
 
             if (!$this->fileStorage->hasFile($target)) {
                 $this->fileStorage->addFile($source, $target);
-
-                // Validate config files
-                try {
-                    $arrYaml = $yamlAdapter->parse($this->fileStorage->getContent());
-
-                    if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
-                        if (!\array_key_exists('services', $arrYaml)) {
-                            throw new ParseException('Key "services" not found. Please check the indents.');
-                        }
-                    }
-
-                    if ('parameters.tpl.yml' === $file) {
-                        if (!\array_key_exists('parameters', $arrYaml)) {
-                            throw new ParseException('Key "parameters" not found. Please check the indents.');
-                        }
-                    }
-                } catch (ParseException $exception) {
-                    throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
-                }
             }
         }
 
