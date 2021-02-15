@@ -103,9 +103,9 @@ final class ComposerJsonMaker extends AbstractMaker
             $this->input->repositoryname
         );
 
-        // Version
-        if ($this->tagStorage->has('composerpackageversion')) {
-            $objComposer->version = $this->input->composerpackageversion;
+        // Version composerpackageversion
+        if (!empty(trim((string) $this->input->composerpackageversion))) {
+            $objComposer->version = trim((string) $this->input->composerpackageversion);
         }
 
         // Autoload
