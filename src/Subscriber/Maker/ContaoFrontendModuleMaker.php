@@ -59,6 +59,10 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
+        if (!$this->input->addFrontendModule) {
+            return;
+        }
+
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 
