@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Contao\Message as ContaoMessage;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -23,23 +24,25 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class Message
 {
-    /**
-     * @var string
-     */
-    private const SESSION_KEY_ERROR = 'contao.BE.error';
+    const CONTAO_SCOPE = 'BE';
 
     /**
      * @var string
      */
-    private const SESSION_KEY_INFO = 'contao.BE.info';
+    const SESSION_KEY_ERROR = 'contao.BE.error';
 
     /**
      * @var string
      */
-    private const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
+    const SESSION_KEY_INFO = 'contao.BE.info';
 
     /**
-     * @var SessionInterface
+     * @var string
+     */
+    const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
+
+    /**
+     * @var ContaoFramework
      */
     protected $framework;
 
@@ -61,22 +64,22 @@ class Message
         $this->framework = $framework;
         $this->session = $session;
 
-        $this->messageAdapter = $this->framework->getAdapter(\Contao\Message::class);
+        $this->messageAdapter = $this->framework->getAdapter(ContaoMessage::class);
     }
 
     public function hasInfo(): bool
     {
-        return $this->messageAdapter->hasInfo();
+        return $this->messageAdapter->hasInfo(static::CONTAO_SCOPE);
     }
 
     public function hasError(): bool
     {
-        return $this->messageAdapter->hasError();
+        return $this->messageAdapter->hasError(static::CONTAO_SCOPE);
     }
 
     public function hasConfirmation(): bool
     {
-        return $this->messageAdapter->hasConfirmation();
+        return $this->messageAdapter->hasConfirmation(static::CONTAO_SCOPE);
     }
 
     /**
@@ -84,7 +87,7 @@ class Message
      */
     public function addInfo(string $msg): void
     {
-        $this->messageAdapter->addInfo($msg);
+        $this->messageAdapter->addInfo($msg, static::CONTAO_SCOPE);
     }
 
     /**
@@ -92,7 +95,7 @@ class Message
      */
     public function addError(string $msg): void
     {
-        $this->messageAdapter->addError($msg);
+        $this->messageAdapter->addError($msg, static::CONTAO_SCOPE);
     }
 
     /**
@@ -100,7 +103,7 @@ class Message
      */
     public function addConfirmation(string $msg): void
     {
-        $this->messageAdapter->addConfirmation($msg);
+        $this->messageAdapter->addConfirmation($msg, static::CONTAO_SCOPE);
     }
 
     /**
