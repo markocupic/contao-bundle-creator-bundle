@@ -47,20 +47,25 @@ class MessageTest extends ContaoTestCase
         $this->assertInstanceOf(Message::class, $this->message);
     }
 
-    public function testAdd(): void
+    public function testAddInfo(): void
     {
         $this->message->addInfo('Info text 1.');
         $this->message->addInfo('Info text 2.');
+        $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
+    }
 
-        $this->message->addError('Error text 1.');
-        $this->message->addError('Error text 2.');
-
+    public function testAddConfirmation(): void
+    {
         $this->message->addConfirmation('Confirmation text 1.');
         $this->message->addConfirmation('Confirmation text 2.');
-
-        $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
-        $this->assertSame('Error text 2.', $this->message->getError()[1]);
         $this->assertSame('Confirmation text 2.', $this->message->getConfirmation()[1]);
+    }
+
+    public function testAddError(): void
+    {
+        $this->message->addError('Error text 1.');
+        $this->message->addError('Error text 2.');
+        $this->assertSame('Error text 2.', $this->message->getError()[1]);
     }
 
     private function mockFramework(): ContaoFramework
@@ -80,6 +85,6 @@ class MessageTest extends ContaoTestCase
             ->method('addConfirmation')
         ;
 
-        return $this->mockContaoFramework([Message::class => $adapterE, Message::class => $adapterI, Message::class => $adapterC]);
+        return $this->mockContaoFramework([\Contao\Message::class => $adapterE, \Contao\Message::class => $adapterI, \Contao\Message::class => $adapterC]);
     }
 }
