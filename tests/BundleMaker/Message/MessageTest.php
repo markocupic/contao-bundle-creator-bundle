@@ -17,6 +17,7 @@ namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Message;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Contao\Message as ContaoMessage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -80,11 +81,13 @@ class MessageTest extends ContaoTestCase
             ->method('addInfo')
         ;
 
+        $this->mockAdapter
+
         $adapterC = $this->mockAdapter(['addConfirmation']);
         $adapterC
             ->method('addConfirmation')
         ;
 
-        return $this->mockContaoFramework([\Contao\Message::class => $adapterE, \Contao\Message::class => $adapterI, \Contao\Message::class => $adapterC]);
+        return $this->mockContaoFramework([ContaoMessage::class => $adapterE, ContaoMessage::class => $adapterI, ContaoMessage::class => $adapterC]);
     }
 }
