@@ -81,8 +81,6 @@ class MessageTest extends ContaoTestCase
             ->method('addInfo')
         ;
 
-        $this->mockAdapter
-
         $adapterC = $this->mockAdapter(['addConfirmation']);
         $adapterC
             ->method('addConfirmation')
