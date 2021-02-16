@@ -99,9 +99,14 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
         }
 
         // Extend require key
-        $blnModified = true;
-        $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = 'dev-main';
+        $version = 'dev-main';
+
+        if (!empty(trim((string) $this->input->composerpackageversion))) {
+            $version = trim((string) $this->input->composerpackageversion);
+        }
+        $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = $version;
         $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
+        $blnModified = true;
 
         if ($blnModified) {
             /** @var Date $dateAdapter */
