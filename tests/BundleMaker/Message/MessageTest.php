@@ -15,9 +15,8 @@ declare(strict_types=1);
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Message;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Contao\Message as ContaoMessage;
+use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -27,20 +26,20 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class MessageTest extends ContaoTestCase
 {
+
     /**
-     * @var string
+     * @var Session 
      */
-    protected $tmpTargetFile;
+    protected $session;
 
     protected function setUp(): void
     {
         parent::setUp();
-        System::setContainer($this->getContainerWithContaoConfiguration());
 
+        $this->session = new Session(new MockArraySessionStorage());
         $framework = $this->mockFramework();
-        $session = new Session(new MockArraySessionStorage());
-
-        $this->message = new Message($framework, $session);
+        $this->message = new Message($framework, $this->session);
+        $this->message->addInfo('something');
     }
 
     public function testInstantiation(): void
@@ -48,16 +47,42 @@ class MessageTest extends ContaoTestCase
         $this->assertInstanceOf(Message::class, $this->message);
     }
 
-    public function testAddInfo(): void
+    public function testHasMessage(): void
     {
-        $this->message->addInfo('Info text 1.');
-        $this->message->addInfo('Info text 2.');
-        $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
+        $this->message->addInfo('something');
+        $this->assertTrue($this->message->hasInfo());
     }
 
-    private function mockFramework(): ContaoFramework
+    public function testGetMessage(): void
     {
-       $adapter = $this->mockAdapter(['addInfo']);
-       return  $this->mockContaoFramework([ContaoMessage::class => $adapter]);
+        $bag = $this->session->getFlashBag();
+        $bag->set(Message::SESSION_KEY_INFO, ['something']);
+        $bag->set(Message::SESSION_KEY_ERROR, ['something wrong']);
+        $bag->set(Message::SESSION_KEY_CONFIRM, ['something else']);
+
+        $this->assertSame('something', $this->message->getInfo()[0]);
+        $this->assertSame('something wrong', $this->message->getError()[0]);
+        $this->assertSame('something else', $this->message->getConfirmation()[0]);
+    }
+
+    private function mockFramework($expectError = true): ContaoFramework
+    {
+        $adapter = $this->mockAdapter(['addInfo', 'hasInfo']);
+
+        $adapter
+            ->method('addInfo')
+            ->with('something')
+        ;
+
+        $adapter
+            ->method('hasInfo')
+            ->willReturn(true)
+        ;
+
+        $adapters = [
+            ContaoMessage::class => $adapter,
+        ];
+
+        return $this->mockContaoFramework($adapters);
     }
 }
