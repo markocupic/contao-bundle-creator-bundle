@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleMakerBundle\Tests\BundleMaker\Message;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
@@ -35,8 +36,10 @@ class MessageTest extends ContaoTestCase
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
+        $framework = $this->mockContaoFramework();
         $session = new Session(new MockArraySessionStorage());
-        $this->message = new Message($session);
+        
+        $this->message = new Message($session, $framework);
     }
 
     public function testInstantiation(): void
