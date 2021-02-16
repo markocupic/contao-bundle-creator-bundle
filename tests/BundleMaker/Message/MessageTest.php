@@ -71,21 +71,11 @@ class MessageTest extends ContaoTestCase
 
     private function mockFramework(): ContaoFramework
     {
-        $adapterE = $this->mockAdapter(['addError']);
-        $adapterE
-            ->method('addError')
-        ;
+        $adapters = [
+            ContaoMessage::class => $messageAdapter,
+        ];
 
-        $adapterI = $this->mockAdapter(['addInfo']);
-        $adapterI
-            ->method('addInfo')
-        ;
+       return $this->mockContaoFramework($adapters);
 
-        $adapterC = $this->mockAdapter(['addConfirmation']);
-        $adapterC
-            ->method('addConfirmation')
-        ;
-
-        return $this->mockContaoFramework([ContaoMessage::class => $adapterE, ContaoMessage::class => $adapterI, ContaoMessage::class => $adapterC]);
     }
 }
