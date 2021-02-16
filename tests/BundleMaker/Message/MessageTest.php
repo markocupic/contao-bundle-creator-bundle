@@ -38,8 +38,8 @@ class MessageTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework();
         $session = new Session(new MockArraySessionStorage());
-        
-        $this->message = new Message($session, $framework);
+
+        $this->message = new Message($framework, $session);
     }
 
     public function testInstantiation(): void
