@@ -55,27 +55,9 @@ class MessageTest extends ContaoTestCase
         $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
     }
 
-    public function testAddConfirmation(): void
-    {
-        $this->message->addConfirmation('Confirmation text 1.');
-        $this->message->addConfirmation('Confirmation text 2.');
-        $this->assertSame('Confirmation text 2.', $this->message->getConfirmation()[1]);
-    }
-
-    public function testAddError(): void
-    {
-        $this->message->addError('Error text 1.');
-        $this->message->addError('Error text 2.');
-        $this->assertSame('Error text 2.', $this->message->getError()[1]);
-    }
-
     private function mockFramework(): ContaoFramework
     {
-        $adapters = [
-            ContaoMessage::class => $messageAdapter,
-        ];
-
-       return $this->mockContaoFramework($adapters);
-
+       $adapter = $this->mockAdapter(['addInfo']);
+       return  $this->mockContaoFramework([ContaoMessage::class => $adapter]);
     }
 }
