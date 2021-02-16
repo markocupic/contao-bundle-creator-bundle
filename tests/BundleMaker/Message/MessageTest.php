@@ -26,9 +26,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class MessageTest extends ContaoTestCase
 {
-
     /**
-     * @var Session 
+     * @var Session
      */
     protected $session;
 
@@ -37,9 +36,7 @@ class MessageTest extends ContaoTestCase
         parent::setUp();
 
         $this->session = new Session(new MockArraySessionStorage());
-        $framework = $this->mockFramework();
-        $this->message = new Message($framework, $this->session);
-        $this->message->addInfo('something');
+        $this->message = new Message($this->mockFramework(), $this->session);
     }
 
     public function testInstantiation(): void
@@ -51,6 +48,12 @@ class MessageTest extends ContaoTestCase
     {
         $this->message->addInfo('something');
         $this->assertTrue($this->message->hasInfo());
+
+        $this->message->addError('something');
+        $this->assertTrue($this->message->hasError());
+
+        $this->message->addConfirmation('something');
+        $this->assertTrue($this->message->hasConfirmation());
     }
 
     public function testGetMessage(): void
@@ -67,7 +70,7 @@ class MessageTest extends ContaoTestCase
 
     private function mockFramework($expectError = true): ContaoFramework
     {
-        $adapter = $this->mockAdapter(['addInfo', 'hasInfo']);
+        $adapter = $this->mockAdapter(['addInfo', 'addError', 'addConfirmation', 'hasInfo', 'hasError', 'hasConfirmation']);
 
         $adapter
             ->method('addInfo')
@@ -75,7 +78,27 @@ class MessageTest extends ContaoTestCase
         ;
 
         $adapter
+            ->method('addError')
+            ->with('something')
+        ;
+
+        $adapter
+            ->method('addConfirmation')
+            ->with('something')
+        ;
+
+        $adapter
             ->method('hasInfo')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->method('hasError')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->method('hasConfirmation')
             ->willReturn(true)
         ;
 
