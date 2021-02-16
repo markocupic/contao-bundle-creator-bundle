@@ -42,26 +42,6 @@ class MessageTest extends ContaoTestCase
         $this->message = new Message($framework, $session);
     }
 
-    private function mockFramework(): ContaoFramework
-    {
-
-
-        $adapter1 = $this->mockAdapter(['addError']);
-        $adapter1
-            ->method('addError')
-        ;
-
-        $adapter2 = $this->mockAdapter(['addInfo']);
-        $adapter2
-            ->method('addError')
-        ;
-
-        $framework = $this->mockContaoFramework([Message::class => $adapter1, Message::class => $adapter2]);
-
-
-        return $framework;
-    }
-
     public function testInstantiation(): void
     {
         $this->assertInstanceOf(Message::class, $this->message);
@@ -75,7 +55,31 @@ class MessageTest extends ContaoTestCase
         $this->message->addError('Error text 1.');
         $this->message->addError('Error text 2.');
 
+        $this->message->addConfirmation('Confirmation text 1.');
+        $this->message->addConfirmation('Confirmation text 2.');
+
         $this->assertSame('Info text 1.', $this->message->getInfo()[0]);
         $this->assertSame('Error text 2.', $this->message->getError()[1]);
+        $this->assertSame('Confirmation text 2.', $this->message->getConfirmation()[1]);
+    }
+
+    private function mockFramework(): ContaoFramework
+    {
+        $adapterE = $this->mockAdapter(['addError']);
+        $adapterE
+            ->method('addError')
+        ;
+
+        $adapterI = $this->mockAdapter(['addInfo']);
+        $adapterI
+            ->method('addInfo')
+        ;
+
+        $adapterC = $this->mockAdapter(['addConfirmation']);
+        $adapterC
+            ->method('addConfirmation')
+        ;
+
+        return $this->mockContaoFramework([Message::class => $adapterE, Message::class => $adapterI, Message::class => $adapterC]);
     }
 }
