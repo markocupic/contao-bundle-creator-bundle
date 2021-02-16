@@ -36,10 +36,30 @@ class MessageTest extends ContaoTestCase
         parent::setUp();
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->mockFramework();
         $session = new Session(new MockArraySessionStorage());
 
         $this->message = new Message($framework, $session);
+    }
+
+    private function mockFramework(): ContaoFramework
+    {
+
+
+        $adapter1 = $this->mockAdapter(['addError']);
+        $adapter1
+            ->method('addError')
+        ;
+
+        $adapter2 = $this->mockAdapter(['addInfo']);
+        $adapter2
+            ->method('addError')
+        ;
+
+        $framework = $this->mockContaoFramework([Message::class => $adapter1, Message::class => $adapter2]);
+
+
+        return $framework;
     }
 
     public function testInstantiation(): void
