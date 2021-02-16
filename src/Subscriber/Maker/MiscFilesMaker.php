@@ -20,11 +20,13 @@ use Symfony\Component\Yaml\Yaml;
 
 final class MiscFilesMaker extends AbstractMaker
 {
+    const PRIORITY = 950;
+
     public static function getSubscribedEvents(): array
     {
         return [
-            AddTagsEvent::NAME => ['addTagsToStorage', 950],
-            AddMakerEvent::NAME => ['addFilesToStorage', 950],
+            AddTagsEvent::NAME => ['addTagsToStorage', self::PRIORITY],
+            AddMakerEvent::NAME => ['addFilesToStorage', self::PRIORITY],
         ];
     }
 

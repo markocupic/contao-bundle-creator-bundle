@@ -19,11 +19,13 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ComposerJsonMaker extends AbstractMaker
 {
+    const PRIORITY = 1000;
+
     public static function getSubscribedEvents(): array
     {
         return [
-            AddTagsEvent::NAME => ['addTagsToStorage', 1000],
-            AddMakerEvent::NAME => ['addFilesToStorage', 1000],
+            AddTagsEvent::NAME => ['addTagsToStorage', self::PRIORITY],
+            AddMakerEvent::NAME => ['addFilesToStorage', self::PRIORITY],
         ];
     }
 

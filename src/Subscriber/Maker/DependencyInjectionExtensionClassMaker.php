@@ -20,11 +20,13 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class DependencyInjectionExtensionClassMaker extends AbstractMaker
 {
+    const PRIORITY = 980;
+
     public static function getSubscribedEvents(): array
     {
         return [
-            AddTagsEvent::NAME => ['addTagsToStorage', 980],
-            AddMakerEvent::NAME => ['addFilesToStorage', 980],
+            AddTagsEvent::NAME => ['addTagsToStorage', self::PRIORITY],
+            AddMakerEvent::NAME => ['addFilesToStorage', self::PRIORITY],
         ];
     }
 

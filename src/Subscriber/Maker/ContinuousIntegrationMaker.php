@@ -19,11 +19,13 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ContinuousIntegrationMaker extends AbstractMaker
 {
+    const PRIORITY = 960;
+
     public static function getSubscribedEvents(): array
     {
         return [
-            AddTagsEvent::NAME => ['addTagsToStorage', 960],
-            AddMakerEvent::NAME => ['addFilesToStorage', 960],
+            AddTagsEvent::NAME => ['addTagsToStorage', self::PRIORITY],
+            AddMakerEvent::NAME => ['addFilesToStorage', self::PRIORITY],
         ];
     }
 

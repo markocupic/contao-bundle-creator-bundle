@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -25,12 +26,22 @@ class Message
     /**
      * @var string
      */
-    private const STR_INFO_FLASH_TYPE = 'contao.BE.info';
+    private const SESSION_KEY_ERROR = 'contao.BE.error';
 
     /**
      * @var string
      */
-    private const STR_ERROR_FLASH_TYPE = 'contao.BE.error';
+    private const SESSION_KEY_INFO = 'contao.BE.info';
+
+    /**
+     * @var string
+     */
+    private const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
+
+    /**
+     * @var SessionInterface
+     */
+    protected $framework;
 
     /**
      * @var SessionInterface
@@ -38,11 +49,34 @@ class Message
     protected $session;
 
     /**
+     * @var \Contao\Message
+     */
+    protected $messageAdapter;
+
+    /**
      * Message constructor.
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(ContaoFramework $framework, SessionInterface $session)
     {
+        $this->framework = $framework;
         $this->session = $session;
+
+        $this->messageAdapter = $this->framework->getAdapter(\Contao\Message::class);
+    }
+
+    public function hasInfo(): bool
+    {
+        return $this->messageAdapter->hasInfo();
+    }
+
+    public function hasError(): bool
+    {
+        return $this->messageAdapter->hasError();
+    }
+
+    public function hasConfirmation(): bool
+    {
+        return $this->messageAdapter->hasConfirmation();
     }
 
     /**
@@ -50,7 +84,7 @@ class Message
      */
     public function addInfo(string $msg): void
     {
-        $this->addFlashMessage($msg, self::STR_INFO_FLASH_TYPE);
+        $this->messageAdapter->addInfo($msg);
     }
 
     /**
@@ -58,7 +92,15 @@ class Message
      */
     public function addError(string $msg): void
     {
-        $this->addFlashMessage($msg, self::STR_ERROR_FLASH_TYPE);
+        $this->messageAdapter->addError($msg);
+    }
+
+    /**
+     * Add a confirmation message to the contao backend.
+     */
+    public function addConfirmation(string $msg): void
+    {
+        $this->messageAdapter->addConfirmation($msg);
     }
 
     /**
@@ -66,7 +108,7 @@ class Message
      */
     public function getInfo(): array
     {
-        return $this->getFlashMessages(self::STR_INFO_FLASH_TYPE);
+        return $this->getFlashMessages(self::SESSION_KEY_INFO);
     }
 
     /**
@@ -74,26 +116,15 @@ class Message
      */
     public function getError(): array
     {
-        return $this->getFlashMessages(self::STR_ERROR_FLASH_TYPE);
+        return $this->getFlashMessages(self::SESSION_KEY_ERROR);
     }
 
     /**
-     * Add a message to the contao backend.
+     * Get confirmation messages.
      */
-    private function addFlashMessage(string $msg, string $type): void
+    public function getConfirmation(): array
     {
-        /** @var Session $session */
-        $session = $this->session;
-        $flashBag = $session->getFlashBag();
-        $arrFlash = [];
-
-        if ($flashBag->has($type)) {
-            $arrFlash = $flashBag->get($type);
-        }
-
-        $arrFlash[] = $msg;
-
-        $flashBag->set($type, $arrFlash);
+        return $this->getFlashMessages(self::SESSION_KEY_CONFIRM);
     }
 
     /**
@@ -104,12 +135,7 @@ class Message
         /** @var Session $session */
         $session = $this->session;
         $flashBag = $session->getFlashBag();
-        $arrFlash = [];
 
-        if ($flashBag->has($type)) {
-            $arrFlash = $flashBag->get($type);
-        }
-
-        return $arrFlash;
+        return $flashBag->get($type, []);
     }
 }

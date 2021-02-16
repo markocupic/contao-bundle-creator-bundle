@@ -1,4 +1,8 @@
 services:
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\AlterRootComposerJsonMaker:
+    tags:
+      - { name: kernel.event_subscriber }
+
   Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\SessionAttributeBagMaker:
     tags:
       - { name: kernel.event_subscriber }

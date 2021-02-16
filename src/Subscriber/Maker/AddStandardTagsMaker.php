@@ -20,12 +20,14 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class AddStandardTagsMaker extends AbstractMaker
 {
+    const PRIORITY = 10000;
+
     public static function getSubscribedEvents(): array
     {
         return [
             // This subscriber should be executed first!!!
-            AddTagsEvent::NAME => ['addTagsToStorage', 10000],
-            AddMakerEvent::NAME => ['addFilesToStorage', 10000],
+            AddTagsEvent::NAME => ['addTagsToStorage', self::PRIORITY],
+            AddMakerEvent::NAME => ['addFilesToStorage', self::PRIORITY],
         ];
     }
 

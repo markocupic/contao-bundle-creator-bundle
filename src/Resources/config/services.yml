@@ -26,6 +26,7 @@ services:
   markocupic.contao_bundle_creator_bundle.bundle_maker.message.message:
     class: Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message
     arguments:
+      - '@contao.framework'
       - '@session'
     public: true
 

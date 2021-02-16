@@ -121,27 +121,40 @@ class BundleMaker
 
         $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
 
-        // Keep the application extensible.
-        // Add maker classes to add tags & files to the bundle.
-        // Store maker classes in src/Subscriber/Maker
-        // Implement these makers as event subscribers.
+        /*
+         * Keep the application extensible.
+         * Add maker classes to add tags & files to the bundle.
+         * Store maker classes in src/Subscriber/Maker and
+         * implement these makers as event subscribers.
+         *
+         * 1. Add all the necessary tags to the tag storage.
+         */
         $this->eventDispatcher->dispatch(new AddTagsEvent((object) get_object_vars($this)), AddTagsEvent::NAME);
+
+        /*
+         * 2. Add all the files to a virtual file storage.
+         */
         $this->eventDispatcher->dispatch(new AddMakerEvent((object) get_object_vars($this)), AddMakerEvent::NAME);
 
-        // Replace tags in file storage
+        /*
+         * 3. Replace tags in file storage.
+         */
         $this->replaceTags();
 
-        // Check yaml files
+        /*
+         * 4. Check yaml/yml files.
+         */
         $this->checkYamlFiles();
 
-        // Copy all the bundle files from the storage to the destination directories in vendor/vendorname/bundlename
-        $this->createBundleFiles();
+        /*
+         * 5. Copy all the bundle files from the virtual storage to the destination directories in vendor/vendorname/bundlename.
+         */
+        $this->writeBundleFiles();
 
-        // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
+        /*
+         * 6. Store new bundle also as a zip-package in system/tmp for downloading it after the generating process.
+         */
         $this->generateZipArchive();
-
-        // Optionally extend the composer.json file located in the root directory
-        $this->editRootComposerJson();
     }
 
     /**
@@ -216,6 +229,9 @@ class BundleMaker
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function checkYamlFiles(): void
     {
         /** @var Yaml $yamlAdapter */
@@ -231,41 +247,23 @@ class BundleMaker
                         ->getContent()
                     ;
 
-                    // Try to parse yaml file
-                    try {
-                        $yamlAdapter->parse($strYaml);
-                    } catch (ParseException $exception) {
-                        throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $arrFile['target'], $exception->getMessage()));
-                    }
+                    // Validate yaml files
+                    $yamlAdapter->parse($strYaml);
                 }
             }
-        }
-
-        // Validate config files
-        try {
-            $arrYaml = $yamlAdapter->parse($strYaml);
-
-            if ('listener.tpl.yml' === $file || 'services.tpl.yml' === $file) {
-                if (!\array_key_exists('services', $arrYaml)) {
-                    throw new ParseException('Key "services" not found. Please check the indents.');
-                }
-            }
-
-            if ('parameters.tpl.yml' === $file) {
-                if (!\array_key_exists('parameters', $arrYaml)) {
-                    throw new ParseException('Key "parameters" not found. Please check the indents.');
-                }
-            }
-        } catch (ParseException $exception) {
-            throw new ParseException(sprintf('Unable to parse the YAML string in %s: %s', $target, $exception->getMessage()));
         }
     }
 
     /**
      * Write files from the file storage to the filesystem.
      */
-    protected function createBundleFiles(): void
+    protected function writeBundleFiles(): void
     {
+        // Do not create the bundle, if there is an error.
+        if ($this->message->hasError()) {
+            return;
+        }
+
         foreach ($this->fileStorage->getAll() as $arrFile) {
             if (false !== $this->fileStorage->createFile($arrFile['target'])) {
                 // Display message in the backend
@@ -277,83 +275,6 @@ class BundleMaker
         }
 
         // Display message in the backend
-        $this->message->addInfo('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
-    }
-
-    /**
-     * Optionally edit the composer.json file located in the root directory.
-     *
-     * @throws \Exception
-     */
-    protected function editRootComposerJson(): void
-    {
-        $blnModified = false;
-
-        $content = file_get_contents($this->projectDir.'/composer.json');
-        $objJSON = json_decode($content);
-
-        if ($this->input->editRootComposer) {
-            if (!isset($objJSON->repositories)) {
-                $objJSON->repositories = [];
-            }
-
-            $objRepositories = new \stdClass();
-
-            if ('path' === $this->input->rootcomposerextendrepositorieskey) {
-                $objRepositories->type = 'path';
-                $objRepositories->url = sprintf(
-                    'vendor/%s/%s',
-                    $this->input->vendorname,
-                    $this->input->repositoryname
-                );
-
-                // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories, false)) {
-                    $blnModified = true;
-                    $objJSON->repositories[] = $objRepositories;
-                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
-                }
-            }
-
-            if ('vcs-github' === $this->input->rootcomposerextendrepositorieskey) {
-                $objRepositories->type = 'vcs';
-                $objRepositories->url = sprintf(
-                    'https://github.com/%s/%s',
-                    $this->input->vendorname,
-                    $this->input->repositoryname
-                );
-
-                // Prevent duplicate entries
-                if (!\in_array($objRepositories, $objJSON->repositories, false)) {
-                    $blnModified = true;
-                    $objJSON->repositories[] = $objRepositories;
-                    $this->message->addInfo('Extended the repositories section in the root composer.json. Please check!');
-                }
-            }
-
-            // Extend require key
-            $blnModified = true;
-            $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = 'dev-main';
-            $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
-        }
-
-        if ($blnModified) {
-            // Make a backup first
-            $strBackupPath = sprintf(
-                'system/tmp/composer_backup_%s.json',
-                Date::parse('Y-m-d _H-i-s', time())
-            );
-
-            copy(
-                $this->projectDir.\DIRECTORY_SEPARATOR.'composer.json',
-                $this->projectDir.\DIRECTORY_SEPARATOR.$strBackupPath
-            );
-
-            $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
-
-            // Append modifications
-            $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            file_put_contents($this->projectDir.'/composer.json', $content);
-        }
+        $this->message->addConfirmation('Added one or more files to the bundle. Please run at least "composer install" or even "composer update", if you have made changes to the root composer.json.');
     }
 }

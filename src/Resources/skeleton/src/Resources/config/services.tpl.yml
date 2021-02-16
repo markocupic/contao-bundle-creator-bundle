@@ -1,5 +1,4 @@
 services:
-
 <?php if($this->addFrontendModule): ?>
     # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
