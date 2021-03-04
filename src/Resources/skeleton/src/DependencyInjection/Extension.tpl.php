@@ -10,17 +10,36 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+<?php if($this->addFriendlyConfiguration): ?>
+use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\Configuration;
+<?php endif; ?>
 
 /**
  * Class <?= $this->dependencyinjectionextensionclassname ?><?= "\n" ?>
  */
 class <?= $this->dependencyinjectionextensionclassname ?> extends Extension
 {
+<?php if($this->addFriendlyConfiguration): ?><?= "\n" ?>
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlias()
+    {
+        return Configuration::ROOT_KEY;
+    }
+<?php endif; ?>
+
     /**
      * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+<?php if($this->addFriendlyConfiguration): ?><?= "\n" ?>
+        $configuration = new Configuration();
+
+        $config = $this->processConfiguration($configuration, $configs);
+<?php endif; ?>
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')
@@ -29,5 +48,11 @@ class <?= $this->dependencyinjectionextensionclassname ?> extends Extension
         $loader->load('parameters.yml');
         $loader->load('services.yml');
         $loader->load('listener.yml');
+
+<?php if($this->addFriendlyConfiguration): ?><?= "\n" ?>
+        $rootKey = $this->getAlias();
+
+        $container->setParameter($rootKey.'.foo.bar', $config['foo']['bar']);
+<?php endif; ?>
     }
 }

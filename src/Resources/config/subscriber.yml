@@ -3,6 +3,10 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+  Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\FriendlyConfigurationMaker:
+    tags:
+      - { name: kernel.event_subscriber }
+
   Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker\SessionAttributeBagMaker:
     tags:
       - { name: kernel.event_subscriber }

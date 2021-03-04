@@ -13,7 +13,8 @@ Es können...
 - ein Backendmodul generiert werden.
 - ein Inhaltselement generiert werden. 
 - eine custom route (https://myhostname.ch/my_custom) generiert werden.
-- eine custom session bag generiert werden
+- eine custom session bag generiert werden.
+- eine Basisklasse (mit custom root key) für eine friendly configuration generiert werden.
 
 Alle nötigen Konfigurationsdaten werden automatisch erstellt.
 

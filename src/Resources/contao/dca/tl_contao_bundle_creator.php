@@ -86,15 +86,18 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = array(
 	// Palettes
 	'palettes'    => array(
 		'__selector__' => array('editRootComposer', 'addBackendModule', 'addFrontendModule', 'addContentElement'),
-		'default'      => '{bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;
-        {composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;
-        {rootcomposer_settings_legend},editRootComposer;
-        {dcatable_settings_legend},addBackendModule;
-        {frontendmodule_settings_legend},addFrontendModule;
-        {contentelement_settings_legend},addContentElement;
-        {custom_route_settings_legend},addCustomRoute;
-        {custom_session_attribute_settings_legend},addSessionAttribute;
-        {coding_style_legend},addEasyCodingStandard'
+		'default'      => '
+		    {bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;
+            {composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;
+            {rootcomposer_settings_legend},editRootComposer;
+            {dcatable_settings_legend},addBackendModule;
+            {frontendmodule_settings_legend},addFrontendModule;
+            {contentelement_settings_legend},addContentElement;
+            {custom_route_settings_legend},addCustomRoute;
+            {custom_session_attribute_settings_legend},addSessionAttribute;
+            {friendly_configuration_settings_legend},addFriendlyConfiguration;
+            {coding_style_legend},addEasyCodingStandard
+            ',
 	),
 	// Subpalettes
 	'subpalettes' => array(
@@ -354,19 +357,25 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = array(
 		'addCustomRoute'                    => array(
 			'exclude'   => true,
 			'inputType' => 'checkbox',
-			'eval'      => array('submitOnChange' => false, 'tl_class' => 'w50 clr'),
+			'eval'      => array('tl_class' => 'w50 clr'),
 			'sql'       => "char(1) NOT NULL default ''"
 		),
 		'addEasyCodingStandard'                    => array(
 			'exclude'   => true,
 			'inputType' => 'checkbox',
-			'eval'      => array('submitOnChange' => false, 'tl_class' => 'w50 clr'),
+			'eval'      => array('tl_class' => 'w50 clr'),
 			'sql'       => "char(1) NOT NULL default ''"
 		),
 		'addSessionAttribute'                    => array(
 			'exclude'   => true,
 			'inputType' => 'checkbox',
-			'eval'      => array('submitOnChange' => false, 'tl_class' => 'w50 clr'),
+			'eval'      => array('tl_class' => 'w50 clr'),
+			'sql'       => "char(1) NOT NULL default ''"
+		),
+		'addFriendlyConfiguration'                  => array(
+			'exclude'   => true,
+			'inputType' => 'checkbox',
+			'eval'      => array('tl_class' => 'w50 clr'),
 			'sql'       => "char(1) NOT NULL default ''"
 		),
 	)

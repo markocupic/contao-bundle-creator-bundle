@@ -65,6 +65,10 @@
                 <source>Session attribute settings</source>
             </trans-unit>
 
+            <trans-unit id="tl_contao_bundle_creator.friendly_configuration_settings_legend">
+                <source>Friendly configuration settings</source>
+            </trans-unit>
+
             <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
                 <source>Coding Style Tools</source>
             </trans-unit>
@@ -322,6 +326,14 @@
 
             <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.1">
                 <source>Add an extra session attribute (session bag).</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.0">
+                <source>Add friendly configuration</source>
+            </trans-unit>
+
+            <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.1">
+                <source>Add friendly configuration.</source>
             </trans-unit>
 
         </body>

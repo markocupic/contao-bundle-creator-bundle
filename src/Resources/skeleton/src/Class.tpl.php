@@ -9,6 +9,9 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>;
 <?php if($this->addSessionAttribute): ?>
 use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\Compiler\AddSessionBagsPass;
 <?php endif; ?>
+<?php if($this->addFriendlyConfiguration): ?>
+use <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\<?= $this->dependencyinjectionextensionclassname ?>;
+<?php endif; ?>
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -17,6 +20,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class <?= $this->toplevelnamespace ?><?= $this->sublevelnamespace ?> extends Bundle
 {
+<?php if($this->addFriendlyConfiguration): ?>
+	public function getContainerExtension(): <?= $this->dependencyinjectionextensionclassname ?><?= "\n" ?>
+	{
+		return new <?= $this->dependencyinjectionextensionclassname ?>();
+	}
+
+<?php endif; ?>
 	/**
 	 * {@inheritdoc}
 	 */
