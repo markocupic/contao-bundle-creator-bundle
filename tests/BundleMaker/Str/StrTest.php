@@ -170,7 +170,7 @@ class StrTest extends ContaoTestCase
         $this->assertSame(Str::asContaoFrontendModuleType($test), $actual);
 
         $test = 'my_ Custom99___';
-        $actual = 'my_custom99_';
+        $actual = 'my_custom99';
         $this->assertSame(Str::asContaoFrontendModuleType($test), $actual);
     }
 
