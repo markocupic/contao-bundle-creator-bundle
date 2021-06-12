@@ -112,8 +112,8 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.repositoryname.0">
-                <source>(Github-) repository name (use &quot;contao-&quot; as prefix and &quot;-bundle&quot; as suffix)</source>
-                <target>(Github-) Repository Name (mit &quot;contao-&quot; als Prefix und &quot;-bundle&quot; als Suffix)</target>
+                <source>(Github-) repository name (use &quot;contao-&quot; as prefix)</source>
+                <target>(Github-) Repository-Name (verwenden Sie &amp;quot;contao-&amp;quot; als Präfix).</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.repositoryname.1">
@@ -302,8 +302,8 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.0">
-                <source>Frontend module type (snakecase with &quot;_module&quot; as a suffix)</source>
-                <target>Frontendmodul-Typ (snakecase mit &quot;_module&quot; als suffix)</target>
+                <source>Frontend module type (snakecase)</source>
+                <target>Frontendmodul-Typ (snakecase)</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.1">
@@ -352,8 +352,8 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
-                <source>Content element type (snakecase with &quot;_element&quot; as a suffix)</source>
-                <target>Inhaltselement-Typ (snakecase mit &quot;_element&quot; als suffix)</target>
+                <source>Content element type (snakecase)</source>
+                <target>Inhaltselement-Typ (snakecase)</target>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">
