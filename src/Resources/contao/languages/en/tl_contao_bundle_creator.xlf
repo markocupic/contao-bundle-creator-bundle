@@ -90,7 +90,7 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.repositoryname.0">
-                <source>(Github-) repository name (use &quot;contao-&quot; as prefix and &quot;-bundle&quot; as suffix)</source>
+                <source>(Github-) repository name (use &quot;contao-&quot; as prefix)</source>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.repositoryname.1">
@@ -242,7 +242,7 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.0">
-                <source>Frontend module type (snakecase with &quot;_module&quot; as a suffix)</source>
+                <source>Frontend module type (snakecase)</source>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.1">
@@ -282,7 +282,7 @@
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
-                <source>Content element type (snakecase with &quot;_element&quot; as a suffix)</source>
+                <source>Content element type (snakecase)</source>
             </trans-unit>
 
             <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">

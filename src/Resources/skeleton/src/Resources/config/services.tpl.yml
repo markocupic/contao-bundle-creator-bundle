@@ -2,24 +2,26 @@ services:
 <?php if($this->addFrontendModule): ?>
 
     # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
+    # We used annotations for tagging the frontend module category, the frontend module type and the frontend module template
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
         arguments:
             - '@session'
         tags:
-            - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
             - { name: container.service_subscriber }
         public: true
+        # Since Symfony 5 the container has to be set manually
         calls:
             - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
     <?php endif; ?>
 <?php if($this->addContentElement): ?>
 
     # Contao content element <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?><?="\n" ?>
+    # We used annotations for tagging the frontend element category, the frontend element type and the frontend element template
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?>:
         tags:
-            - { name: contao.content_element, category: <?= $this->contentelementcategory ?>, template: <?= $this->contentelementtemplate ?>, type: <?= $this->contentelementtype ?> }
             - { name: container.service_subscriber }
         public: true
+        # Since Symfony 5 the container has to be set manually
         calls:
             - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]<?php endif; ?>
 <?php if($this->addCustomRoute): ?>
@@ -29,6 +31,7 @@ services:
         arguments:
             - '@twig'
         public: true
+        # Since Symfony 5 the container has to be set manually
         calls:
             - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
     <?php endif; ?>

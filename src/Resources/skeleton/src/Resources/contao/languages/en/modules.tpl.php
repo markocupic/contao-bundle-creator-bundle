@@ -1,7 +1,11 @@
 <?= "<?php\n" ?>
 
+declare(strict_types=1);
+
 <?= $this->phpdoc ?>
 <?php if($this->addBackendModule): ?>
+
+use <?= $this->fullyquallifiedfrontendmoduleclassname ?>;
 
 /**
  * Backend modules
@@ -19,5 +23,5 @@ $GLOBALS['TL_LANG']['MOD']['<?= $this->backendmoduletype ?>'] = ['<?= $this->bac
 <?php if($this->frontendmodulecategorytrans != ""): ?>
 $GLOBALS['TL_LANG']['FMD']['<?= $this->frontendmodulecategory ?>'] = '<?= $this->frontendmodulecategorytrans ?>';
 <?php endif; ?>
-$GLOBALS['TL_LANG']['FMD']['<?= $this->frontendmoduletype ?>'] = ['<?= $this->frontendmoduletrans_0 ?>', '<?= $this->frontendmoduletrans_1 ?>'];
+$GLOBALS['TL_LANG']['FMD'][<?= $this->frontendmoduleclassname ?>::TYPE] = ['<?= $this->frontendmoduletrans_0 ?>', '<?= $this->frontendmoduletrans_1 ?>'];
 <?php endif; ?>

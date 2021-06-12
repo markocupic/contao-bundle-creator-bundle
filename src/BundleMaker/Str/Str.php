@@ -162,13 +162,13 @@ final class Str
     }
 
     /**
-     * Get the frontend module type (f.ex. my_custom_module)
-     * Convention => snakecase with suffix "_module".
+     * Get the frontend module type (f.ex. my_custom)
+     * Convention => snakecase
      *
      * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
-     * @param string $suffix
+     * @param string $suffix (add a suffix e.g. "_module")
      */
-    public static function asContaoFrontendModuleType(string $value, $suffix = '_module'): string
+    public static function asContaoFrontendModuleType(string $value, $suffix = ''): string
     {
         $value = self::asSnakeCase((string) $value);
 
@@ -197,13 +197,13 @@ final class Str
     }
 
     /**
-     * Get the content element type (f.ex. my_custom_element)
-     * Convention => snakecase with suffix "_element".
+     * Get the content element type (f.ex. my_custom)
+     * Convention => snakecase
      *
      * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
-     * @param string $suffix
+     * @param string $suffix (add a suffix e.g. "_element")
      */
-    public static function asContaoContentElementType(string $value, $suffix = '_element'): string
+    public static function asContaoContentElementType(string $value, $suffix = ''): string
     {
         $value = self::asSnakeCase((string) $value);
 
