@@ -9,6 +9,7 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contro
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
@@ -23,9 +24,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class <?= $this->frontendmoduleclassname ?><?= "\n" ?>
+ *
+ * @FrontendModule(<?= $this->frontendmoduleclassname ?>::TYPE, category="<?= $this->frontendmodulecategory ?>", template="<?= $this->frontendmoduletemplate ?>")
  */
 class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
 {
+    public const TYPE = '<?= $this->frontendmoduletype ?>';
+
     /**
      * @var SessionInterface
      */

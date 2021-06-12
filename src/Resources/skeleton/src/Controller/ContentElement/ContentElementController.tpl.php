@@ -8,15 +8,20 @@ namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Contro
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class <?= $this->contentelementclassname ?><?= "\n" ?>
+ *
+ * @ContentElement(<?= $this->contentelementclassname ?>::TYPE, category="<?= $this->contentelementcategory ?>", template="<?= $this->contentelementtemplate ?>")
  */
 class <?= $this->contentelementclassname ?> extends AbstractContentElementController
 {
+    public const TYPE = '<?= $this->contentelementtype ?>';
+
     /**
      * Generate the content element
      */

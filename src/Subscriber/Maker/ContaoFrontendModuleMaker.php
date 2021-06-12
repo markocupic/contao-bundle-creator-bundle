@@ -43,7 +43,13 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
         $strAdapter = $this->framework->getAdapter(Str::class);
 
         $stringUtilAdaper = $this->framework->getAdapter(StringUtil::class);
-        $this->tagStorage->set('frontendmoduleclassname', $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype));
+
+        $toplevelnamespace = $strAdapter->asClassName((string) $this->input->vendorname);
+        $sublevelnamespace = $strAdapter->asClassName((string) $this->input->repositoryname);
+        $frontendmoduleclassname = $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
+
+        $this->tagStorage->set('fullyquallifiedfrontendmoduleclassname', sprintf('%s\%s\Controller\FrontendModule\%s', $toplevelnamespace, $sublevelnamespace, $frontendmoduleclassname));
+        $this->tagStorage->set('frontendmoduleclassname', $frontendmoduleclassname);
         $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
         $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
         $this->tagStorage->set('frontendmoduletemplate', $strAdapter->asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));

@@ -45,6 +45,12 @@ final class ContaoContentElementMaker extends AbstractMaker
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 
+        $toplevelnamespace = $strAdapter->asClassName((string) $this->input->vendorname);
+        $sublevelnamespace = $strAdapter->asClassName((string) $this->input->repositoryname);
+        $contentelementclassname = $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype);
+
+        $this->tagStorage->set('fullyquallifiedcontentelementclassname', sprintf('%s\%s\Controller\ContentElement\%s', $toplevelnamespace, $sublevelnamespace, $contentelementclassname));
+
         $this->tagStorage->set('contentelementclassname', $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype));
         $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
         $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
