@@ -1,5 +1,6 @@
 services:
 <?php if($this->addFrontendModule): ?>
+
     # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
         arguments:
@@ -8,26 +9,31 @@ services:
             - { name: contao.frontend_module, category: <?= $this->frontendmodulecategory ?>, template: <?= $this->frontendmoduletemplate ?>, type: <?= $this->frontendmoduletype ?> }
             - { name: container.service_subscriber }
         public: true
-<?php endif; ?>
-
+        calls:
+            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
+    <?php endif; ?>
 <?php if($this->addContentElement): ?>
+
     # Contao content element <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?><?="\n" ?>
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?>:
         tags:
             - { name: contao.content_element, category: <?= $this->contentelementcategory ?>, template: <?= $this->contentelementtemplate ?>, type: <?= $this->contentelementtype ?> }
             - { name: container.service_subscriber }
         public: true
-<?php endif; ?>
-
+        calls:
+            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]<?php endif; ?>
 <?php if($this->addCustomRoute): ?>
+
     # Custom route
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\MyCustomController:
         arguments:
             - '@twig'
         public: true
-<?php endif; ?>
-
+        calls:
+            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
+    <?php endif; ?>
 <?php if($this->addSessionAttribute): ?>
+
     # Add a session bag
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag:
         arguments:
