@@ -110,12 +110,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty stylesheet
         $source = sprintf(
-            '%s/src/Resources/public/css/logo.png',
+            '%s/src/Resources/public/css/styles.css',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/css/logo.png',
+            '%s/vendor/%s/%s/src/Resources/public/css/styles.css',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
