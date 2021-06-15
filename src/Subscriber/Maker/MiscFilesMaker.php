@@ -91,14 +91,48 @@ final class MiscFilesMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add logo
+        // Add logo to the docs folder
         $source = sprintf(
-            '%s/src/Resources/public/logo.png',
+            '%s/docs/logo.png',
             $this->skeletonPath
         );
 
         $target = sprintf(
             '%s/vendor/%s/%s/docs/logo.png',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname
+        );
+
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
+        // Add empty stylesheet
+        $source = sprintf(
+            '%s/src/Resources/public/css/logo.png',
+            $this->skeletonPath
+        );
+
+        $target = sprintf(
+            '%s/vendor/%s/%s/src/Resources/public/css/logo.png',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname
+        );
+
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
+        // Add empty script file
+        $source = sprintf(
+            '%s/src/Resources/public/js/script.js',
+            $this->skeletonPath
+        );
+
+        $target = sprintf(
+            '%s/vendor/%s/%s/src/Resources/public/js/script.js',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
