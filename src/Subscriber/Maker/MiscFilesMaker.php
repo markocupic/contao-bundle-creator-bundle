@@ -98,7 +98,7 @@ final class MiscFilesMaker extends AbstractMaker
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/logo.png',
+            '%s/vendor/%s/%s/docs/logo.png',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname

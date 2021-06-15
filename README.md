@@ -1,7 +1,7 @@
 ![passed tests at travis-ci.org](https://travis-ci.org/markocupic/contao-bundle-creator-bundle.svg?branch=master "")
 
 
-![Marko Cupic](src/Resources/docs/logo.png?raw=true "Marko Cupic")
+![Marko Cupic](docs/logo.png?raw=true "Marko Cupic")
 
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
@@ -24,13 +24,13 @@ Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurc
 
 ## Via Contao Backend das Bundle konfigurieren
 
-![Alt text](src/Resources/docs/backend.png?raw=true "Backend")
+![Alt text](docs/backend.png?raw=true "Backend")
 
 
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
-![Alt text](src/Resources/docs/file-tree.png?raw=true "Verzeichnisstruktur")
+![Alt text](docs/file-tree.png?raw=true "Verzeichnisstruktur")
 
 
 ## Inbetriebnahme des Bundles
@@ -117,7 +117,7 @@ Installtool aufrufen. Fertig!
 Falls man die Standard-Templates anpassen möchte, die der bundle-maker benötigt, um die PHP-Klassen, Konfigurationsdateien, etc. zu generieren, 
 kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-bundle/skeleton ablegen.
 
-![Templates updatesicher überschreiben](src/Resources/docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
+![Templates updatesicher überschreiben](docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Codefixing mit easy-coding-standard
 Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/.ecs" abgelegt. Der Fixer kann nun so über das Terminal aufgerufen werden:

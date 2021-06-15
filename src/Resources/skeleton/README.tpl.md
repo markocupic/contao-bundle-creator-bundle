@@ -1,4 +1,4 @@
-![Alt text](src/Resources/public/logo.png?raw=true "logo")
+![Alt text](docs/logo.png?raw=true "logo")
 
 
 # Welcome to <?= $this->bundlename ?>
