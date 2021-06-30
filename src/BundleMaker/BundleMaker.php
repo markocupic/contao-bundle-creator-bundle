@@ -189,6 +189,11 @@ class BundleMaker
 
     protected function generateZipArchive(): void
     {
+        // Do not create the bundle, if there is an error.
+        if ($this->message->hasError()) {
+            return;
+        }
+
         // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
         $zipSource = sprintf(
             '%s/vendor/%s/%s',
@@ -219,6 +224,11 @@ class BundleMaker
      */
     protected function replaceTags(): void
     {
+        // Do not create the bundle, if there is an error.
+        if ($this->message->hasError()) {
+            return;
+        }
+
         foreach ($this->fileStorage->getAll() as $arrFile) {
             if ($this->fileStorage->hasFile($arrFile['target'])) {
                 $this->fileStorage
@@ -234,6 +244,11 @@ class BundleMaker
      */
     protected function checkYamlFiles(): void
     {
+        // Do not create the bundle, if there is an error.
+        if ($this->message->hasError()) {
+            return;
+        }
+
         /** @var Yaml $yamlAdapter */
         $yamlAdapter = $this->framework->getAdapter(Yaml::class);
 

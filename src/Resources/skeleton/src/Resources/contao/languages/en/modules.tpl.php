@@ -5,7 +5,9 @@ declare(strict_types=1);
 <?= $this->phpdoc ?>
 <?php if($this->addBackendModule): ?>
 
+<?php if($this->addFrontendModule): ?>
 use <?= $this->fullyquallifiedfrontendmoduleclassname ?>;
+<?php endif; ?>
 
 /**
  * Backend modules
