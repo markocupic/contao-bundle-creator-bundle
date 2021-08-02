@@ -4,8 +4,6 @@ services:
     # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
     # We used annotations for tagging the frontend module category, the frontend module type and the frontend module template
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
-        arguments:
-            - '@session'
         tags:
             - { name: container.service_subscriber }
         public: true

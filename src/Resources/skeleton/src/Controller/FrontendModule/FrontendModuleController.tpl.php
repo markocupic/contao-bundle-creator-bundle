@@ -18,7 +18,7 @@ use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,22 +32,9 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
     public const TYPE = '<?= $this->frontendmoduletype ?>';
 
     /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
      * @var PageModel
      */
     protected $page;
-
-    /**
-     * <?= $this->frontendmoduleclassname ?> constructor.
-     */
-    public function __construct(SessionInterface $session)
-    {
-        $this->session = $session;
-    }
 
     /**
      * This method extends the parent __invoke method,
@@ -94,6 +81,11 @@ class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleContro
         {
             $userFirstname = $user->firstname;
         }
+
+        /** @var Session $session */
+        $session = $request->getSession();
+        $feBag = $session->getBag('contao_frontend');
+        $feBag->set('foo', 'bar');
 
         /** @var Date $dateAdapter */
         $dateAdapter = $this->get('contao.framework')->getAdapter(Date::class);
