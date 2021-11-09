@@ -21,7 +21,7 @@ $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['show'] = ["Datensatz mit ID: %s a
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['title'] = ["Name", "Geben Sie einen Namen ein"];
+$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['title'] = ["Titel", "Geben Sie den Titel ein"];
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['selectField'] = ["Select Feld", "Wählen Sie aus."];
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['checkboxField'] = ["Chosen Feld", "Wählen Sie aus."];
 $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['multitextField'] = ["Multitext Feld", "Geben Sie die Werte ein"];
