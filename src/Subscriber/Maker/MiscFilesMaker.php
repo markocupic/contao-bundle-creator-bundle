@@ -159,6 +159,23 @@ final class MiscFilesMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
+        // .editorconfig
+        $source = sprintf(
+            '%s/.editorconfig.tpl.txt',
+            $this->skeletonPath
+        );
+
+        $target = sprintf(
+            '%s/vendor/%s/%s/.editorconfig',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname
+        );
+
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
         // .gitattributes
         $source = sprintf(
             '%s/.gitattributes.tpl.txt',
