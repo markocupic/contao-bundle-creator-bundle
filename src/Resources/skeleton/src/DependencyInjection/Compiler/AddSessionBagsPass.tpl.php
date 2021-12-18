@@ -1,10 +1,10 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
-namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection\Compiler;
+namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,6 +22,6 @@ class AddSessionBagsPass implements CompilerPassInterface
         }
 
         $session = $container->findDefinition('session');
-        $session->addMethodCall('registerBag', [new Reference('<?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag')]);
+        $session->addMethodCall('registerBag', [new Reference('<?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Session\Attribute\ArrayAttributeBag')]);
     }
 }

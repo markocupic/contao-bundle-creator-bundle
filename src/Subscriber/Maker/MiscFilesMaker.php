@@ -16,11 +16,10 @@ namespace Markocupic\ContaoBundleCreatorBundle\Subscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
-use Symfony\Component\Yaml\Yaml;
 
 final class MiscFilesMaker extends AbstractMaker
 {
-    const PRIORITY = 950;
+    public const PRIORITY = 950;
 
     public static function getSubscribedEvents(): array
     {
@@ -58,7 +57,8 @@ final class MiscFilesMaker extends AbstractMaker
         foreach ($arrFiles as $file) {
             $source = sprintf(
                 '%s/src/Resources/config/%s',
-                $this->skeletonPath, $file
+                $this->skeletonPath,
+                $file
             );
 
             $target = sprintf(

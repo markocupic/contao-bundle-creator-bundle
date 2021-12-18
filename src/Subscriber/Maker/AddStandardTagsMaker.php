@@ -20,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class AddStandardTagsMaker extends AbstractMaker
 {
-    const PRIORITY = 10000;
+    public const PRIORITY = 10000;
 
     public static function getSubscribedEvents(): array
     {
@@ -59,7 +59,7 @@ final class AddStandardTagsMaker extends AbstractMaker
         $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
         $this->tagStorage->set('phpdoc', $strAdapter->generateHeaderCommentFromString($strPhpdoc));
         $phpdoclines = explode(PHP_EOL, $strPhpdoc);
-        $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static function ($line) {return $line.'\n'; }, $phpdoclines)));
+        $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static fn ($line) => $line.'\n', $phpdoclines)));
         $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
     }
 

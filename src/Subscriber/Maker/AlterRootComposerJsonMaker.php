@@ -20,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class AlterRootComposerJsonMaker extends AbstractMaker
 {
-    const PRIORITY = -10000;
+    public const PRIORITY = -10000;
 
     public static function getSubscribedEvents(): array
     {
@@ -69,10 +69,10 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
 
             $objRepositories->type = 'path';
             $objRepositories->url = sprintf(
-                    'vendor/%s/%s',
-                    $this->input->vendorname,
-                    $this->input->repositoryname
-                );
+                'vendor/%s/%s',
+                $this->input->vendorname,
+                $this->input->repositoryname
+            );
 
             // Prevent duplicate entries
             if (!\in_array($objRepositories, $objJSON->repositories, false)) {
@@ -85,10 +85,10 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
         if ('vcs-github' === $this->input->rootcomposerextendrepositorieskey) {
             $objRepositories->type = 'vcs';
             $objRepositories->url = sprintf(
-                    'https://github.com/%s/%s',
-                    $this->input->vendorname,
-                    $this->input->repositoryname
-                );
+                'https://github.com/%s/%s',
+                $this->input->vendorname,
+                $this->input->repositoryname
+            );
 
             // Prevent duplicate entries
             if (!\in_array($objRepositories, $objJSON->repositories, false)) {

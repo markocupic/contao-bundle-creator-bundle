@@ -20,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class SessionAttributeBagMaker extends AbstractMaker
 {
-    const PRIORITY = 1010;
+    public const PRIORITY = 1010;
 
     public static function getSubscribedEvents(): array
     {

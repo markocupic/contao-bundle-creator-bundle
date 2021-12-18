@@ -1,10 +1,10 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
-namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute;
+namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Session\Attribute;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 

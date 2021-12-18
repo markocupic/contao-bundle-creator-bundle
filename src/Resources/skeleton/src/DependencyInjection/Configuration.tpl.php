@@ -1,17 +1,17 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
-namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\DependencyInjection;
+namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    const ROOT_KEY = '<?= $this->friendlyconfigurationrootkey ?>';
+    const ROOT_KEY = '<?= $this->friendlyconfigurationrootkey; ?>';
 
     public function getConfigTreeBuilder()
     {

@@ -163,7 +163,7 @@ final class Str
 
     /**
      * Get the frontend module type (f.ex. my_custom)
-     * Convention => snakecase
+     * Convention => snakecase.
      *
      * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
      * @param string $suffix (add a suffix e.g. "_module")
@@ -198,7 +198,7 @@ final class Str
 
     /**
      * Get the content element type (f.ex. my_custom)
-     * Convention => snakecase
+     * Convention => snakecase.
      *
      * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
      * @param string $suffix (add a suffix e.g. "_element")
@@ -308,9 +308,7 @@ final class Str
     {
         $lines = explode("\n", $value);
         $lines = array_map(
-            static function ($line) {
-                return ' * '.$line;
-            },
+            static fn ($line) => ' * '.$line,
             $lines
         );
 

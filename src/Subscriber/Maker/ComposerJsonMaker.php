@@ -19,7 +19,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ComposerJsonMaker extends AbstractMaker
 {
-    const PRIORITY = 1000;
+    public const PRIORITY = 1000;
 
     public static function getSubscribedEvents(): array
     {

@@ -1,10 +1,10 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
-namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule;
+namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -23,13 +23,13 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class <?= $this->frontendmoduleclassname ?><?= "\n" ?>
+ * Class <?= $this->frontendmoduleclassname; ?><?= "\n"; ?>
  *
- * @FrontendModule(<?= $this->frontendmoduleclassname ?>::TYPE, category="<?= $this->frontendmodulecategory ?>", template="<?= $this->frontendmoduletemplate ?>")
+ * @FrontendModule(<?= $this->frontendmoduleclassname; ?>::TYPE, category="<?= $this->frontendmodulecategory; ?>", template="<?= $this->frontendmoduletemplate; ?>")
  */
-class <?= $this->frontendmoduleclassname ?> extends AbstractFrontendModuleController
+class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleController
 {
-    public const TYPE = '<?= $this->frontendmoduletype ?>';
+    public const TYPE = '<?= $this->frontendmoduletype; ?>';
 
     /**
      * @var PageModel

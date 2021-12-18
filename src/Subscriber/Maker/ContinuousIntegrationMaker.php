@@ -19,7 +19,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ContinuousIntegrationMaker extends AbstractMaker
 {
-    const PRIORITY = 960;
+    public const PRIORITY = 960;
 
     public static function getSubscribedEvents(): array
     {

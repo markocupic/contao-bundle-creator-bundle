@@ -19,7 +19,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class EasyCodingStandardMaker extends AbstractMaker
 {
-    const PRIORITY = 940;
+    public const PRIORITY = 940;
 
     public static function getSubscribedEvents(): array
     {

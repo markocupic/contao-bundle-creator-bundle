@@ -22,7 +22,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ContaoBackendModuleMaker extends AbstractMaker
 {
-    const PRIORITY = 930;
+    public const PRIORITY = 930;
 
     public static function getSubscribedEvents(): array
     {
@@ -84,7 +84,8 @@ final class ContaoBackendModuleMaker extends AbstractMaker
         // Add dca table file
         $source = sprintf(
             '%s/src/Resources/contao/dca/tl_sample_table.tpl.php',
-            $this->skeletonPath)
+            $this->skeletonPath
+        )
         ;
 
         $target = sprintf(

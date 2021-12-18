@@ -1,21 +1,21 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
-namespace <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Model;
+namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Model;
 
 use Contao\Model;
 
 /**
- * Class <?= $this->modelclassname ?><?= "\n" ?>
+ * Class <?= $this->modelclassname; ?><?= "\n"; ?>
  *
- * @package <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Model
+ * @package <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Model
  */
-class <?= $this->modelclassname ?> extends Model
+class <?= $this->modelclassname; ?> extends Model
 {
-    protected static $strTable = '<?= $this->dcatable ?>';
+    protected static $strTable = '<?= $this->dcatable; ?>';
 
 }
 

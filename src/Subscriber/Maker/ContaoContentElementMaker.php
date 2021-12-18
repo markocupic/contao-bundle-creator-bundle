@@ -21,7 +21,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class ContaoContentElementMaker extends AbstractMaker
 {
-    const PRIORITY = 910;
+    public const PRIORITY = 910;
 
     public static function getSubscribedEvents(): array
     {

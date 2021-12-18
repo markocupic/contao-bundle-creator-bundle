@@ -1,17 +1,17 @@
-<?= "<?php\n" ?>
+<?= "<?php\n"; ?>
 
 declare(strict_types=1);
 
-<?= $this->phpdoc ?>
+<?= $this->phpdoc; ?>
 
 use Contao\Backend;
 use Contao\DC_Table;
 use Contao\Input;
 
 /**
- * Table <?= $this->dcatable . "\n" ?>
+ * Table <?= $this->dcatable."\n"; ?>
  */
-$GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
+$GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
 
     // Config
     'config'      => array(
@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
     ),
     'edit'        => array(
         'buttons_callback' => array(
-            array('<?= $this->dcaclassname ?>', 'buttonsCallback')
+            array('<?= $this->dcaclassname; ?>', 'buttonsCallback')
         )
     ),
     'list'        => array(
@@ -49,23 +49,23 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
         ),
         'operations'        => array(
             'edit'   => array(
-                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['edit'],
+                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif'
             ),
             'copy'   => array(
-                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['copy'],
+                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['copy'],
                 'href'  => 'act=copy',
                 'icon'  => 'copy.gif'
             ),
             'delete' => array(
-                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['delete'],
+                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
             ),
             'show'   => array(
-                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['show'],
+                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['show'],
                 'href'       => 'act=show',
                 'icon'       => 'show.gif',
                 'attributes' => 'style="margin-right:3px"'
@@ -105,7 +105,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable ?>'],
+            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
             'options'   => array('firstoption', 'secondoption'),
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      => array('CLASS', 'METHOD'),
@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable ?>'],
+            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
             'options'   => array('firstoption', 'secondoption'),
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      => array('CLASS', 'METHOD'),
@@ -155,9 +155,9 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable ?>'] = array(
 );
 
 /**
- * Class <?= $this->dcaclassname . "\n" ?>
+ * Class <?= $this->dcaclassname."\n"; ?>
  */
-class <?= $this->dcaclassname ?> extends Backend
+class <?= $this->dcaclassname; ?> extends Backend
 {
     /**
      * @param $arrButtons
@@ -168,7 +168,7 @@ class <?= $this->dcaclassname ?> extends Backend
     {
         if (Input::get('act') === 'edit')
         {
-            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">' . $GLOBALS['TL_LANG']['<?= $this->dcatable ?>']['customButton'] . '</button>';
+            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">' . $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['customButton'] . '</button>';
         }
 
         return $arrButtons;

@@ -24,22 +24,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class Message
 {
-    const CONTAO_SCOPE = 'BE';
+    public const CONTAO_SCOPE = 'BE';
 
-    /**
-     * @var string
-     */
-    const SESSION_KEY_ERROR = 'contao.BE.error';
+    public const SESSION_KEY_ERROR = 'contao.BE.error';
 
-    /**
-     * @var string
-     */
-    const SESSION_KEY_INFO = 'contao.BE.info';
+    public const SESSION_KEY_INFO = 'contao.BE.info';
 
-    /**
-     * @var string
-     */
-    const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
+    public const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
 
     /**
      * @var ContaoFramework

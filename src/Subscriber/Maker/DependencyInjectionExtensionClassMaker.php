@@ -20,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class DependencyInjectionExtensionClassMaker extends AbstractMaker
 {
-    const PRIORITY = 980;
+    public const PRIORITY = 980;
 
     public static function getSubscribedEvents(): array
     {

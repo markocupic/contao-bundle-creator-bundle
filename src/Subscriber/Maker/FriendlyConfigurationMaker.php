@@ -20,7 +20,7 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 
 final class FriendlyConfigurationMaker extends AbstractMaker
 {
-    const PRIORITY = 890;
+    public const PRIORITY = 890;
 
     public static function getSubscribedEvents(): array
     {
