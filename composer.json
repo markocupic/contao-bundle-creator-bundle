@@ -25,7 +25,8 @@
     "source": "https://github.com/markocupic/contao-bundle-creator-bundle"
   },
   "require": {
-    "contao/core-bundle": "^4.9",
+    "php/php": "^7.4|^8.0",
+    "contao/core-bundle": "^4.12",
     "markocupic/zip-bundle": "^1.0",
     "ext-json": "*"
   },

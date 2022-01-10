@@ -20,62 +20,6 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
 final class Str
 {
     /**
-     * Looks for prefixes in strings in a case-insensitive way.
-     */
-    public static function hasPrefix(string $value, string $prefix): bool
-    {
-        return 0 === stripos($value, $prefix);
-    }
-
-    /**
-     * Ensures that the given string ends with the given prefix. If the string
-     * already contains the prefix, it's not added twice. It's case-insensitive
-     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
-     */
-    public static function addPrefix(string $value, string $prefix): string
-    {
-        return $prefix.self::removePrefix($value, $prefix);
-    }
-
-    /**
-     * Looks for suffixes in strings in a case-insensitive way.
-     */
-    public static function hasSuffix(string $value, string $suffix): bool
-    {
-        return 0 === strcasecmp($suffix, substr($value, -\strlen($suffix)));
-    }
-
-    /**
-     * Ensures that the given string ends with the given suffix. If the string
-     * already contains the suffix, it's not added twice. It's case-insensitive
-     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
-     */
-    public static function addSuffix(string $value, string $suffix): string
-    {
-        return self::removeSuffix($value, $suffix).$suffix;
-    }
-
-    /**
-     * Ensures that the given string doesn't end with the given suffix. If the
-     * string contains the suffix multiple times, only the last one is removed.
-     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
-     */
-    public static function removeSuffix(string $value, string $suffix): string
-    {
-        return self::hasSuffix($value, $suffix) ? substr($value, 0, -\strlen($suffix)) : $value;
-    }
-
-    /**
-     * Ensures that the given string doesn't starts with the given prefix. If the
-     * string contains the prefix multiple times, only the first one is removed.
-     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
-     */
-    public static function removePrefix(string $value, string $prefix): string
-    {
-        return self::hasPrefix($value, $prefix) ? substr($value, \strlen($prefix)) : $value;
-    }
-
-    /**
      * Sanitize vendorname (github 6 packagist restrictions)
      * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name, Vendorname
      * But allow vendor-name.
@@ -100,6 +44,34 @@ final class Str
         $value = preg_replace('/[^A-Za-z0-9_\-]/', '-', $value);
 
         return self::addPrefix($value, $prefix);
+    }
+
+    /**
+     * Ensures that the given string ends with the given prefix. If the string
+     * already contains the prefix, it's not added twice. It's case-insensitive
+     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
+     */
+    public static function addPrefix(string $value, string $prefix): string
+    {
+        return $prefix.self::removePrefix($value, $prefix);
+    }
+
+    /**
+     * Ensures that the given string doesn't starts with the given prefix. If the
+     * string contains the prefix multiple times, only the first one is removed.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     */
+    public static function removePrefix(string $value, string $prefix): string
+    {
+        return self::hasPrefix($value, $prefix) ? substr($value, \strlen($prefix)) : $value;
+    }
+
+    /**
+     * Looks for prefixes in strings in a case-insensitive way.
+     */
+    public static function hasPrefix(string $value, string $prefix): bool
+    {
+        return 0 === stripos($value, $prefix);
     }
 
     /**
@@ -144,7 +116,52 @@ final class Str
      */
     public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
     {
-        return preg_replace('/Bundle$/', '', self::asClassName($vendorName).self::asClassName($repositoryName)).'Extension';
+        return preg_replace('/Bundle$/', '',
+                self::asClassName($vendorName).self::asClassName($repositoryName)).'Extension';
+    }
+
+    /**
+     * Transforms the given string into the format commonly used by PHP classes,
+     * (e.g. `app:do_this-and_that` -> `AppDoThisAndThat`) but it doesn't check
+     * the validity of the class name.
+     */
+    public static function asClassName(string $value, string $suffix = ''): string
+    {
+        $value = trim($value);
+        $value = str_replace(['-', '_', '.', ':'], ' ', $value);
+        $value = ucwords($value);
+        $value = str_replace(' ', '', $value);
+        $value = ucfirst($value);
+
+        return self::addSuffix($value, $suffix);
+    }
+
+    /**
+     * Ensures that the given string ends with the given suffix. If the string
+     * already contains the suffix, it's not added twice. It's case-insensitive
+     * (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'FooCommand').
+     */
+    public static function addSuffix(string $value, string $suffix): string
+    {
+        return self::removeSuffix($value, $suffix).$suffix;
+    }
+
+    /**
+     * Ensures that the given string doesn't end with the given suffix. If the
+     * string contains the suffix multiple times, only the last one is removed.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     */
+    public static function removeSuffix(string $value, string $suffix): string
+    {
+        return self::hasSuffix($value, $suffix) ? substr($value, 0, -\strlen($suffix)) : $value;
+    }
+
+    /**
+     * Looks for suffixes in strings in a case-insensitive way.
+     */
+    public static function hasSuffix(string $value, string $suffix): bool
+    {
+        return 0 === strcasecmp($suffix, substr($value, -\strlen($suffix)));
     }
 
     /**
@@ -165,12 +182,12 @@ final class Str
      * Get the frontend module type (f.ex. my_custom)
      * Convention => snakecase.
      *
-     * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
      * @param string $suffix (add a suffix e.g. "_module")
      */
     public static function asContaoFrontendModuleType(string $value, $suffix = ''): string
     {
-        $value = self::asSnakeCase((string) $value);
+        $value = self::asSnakeCase((string)$value);
 
         $pattern = '/^(module_|module|mod_|mod|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -200,12 +217,12 @@ final class Str
      * Get the content element type (f.ex. my_custom)
      * Convention => snakecase.
      *
-     * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
+     * @param string $value (requires tl_contao_bundle_creator.contentelementtype)
      * @param string $suffix (add a suffix e.g. "_element")
      */
     public static function asContaoContentElementType(string $value, $suffix = ''): string
     {
-        $value = self::asSnakeCase((string) $value);
+        $value = self::asSnakeCase((string)$value);
 
         $pattern = '/^(element_|element|ce_|ce|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -214,22 +231,6 @@ final class Str
         $value = preg_replace($pattern, '', $value);
 
         // Add suffix
-        return self::addSuffix($value, $suffix);
-    }
-
-    /**
-     * Transforms the given string into the format commonly used by PHP classes,
-     * (e.g. `app:do_this-and_that` -> `AppDoThisAndThat`) but it doesn't check
-     * the validity of the class name.
-     */
-    public static function asClassName(string $value, string $suffix = ''): string
-    {
-        $value = trim($value);
-        $value = str_replace(['-', '_', '.', ':'], ' ', $value);
-        $value = ucwords($value);
-        $value = str_replace(' ', '', $value);
-        $value = ucfirst($value);
-
         return self::addSuffix($value, $suffix);
     }
 
@@ -257,7 +258,7 @@ final class Str
      */
     public static function asContaoDcaTable(string $value): string
     {
-        if (!\strlen((string) $value)) {
+        if (!\strlen((string)$value)) {
             throw new \Exception('No dca tablename set.');
         }
 
@@ -307,10 +308,9 @@ final class Str
     public static function generateHeaderCommentFromString(string $value): string
     {
         $lines = explode("\n", $value);
-        $lines = array_map(
-            static fn ($line) => ' * '.$line,
-            $lines
-        );
+        $lines = array_map(function ($line) {
+            return ' * '.$line;
+        }, $lines);
 
         return sprintf('%s%s%s', '/*'."\n", implode("\n", $lines), "\n".' */'."\n");
     }
