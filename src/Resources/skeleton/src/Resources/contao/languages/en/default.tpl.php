@@ -17,7 +17,7 @@ $GLOBALS['TL_LANG']['CTE'][<?= $this->contentelementclassname; ?>::TYPE] = ['<?=
 <?php } ?>
 
 /**
- * Miscelaneous
+ * Miscellaneous
  */
 //$GLOBALS['TL_LANG']['MSC'][''] = '';
 
