@@ -18,11 +18,7 @@
     "contao/core-bundle": "^4.9"
   },
   "require-dev": {
-    "contao/manager-plugin": "^2.3",
-    "contao/test-case": "^4.0",
-    "phpunit/phpunit": "^8.4",
-    "symfony/http-client": "4.4.*",
-    "symfony/phpunit-bridge": "4.4.*"
+    "contao/easy-coding-standard": "^4.0"
   },
   "autoload": {
     "psr-4": {},
