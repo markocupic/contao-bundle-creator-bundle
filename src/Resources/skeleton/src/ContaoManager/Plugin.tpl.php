@@ -23,7 +23,7 @@ class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { 
     /**
      * @return array
      */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create('<?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\<?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?>')
