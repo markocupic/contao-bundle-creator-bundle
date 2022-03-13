@@ -77,6 +77,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     {
         $userFirstname = 'DUDE';
         $user = $this->get('security.helper')->getUser();
+
         if ($user instanceof FrontendUser)
         {
             $userFirstname = $user->firstname;
@@ -94,14 +95,14 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         $strWeekday = $translator->trans('DAYS.' . $intWeekday, [], 'contao_default');
 
         $arrGuests = [];
+
+        /** @var \Doctrine\DBAL\Result $stmt */
         $stmt = $this->get('database_connection')
-            ->executeQuery(
-                'SELECT * FROM tl_member WHERE gender=? ORDER BY lastname',
-                ['female']
-            );
-        while (false !== ($objMember = $stmt->fetch(\PDO::FETCH_OBJ)))
+            ->executeQuery('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);
+
+        while (false !== ($row = $stmt->fetchAssociative()))
         {
-            $arrGuests[] = $objMember->firstname;
+            $arrGuests[] = $row['firstname'];
         }
 
         $template->helloTitle = sprintf(
