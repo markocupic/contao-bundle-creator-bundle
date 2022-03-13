@@ -45,7 +45,9 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         // Get the page model
         $this->page = $page;
 
-        if ($this->page instanceof PageModel && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request))
+        $scopeMatcher = $this->get('contao.routing.scope_matcher');
+
+        if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request))
         {
             // If TL_MODE === 'FE'
             $this->page->loadDetails();
@@ -55,7 +57,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     }
 
     /**
-     * Lazyload some services
+     * Lazyload services
      */
     public static function getSubscribedServices(): array
     {
@@ -71,13 +73,14 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     }
 
     /**
-     * Generate the module
+     * Generate the dummy module
      */
     protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
     {
         $userFirstname = 'DUDE';
         $user = $this->get('security.helper')->getUser();
 
+        // Get the logged in frontend user... if there is one
         if ($user instanceof FrontendUser)
         {
             $userFirstname = $user->firstname;
@@ -85,20 +88,23 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 
         /** @var Session $session */
         $session = $request->getSession();
-        $feBag = $session->getBag('contao_frontend');
-        $feBag->set('foo', 'bar');
+        $bag = $session->getBag('contao_frontend');
+        $bag->set('foo', 'bar');
 
         /** @var Date $dateAdapter */
         $dateAdapter = $this->get('contao.framework')->getAdapter(Date::class);
+
         $intWeekday = $dateAdapter->parse('w');
         $translator = $this->get('translator');
         $strWeekday = $translator->trans('DAYS.' . $intWeekday, [], 'contao_default');
 
         $arrGuests = [];
 
+        // Get the database connection
+        $db = $this->get('database_connection');
+
         /** @var \Doctrine\DBAL\Result $stmt */
-        $stmt = $this->get('database_connection')
-            ->executeQuery('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);
+        $stmt = $db->executeQuery('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);
 
         while (false !== ($row = $stmt->fetchAssociative()))
         {
@@ -110,7 +116,11 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
             $userFirstname, $strWeekday
         );
 
-        $template->helloText = 'Our guests today are: ' . implode(', ', $arrGuests);
+        $template->helloText = '';
+
+        if (!empty($arrGuests)){
+            $template->helloText = 'Our guests today are: ' . implode(', ', $arrGuests);
+        }
 
         return $template->getResponse();
     }
