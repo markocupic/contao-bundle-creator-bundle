@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
 {
     const ROOT_KEY = '<?= $this->friendlyconfigurationrootkey; ?>';
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder(self::ROOT_KEY);
 

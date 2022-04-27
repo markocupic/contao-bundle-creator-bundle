@@ -20,9 +20,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { ?>, RoutingPluginInterface<?php } ?><?= "\n"; ?>
 {
-    /**
-     * @return array
-     */
     public function getBundles(ParserInterface $parser): array
     {
         return [
