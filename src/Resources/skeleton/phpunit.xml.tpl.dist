@@ -11,7 +11,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="<?= $this->repositoryname ?>>">
+        <testsuite name="<?= $this->repositoryname ?>">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
