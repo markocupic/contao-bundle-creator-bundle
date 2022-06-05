@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
+return static function (ECSConfig $ECSConfig): void {
 
-    $services = $containerConfigurator->services();
+    $services = $ECSConfig->services();
 
     $services
         ->set(HeaderCommentFixer::class)

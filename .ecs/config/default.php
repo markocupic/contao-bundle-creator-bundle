@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
+return static function (ECSConfig $ECSConfig): void {
     // Contao
-    $containerConfigurator->import(__DIR__ . '../../../../../contao/easy-coding-standard/config/contao.php');
+    $ECSConfig->import(__DIR__ . '../../../../../contao/easy-coding-standard/config/contao.php');
     // Custom
-    $containerConfigurator->import(__DIR__.'/set/header_comment_fixer.php');
+    $ECSConfig->import(__DIR__.'/set/header_comment_fixer.php');
 };
