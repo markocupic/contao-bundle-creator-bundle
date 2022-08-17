@@ -49,7 +49,6 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 
         if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request))
         {
-            // If TL_MODE === 'FE'
             $this->page->loadDetails();
         }
 
