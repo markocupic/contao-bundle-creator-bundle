@@ -1,18 +1,19 @@
-<?xml version="1.0" ?><xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="de">
-        <body>
-            <trans-unit id="MOD.dev_tools">
-                <source>Developer tools.</source>
-                <target>Entwickler Tools</target>
-            </trans-unit>
-            <trans-unit id="MOD.contao_bundle_creator.0">
-                <source>Contao bundle creator</source>
-                <target>Contao Bundle Generator</target>
-            </trans-unit>
-            <trans-unit id="MOD.contao_bundle_creator.1">
-                <source>Create a contao bundle.</source>
-                <target>Erstellen Sie ein Contao Bundle.</target>
-            </trans-unit>
-        </body>
-    </file>
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="MOD.dev_tools">
+        <source>Developer tools.</source>
+        <target>Entwickler Tools</target>
+      </trans-unit>
+      <trans-unit id="MOD.contao_bundle_creator.0">
+        <source>Contao bundle creator</source>
+        <target>Contao Bundle Generator</target>
+      </trans-unit>
+      <trans-unit id="MOD.contao_bundle_creator.1">
+        <source>Create a contao bundle.</source>
+        <target>Erstellen Sie ein Contao Bundle.</target>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

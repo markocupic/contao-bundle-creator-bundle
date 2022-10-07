@@ -1,40 +1,18 @@
 services:
-<?php if($this->addFrontendModule): ?>
+    _defaults:
+        autowire: true          # Automatically injects dependencies in your services.
+        autoconfigure: true     # Automatically registers your services as commands, event subscribers, etc.
+        public: false           # Allows optimizing the container by removing unused services; this also means
+                                # fetching services directly from the container via $container->get() won't work.
+                                # The best practice is to be explicit about your dependencies anyway.
+        bind:
+            #$projectDir: '%kernel.project_dir%'
 
-    # Contao frontend module <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?><?="\n" ?>
-    # We used annotations for tagging the frontend module category, the frontend module type and the frontend module template
-    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\FrontendModule\<?= $this->frontendmoduleclassname ?>:
-        tags:
-            - { name: container.service_subscriber }
-        public: true
-        # Since Symfony 5 the container has to be set manually
-        calls:
-            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
-    <?php endif; ?>
-<?php if($this->addContentElement): ?>
+    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\:
+        resource: ../../
+        exclude: ../../{DependencyInjection,Resources,Model}
 
-    # Contao content element <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?><?="\n" ?>
-    # We used annotations for tagging the frontend element category, the frontend element type and the frontend element template
-    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\ContentElement\<?= $this->contentelementclassname ?>:
-        tags:
-            - { name: container.service_subscriber }
-        public: true
-        # Since Symfony 5 the container has to be set manually
-        calls:
-            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]<?php endif; ?>
-<?php if($this->addCustomRoute): ?>
-
-    # Custom route
-    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Controller\MyCustomController:
-        arguments:
-            - '@twig'
-        public: true
-        # Since Symfony 5 the container has to be set manually
-        calls:
-            - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
-    <?php endif; ?>
-<?php if($this->addSessionAttribute): ?>
-
+<?php if ($this->addSessionAttribute): ?>
     # Add a session bag
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag:
         arguments:
@@ -42,5 +20,3 @@ services:
         calls:
             - [ setName, [ <?= $this->sessionAttributeName ?> ] ]
 <?php endif; ?>
-
-

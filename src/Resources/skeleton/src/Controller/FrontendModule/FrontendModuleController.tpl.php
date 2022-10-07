@@ -9,7 +9,11 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+<?php if ($this->useattributes): ?>
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+<?php else: ?>
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
+<?php endif; ?>
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
@@ -22,19 +26,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+<?php if ($this->useattributes): ?>
+#[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>')]
+<?php else: ?>
 /**
- * Class <?= $this->frontendmoduleclassname; ?><?= "\n"; ?>
- *
- * @FrontendModule(<?= $this->frontendmoduleclassname; ?>::TYPE, category="<?= $this->frontendmodulecategory; ?>", template="<?= $this->frontendmoduletemplate; ?>")
+ * @FrontendModule(category="<?= $this->frontendmodulecategory; ?>")
  */
+<?php endif; ?>
 class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleController
 {
     public const TYPE = '<?= $this->frontendmoduletype; ?>';
 
-    /**
-     * @var PageModel
-     */
-    protected $page;
+    protected PageModel $page;
 
     /**
      * This method extends the parent __invoke method,
@@ -45,7 +48,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         // Get the page model
         $this->page = $page;
 
-        $scopeMatcher = $this->get('contao.routing.scope_matcher');
+        $scopeMatcher = $this->container->get('contao.routing.scope_matcher');
 
         if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request))
         {
@@ -71,13 +74,10 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         return $services;
     }
 
-    /**
-     * Generate the dummy module
-     */
     protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
     {
         $userFirstname = 'DUDE';
-        $user = $this->get('security.helper')->getUser();
+        $user = $this->container->get('security.helper')->getUser();
 
         // Get the logged in frontend user... if there is one
         if ($user instanceof FrontendUser)
@@ -91,16 +91,16 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         $bag->set('foo', 'bar');
 
         /** @var Date $dateAdapter */
-        $dateAdapter = $this->get('contao.framework')->getAdapter(Date::class);
+        $dateAdapter = $this->container->get('contao.framework')->getAdapter(Date::class);
 
         $intWeekday = $dateAdapter->parse('w');
-        $translator = $this->get('translator');
+        $translator = $this->container->get('translator');
         $strWeekday = $translator->trans('DAYS.' . $intWeekday, [], 'contao_default');
 
         $arrGuests = [];
 
         // Get the database connection
-        $db = $this->get('database_connection');
+        $db = $this->container->get('database_connection');
 
         /** @var \Doctrine\DBAL\Result $stmt */
         $stmt = $db->executeQuery('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);

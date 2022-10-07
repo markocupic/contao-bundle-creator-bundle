@@ -6,26 +6,26 @@
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate/Skeleton) für ein Contao 4 Bundle. 
+Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate/Skeleton) für ein Contao 4 Bundle.
 
 Es können...
 - ein Frontendmodul generiert werden.
 - ein Backendmodul generiert werden.
-- ein Inhaltselement generiert werden. 
+- ein Inhaltselement generiert werden.
 - eine custom route (https://myhostname.ch/my_custom) generiert werden.
 - eine custom session bag generiert werden.
 - eine Basisklasse (mit custom root key) für eine friendly configuration generiert werden.
 
 Alle nötigen Konfigurationsdaten werden automatisch erstellt.
 
-Falls gewünscht, werden auch die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt. 
-Nach der Generierung ist es lediglich nötig, im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten.
-
+Falls gewünscht, werden auch die für den Betrieb nötigen Einstellungen in der root composer.json automatisch getätigt.
+Nach der Generierung ist es lediglich nötig,
+- im Contao Manager einen Updatedurchlauf zu starten und mit dem Installtool die Datenbank upzudaten
+- oder per Konsole den `php composer update` und `php vendor/bin/contao-console contao:migrate` Befehl auszuführen
 
 ## Via Contao Backend das Bundle konfigurieren
 
 ![Alt text](docs/backend.png?raw=true "Backend")
-
 
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
@@ -34,7 +34,7 @@ Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
 
 ## Inbetriebnahme des Bundles
-Nachdem alle Eingaben im Backend gemacht wurden, das Bundle ganz einfach per Knopfdruck generieren lassen. 
+Nachdem alle Eingaben im Backend gemacht wurden, das Bundle ganz einfach per Knopfdruck generieren lassen.
 Die Extension sollte nun im Verzeichnis "vendor" erstellt worden sein und kann auch als ZIP-File heruntergeladen werden.
 
 ### Variante A (Auch ohne eigenen github-Account möglich)
@@ -47,7 +47,7 @@ In der composer.json folgende 2 Einträge machen:
     }
   ],
 ```
-In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben. 
+In der composer.json den **absoluten Pfad** zum Bundle im vendor-Verzeichnis angeben.
 Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 ```
   "require": {
@@ -56,7 +56,7 @@ Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch e
     "dirtyharrycoding/hello-world-bundle": "dev-main"
   },
 ```
-Im require-Teil das neu erstellte Bundle registrieren. 
+Im require-Teil das neu erstellte Bundle registrieren.
 Dieser Schritt kann, wenn so eingestellt, von der Erweiterung auch automatisch erledigt werden.
 
 Danach via Contao Manager ein vollständiges Update durchführen und das Installtool aufrufen. Fertig!
@@ -81,13 +81,13 @@ In der composer.json den Pfad zum github repo angeben.
     "dirtyharrycoding/hello-world-bundle": "dev-main"
   },
 ```
-Im require-Teil das neu erstellte Bundle registrieren. 
+Im require-Teil das neu erstellte Bundle registrieren.
 
 Danach via Contao Manager ein vollständige Update durchführen und das Installtool aufrufen. Fertig!
 
-Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt. 
+Bei Variante B kann es sein, dass github.com die Verbindungsanfrage ablehnt.
 Die Erstellung eines **Oauth-Access-Tokens** kann hier Abhilfe schaffen.
-Das Access Token muss dann in der **config section** der composer.json im Root eingesetzt werden. 
+Das Access Token muss dann in der **config section** der composer.json im Root eingesetzt werden.
 [Github Oauth-Access-Token generieren](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
 ```
    "config": {
@@ -114,7 +114,7 @@ Installtool aufrufen. Fertig!
 * Bei der Erstellung des Bundles wird im Verzeichnis system/tmp zusätzlich ein zip-package mit dem generierten Bundle abgelegt. Das Package kann per Knopfdruck heruntergeladen werden.
 
 ## Templates updatesicher anpassen
-Falls man die Standard-Templates anpassen möchte, die der bundle-maker benötigt, um die PHP-Klassen, Konfigurationsdateien, etc. zu generieren, 
+Falls man die Standard-Templates anpassen möchte, die der bundle-maker benötigt, um die PHP-Klassen, Konfigurationsdateien, etc. zu generieren,
 kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-bundle/skeleton ablegen.
 
 ![Templates updatesicher überschreiben](docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
@@ -139,7 +139,7 @@ vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src/Resources/contao --f
 
 ## App erweitern
 Die Bundle-Dateien werden in dieser App über Maker dem neu zu erstellenden Bundle hinzugefügt.
-Mit Subscribern können weitere Maker-Klassen hinzugefügt werden. Dazu muss lediglich eine Subscriberklasse angelegt und diese in src/Resources/config/subscriber.yml registriert werden. 
+Mit Subscribern können weitere Maker-Klassen hinzugefügt werden. Dazu muss lediglich eine Subscriberklasse angelegt und diese in src/Resources/config/subscriber.yml registriert werden.
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)

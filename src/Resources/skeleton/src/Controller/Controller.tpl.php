@@ -7,43 +7,34 @@ declare(strict_types=1);
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+<?php if ($this->useattributes): ?>
 use Symfony\Component\Routing\Annotation\Route;
+<?php else: ?>
+use Symfony\Component\Routing\Annotation\Route;
+<?php endif; ?>
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment as TwigEnvironment;
 
+<?php if ($this->useattributes): ?>
+#[Route('/my_custom', name: '<?= $this->routeid; ?>_my_custom', defaults: ['_scope' => 'frontend', '_token_check' => true])]
+<?php else: ?>
 /**
- * Class MyCustomController
- *
- * @Route("/my_custom",
- *     name="<?= $this->routeid; ?>_my_custom",
- *     defaults={
- *         "_scope" = "frontend",
- *         "_token_check" = true
- *     }
- * )
+ * @Route("/my_custom", name="<?= $this->routeid; ?>_my_custom", defaults={"_scope" = "frontend", "_token_check" = true})
  */
+<?php endif; ?>
 class MyCustomController extends AbstractController
 {
-    /**
-     * @var TwigEnvironment
-     */
-    private $twig;
 
-    /**
-     * MyCustomController constructor.
-     */
+    private TwigEnvironment $twig;
+
     public function __construct(TwigEnvironment $twig)
     {
         $this->twig = $twig;
     }
 
-    /**
-     * Generate the response
-     */
     public function __invoke()
     {
         $animals = [
-
             [
                 'species' => 'dogs',
                 'color'   => 'white'

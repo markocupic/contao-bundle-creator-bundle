@@ -18,7 +18,7 @@ class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
         return $this->has($offset);
     }
 
-    public function &offsetGet($offset)
+    public function &offsetGet($offset): mixed
     {
         return $this->attributes[$offset];
     }

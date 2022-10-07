@@ -8,23 +8,26 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+<?php if ($this->useattributes): ?>
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+<?php else: ?>
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+<?php endif; ?>
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+<?php if ($this->useattributes): ?>
+#[AsContentElement(category: '<?= $this->contentelementcategory; ?>')]
+<?php else: ?>
 /**
- * Class <?= $this->contentelementclassname; ?><?= "\n"; ?>
- *
- * @ContentElement(<?= $this->contentelementclassname; ?>::TYPE, category="<?= $this->contentelementcategory; ?>", template="<?= $this->contentelementtemplate; ?>")
+ * @ContentElement(category="<?= $this->contentelementcategory; ?>")
  */
+<?php endif; ?>
 class <?= $this->contentelementclassname; ?> extends AbstractContentElementController
 {
     public const TYPE = '<?= $this->contentelementtype; ?>';
 
-    /**
-     * Generate the content element
-     */
     protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
     {
         $template->text = $model->text;

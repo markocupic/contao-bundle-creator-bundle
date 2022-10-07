@@ -1,341 +1,265 @@
-<?xml version="1.0" ?><xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_contao_bundle_creator.php" source-language="en">
-        <body>
-            <trans-unit id="tl_contao_bundle_creator.edit.0">
-                <source>Edit ID %s </source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.edit.1">
-                <source>Edit bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.copy.0">
-                <source>Duplicate bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.copy.1">
-                <source>Duplicate bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.delete.0">
-                <source>Delete bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.delete.1">
-                <source>Delete bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.show.0">
-                <source>Watch details bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.show.1">
-                <source>Watch details bundle ID %s</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.bundle_settings_legend">
-                <source>Bundle settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composer_settings_legend">
-                <source>composer.json settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.rootcomposer_settings_legend">
-                <source>(ROOT-)composer.json settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.dcatable_settings_legend">
-                <source>DCA table settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmodule_settings_legend">
-                <source>Frontend element settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelement_settings_legend">
-                <source>Content element settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.custom_route_settings_legend">
-                <source>Custom route settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.custom_session_attribute_settings_legend">
-                <source>Session attribute settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.friendly_configuration_settings_legend">
-                <source>Friendly configuration settings</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
-                <source>Coding Style Tools</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.bundlename.0">
-                <source>Bundle name</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.bundlename.1">
-                <source>Please enter a name for the bundle.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.vendorname.0">
-                <source>Vendor name</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.vendorname.1">
-                <source>Please enter a vendor name.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.repositoryname.0">
-                <source>(Github-) repository name (use &quot;contao-&quot; as prefix)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.repositoryname.1">
-                <source>Please enter the repository name.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.overwriteexisting.0">
-                <source>Override bundle of the same name</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.overwriteexisting.1">
-                <source>Should the bundle of the same name be overwritten?</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerdescription.0">
-                <source>composer.json: description text</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerdescription.1">
-                <source>Please enter the text for the description section in the composer.json file of your new bundle.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerpackageversion.0">
-                <source>composer.json: package version  (Mandatory for package uploads with the Contao Manager)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerpackageversion.1">
-                <source>Please enter the package version in format 1.x (Mandatory only for package uploads with the Contao Manager).</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.editRootComposer.0">
-                <source>Edit composer.json (ROOT)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.editRootComposer.1">
-                <source>Authorize the bundle generator editing your composer.json (ROOT)?</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.rootcomposerextendrepositorieskey.0">
-                <source>composer.json (ROOT): Extend the file with an entry at the key: &quot;repositories&quot;?</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.rootcomposerextendrepositorieskey.1">
-                <source>Should your (ROOT-) composer.json be extended with an entry at the key: &quot;repositories&quot;?</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerlicense.0">
-                <source>composer.json: license</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerlicense.1">
-                <source>Please enter the license type. e.g. MIT.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthorname.0">
-                <source>composer.json: author name</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthorname.1">
-                <source>Please enter the author's name.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthoremail.0">
-                <source>composer.json: author email address</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthoremail.1">
-                <source>Please enter the authors's email address.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthorwebsite.0">
-                <source>composer.json: website</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.composerauthorwebsite.1">
-                <source>Please enter the author's website. e.g. https://github.com/vendorname</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addBackendModule.0">
-                <source>Add a backend module with a dca table</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addBackendModule.1">
-                <source>Should a backend module with a dca table be added?</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmodulecategory.0">
-                <source>Backend module category</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmodulecategory.1">
-                <source>Please enter the backend module category as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmodulecategorytrans.0">
-                <source>Backend module category translation</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmodulecategorytrans.1">
-                <source>Let the field empty if the category and the translation already exists.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmoduletype.0">
-                <source>Backendmodule type</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmoduletype.1">
-                <source>Please enter the backend module type as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmoduletrans.0">
-                <source>Backend module type translation and description</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.backendmoduletrans.1">
-                <source>Please add a name and a description for the backend module.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.dcatable.0">
-                <source>DCA table name</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.dcatable.1">
-                <source>Please enter a name for the table: e.g. tl_my_pets</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addFrontendModule.0">
-                <source>Add a frontend module</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addFrontendModule.1">
-                <source>Add a frontend module to the bundle.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.0">
-                <source>Frontend module category (snakecase)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.1">
-                <source>Please enter the frontend module category as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmodulecategorytrans.0">
-                <source>Frontend module category translation</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmodulecategorytrans.1">
-                <source>Let the field empty if the category and the translation already exists.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.0">
-                <source>Frontend module type (snakecase)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.1">
-                <source>Please enter the frontend module type as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.0">
-                <source>Frontend module type name and description</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.1">
-                <source>Please add a name and a description for the frontend module.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addContentElement.0">
-                <source>Add a content element</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addContentElement.1">
-                <source>Add a content element to the bundle.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.0">
-                <source>Content element category (snakecase)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementcategory.1">
-                <source>Please enter the content element category as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.0">
-                <source>Content element category translation</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.1">
-                <source>Let the field empty if the category and the translation already exists.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
-                <source>Content element type (snakecase)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">
-                <source>Please enter the content element type as a snakecased string.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.0">
-                <source>Content element type name and description</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.contentelementtrans.1">
-                <source>Please add a name and a description for the content element.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addCustomRoute.0">
-                <source>Add a custom route</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addCustomRoute.1">
-                <source>Should a custom route be added to the bundle?</source>
-            </trans-unit>
-            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
-                <source>Add easy-coding-standard configuration</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.1">
-                <source>Add easy-coding-standard configuration.</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.createBundleButton">
-                <source>Generate bundle</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.downloadBundleButton">
-                <source>Download bundle</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.0">
-                <source>Add extra session attribute (session bag)</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.1">
-                <source>Add an extra session attribute (session bag).</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.0">
-                <source>Add friendly configuration</source>
-            </trans-unit>
-
-            <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.1">
-                <source>Add friendly configuration.</source>
-            </trans-unit>
-
-        </body>
-    </file>
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_contao_bundle_creator.php" source-language="en">
+    <body>
+      <trans-unit id="tl_contao_bundle_creator.edit.0">
+        <source>Edit ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.edit.1">
+        <source>Edit bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.copy.0">
+        <source>Duplicate bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.copy.1">
+        <source>Duplicate bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.delete.0">
+        <source>Delete bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.delete.1">
+        <source>Delete bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.show.0">
+        <source>Watch details bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.show.1">
+        <source>Watch details bundle ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.bundle_settings_legend">
+        <source>Bundle settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composer_settings_legend">
+        <source>composer.json settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.rootcomposer_settings_legend">
+        <source>(ROOT-)composer.json settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.dcatable_settings_legend">
+        <source>DCA table settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmodule_settings_legend">
+        <source>Frontend element settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelement_settings_legend">
+        <source>Content element settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.custom_route_settings_legend">
+        <source>Custom route settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.custom_session_attribute_settings_legend">
+        <source>Session attribute settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.friendly_configuration_settings_legend">
+        <source>Friendly configuration settings</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.coding_style_legend">
+        <source>Coding Style Tools</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.bundlename.0">
+        <source>Bundle name</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.bundlename.1">
+        <source>Please enter a name for the bundle.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.vendorname.0">
+        <source>Vendor name</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.vendorname.1">
+        <source>Please enter a vendor name.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.repositoryname.0">
+        <source>(Github-) repository name (use &quot;contao-&quot; as prefix)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.repositoryname.1">
+        <source>Please enter the repository name.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.overwriteexisting.0">
+        <source>Override bundle of the same name</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.overwriteexisting.1">
+        <source>Should the bundle of the same name be overwritten?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.useattributes.0">
+        <source>Use native PHP 8 attributes</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.useattributes.1">
+        <source>Use native PHP 8 attributes instead of annotation syntax to define/configure routes, frontend modules or content elements?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerdescription.0">
+        <source>composer.json: description text</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerdescription.1">
+        <source>Please enter the text for the description section in the composer.json file of your new bundle.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerpackageversion.0">
+        <source>composer.json: package version (Mandatory for package uploads with the Contao Manager)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerpackageversion.1">
+        <source>Please enter the package version in format 1.x (Mandatory only for package uploads with the Contao Manager).</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.editRootComposer.0">
+        <source>Edit composer.json (ROOT)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.editRootComposer.1">
+        <source>Authorize the bundle generator editing your composer.json (ROOT)?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.rootcomposerextendrepositorieskey.0">
+        <source>composer.json (ROOT): Extend the file with an entry at the key: &quot;repositories&quot;?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.rootcomposerextendrepositorieskey.1">
+        <source>Should your (ROOT-) composer.json be extended with an entry at the key: &quot;repositories&quot;?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerlicense.0">
+        <source>composer.json: license</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerlicense.1">
+        <source>Please enter the license type. e.g. MIT.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthorname.0">
+        <source>composer.json: author name</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthorname.1">
+        <source>Please enter the author's name.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthoremail.0">
+        <source>composer.json: author email address</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthoremail.1">
+        <source>Please enter the authors's email address.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthorwebsite.0">
+        <source>composer.json: website</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.composerauthorwebsite.1">
+        <source>Please enter the author's website. e.g. https://github.com/vendorname</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addBackendModule.0">
+        <source>Add a backend module with a dca table</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addBackendModule.1">
+        <source>Should a backend module with a dca table be added?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmodulecategory.0">
+        <source>Backend module category</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmodulecategory.1">
+        <source>Please enter the backend module category as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmodulecategorytrans.0">
+        <source>Backend module category translation</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmodulecategorytrans.1">
+        <source>Let the field empty if the category and the translation already exists.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmoduletype.0">
+        <source>Backendmodule type</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmoduletype.1">
+        <source>Please enter the backend module type as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmoduletrans.0">
+        <source>Backend module type translation and description</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.backendmoduletrans.1">
+        <source>Please add a name and a description for the backend module.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.dcatable.0">
+        <source>DCA table name</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.dcatable.1">
+        <source>Please enter a name for the table: e.g. tl_my_pets</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addFrontendModule.0">
+        <source>Add a frontend module</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addFrontendModule.1">
+        <source>Add a frontend module to the bundle.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.0">
+        <source>Frontend module category (snakecase)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmodulecategory.1">
+        <source>Please enter the frontend module category as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmodulecategorytrans.0">
+        <source>Frontend module category translation</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmodulecategorytrans.1">
+        <source>Let the field empty if the category and the translation already exists.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.0">
+        <source>Frontend module type (snakecase)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmoduletype.1">
+        <source>Please enter the frontend module type as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.0">
+        <source>Frontend module type name and description</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.frontendmoduletrans.1">
+        <source>Please add a name and a description for the frontend module.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addContentElement.0">
+        <source>Add a content element</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addContentElement.1">
+        <source>Add a content element to the bundle.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementcategory.0">
+        <source>Content element category (snakecase)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementcategory.1">
+        <source>Please enter the content element category as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.0">
+        <source>Content element category translation</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementcategorytrans.1">
+        <source>Let the field empty if the category and the translation already exists.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementtype.0">
+        <source>Content element type (snakecase)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementtype.1">
+        <source>Please enter the content element type as a snakecased string.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementtrans.0">
+        <source>Content element type name and description</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.contentelementtrans.1">
+        <source>Please add a name and a description for the content element.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addCustomRoute.0">
+        <source>Add a custom route</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addCustomRoute.1">
+        <source>Should a custom route be added to the bundle?</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.0">
+        <source>Add easy-coding-standard configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addEasyCodingStandard.1">
+        <source>Add easy-coding-standard configuration.</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.createBundleButton">
+        <source>Generate bundle</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.downloadBundleButton">
+        <source>Download bundle</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.0">
+        <source>Add extra session attribute (session bag)</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addSessionAttribute.1">
+        <source>Add an extra session attribute (session bag).</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.0">
+        <source>Add friendly configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_contao_bundle_creator.addFriendlyConfiguration.1">
+        <source>Add friendly configuration.</source>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
