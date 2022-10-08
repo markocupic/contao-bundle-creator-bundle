@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2022 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -18,25 +18,35 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Message as ContaoMessage;
 use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-/**
- * Class MessageTest.
- */
 class MessageTest extends ContaoTestCase
 {
-    /**
-     * @var Session
-     */
-    protected $session;
+    protected Session $session;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->session = new Session(new MockArraySessionStorage());
-        $this->message = new Message($this->mockFramework(), $this->session);
+        $session = new Session(new MockArraySessionStorage());
+        $session->start();
+
+        $this->session = $session;
+
+        $request = new Request([], [], [], [], [], [], [], json_encode([
+            'foo' => 'bar',
+        ]));
+
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        // Do your tests
+        $this->message = new Message($this->mockFramework(), $requestStack);
     }
 
     public function testInstantiation(): void

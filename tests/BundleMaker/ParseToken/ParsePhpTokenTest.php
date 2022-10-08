@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2022 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -19,20 +19,10 @@ use Contao\TestCase\ContaoTestCase;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 
-/**
- * Class ParsePhpTokenTest.
- */
 class ParsePhpTokenTest extends ContaoTestCase
 {
-    /**
-     * @var TagStorage
-     */
-    protected $tagStorage;
-
-    /**
-     * @var ParsePhpToken
-     */
-    protected $parseToken;
+    protected TagStorage $tagStorage;
+    protected ParsePhpToken $parseToken;
 
     protected function setUp(): void
     {
