@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2021 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2022 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
 
-/**
- * Class String.
- */
 final class Str
 {
     /**
@@ -116,8 +113,11 @@ final class Str
      */
     public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
     {
-        return preg_replace('/Bundle$/', '',
-                self::asClassName($vendorName).self::asClassName($repositoryName)).'Extension';
+        return preg_replace(
+            '/Bundle$/',
+            '',
+            self::asClassName($vendorName).self::asClassName($repositoryName)
+        ).'Extension';
     }
 
     /**
@@ -182,12 +182,12 @@ final class Str
      * Get the frontend module type (f.ex. my_custom)
      * Convention => snakecase.
      *
-     * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
+     * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
      * @param string $suffix (add a suffix e.g. "_module")
      */
     public static function asContaoFrontendModuleType(string $value, $suffix = ''): string
     {
-        $value = self::asSnakeCase((string)$value);
+        $value = self::asSnakeCase((string) $value);
 
         $pattern = '/^(module_|module|mod_|mod|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -217,12 +217,12 @@ final class Str
      * Get the content element type (f.ex. my_custom)
      * Convention => snakecase.
      *
-     * @param string $value (requires tl_contao_bundle_creator.contentelementtype)
+     * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
      * @param string $suffix (add a suffix e.g. "_element")
      */
     public static function asContaoContentElementType(string $value, $suffix = ''): string
     {
-        $value = self::asSnakeCase((string)$value);
+        $value = self::asSnakeCase((string) $value);
 
         $pattern = '/^(element_|element|ce_|ce|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -258,7 +258,7 @@ final class Str
      */
     public static function asContaoDcaTable(string $value): string
     {
-        if (!\strlen((string)$value)) {
+        if (!\strlen((string) $value)) {
             throw new \Exception('No dca tablename set.');
         }
 
@@ -308,9 +308,7 @@ final class Str
     public static function generateHeaderCommentFromString(string $value): string
     {
         $lines = explode("\n", $value);
-        $lines = array_map(function ($line) {
-            return ' * '.$line;
-        }, $lines);
+        $lines = array_map(static fn ($line) => ' * '.$line, $lines);
 
         return sprintf('%s%s%s', '/*'."\n", implode("\n", $lines), "\n".' */'."\n");
     }

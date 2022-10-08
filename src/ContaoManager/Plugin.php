@@ -14,20 +14,19 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Markocupic\ContaoBundleCreatorBundle\MarkocupicContaoBundleCreatorBundle;
 
-/**
- * Class Plugin.
- */
 class Plugin implements BundlePluginInterface
 {
     public function getBundles(ParserInterface $parser): array
     {
         return [
-            BundleConfig::create('Markocupic\ContaoBundleCreatorBundle\MarkocupicContaoBundleCreatorBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
+            BundleConfig::create(MarkocupicContaoBundleCreatorBundle::class)
+                ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }
 }

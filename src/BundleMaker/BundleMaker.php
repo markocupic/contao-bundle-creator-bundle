@@ -24,72 +24,26 @@ use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * Class BundleMaker.
- */
 class BundleMaker
 {
-    /**
-     * @var ContaoFramework
-     */
-    protected $framework;
+    protected ContaoFramework $framework;
+    protected RequestStack $requestStack;
+    protected FileStorage $fileStorage;
+    protected TagStorage $tagStorage;
+    protected EventDispatcherInterface $eventDispatcher;
+    protected Message $message;
+    protected Zip $zip;
+    protected string $projectDir;
+    protected ContaoBundleCreatorModel $input;
+    protected string $skeletonPath;
 
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var FileStorage
-     */
-    protected $fileStorage;
-
-    /**
-     * @var TagStorage
-     */
-    protected $tagStorage;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @var Message
-     */
-    protected $message;
-
-    /**
-     * @var Zip
-     */
-    protected $zip;
-
-    /**
-     * @var string
-     */
-    protected $projectDir;
-
-    /**
-     * @var ContaoBundleCreatorModel
-     */
-    protected $input;
-
-    /**
-     * @var string
-     */
-    protected $skeletonPath;
-
-    /**
-     * BundleMaker constructor.
-     */
-    public function __construct(ContaoFramework $framework, Session $session, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
     {
         $this->framework = $framework;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->fileStorage = $fileStorage;
         $this->tagStorage = $tagStorage;
         $this->eventDispatcher = $eventDispatcher;
@@ -100,7 +54,7 @@ class BundleMaker
     }
 
     /**
-     * Run contao bundle creator.
+     * Run the contao bundle creator.
      *
      * @throws \Exception
      */
@@ -215,7 +169,8 @@ class BundleMaker
         ;
 
         if ($zip->run($zipTarget)) {
-            $this->session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir.'/', '', $zipTarget));
+            $session = $this->requestStack->getCurrentRequest()->getSession();
+            $session->set('CONTAO-BUNDLE-CREATOR.LAST-ZIP', str_replace($this->projectDir.'/', '', $zipTarget));
         }
     }
 

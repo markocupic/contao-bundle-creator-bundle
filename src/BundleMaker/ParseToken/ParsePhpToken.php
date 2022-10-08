@@ -17,19 +17,10 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Class ParsePhpToken.
- */
 class ParsePhpToken
 {
-    /**
-     * @var TagStorage
-     */
-    public $tagStorage;
+    public TagStorage $tagStorage;
 
-    /**
-     * ParsePhpToken constructor.
-     */
     public function __construct(TagStorage $tagStorage)
     {
         $this->tagStorage = $tagStorage;
@@ -70,7 +61,7 @@ class ParsePhpToken
         $tmpDir = sys_get_temp_dir();
 
         if (!is_dir($tmpDir)) {
-            throw new \Exception(sprintf('Temporary directory not found.'));
+            throw new \Exception('Temporary directory not found.');
         }
 
         $tmpFile = $tmpDir.'/'.md5($content.microtime()).'txt';

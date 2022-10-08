@@ -154,9 +154,6 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
     )
 );
 
-/**
- * Class <?= $this->dcaclassname."\n"; ?>
- */
 class <?= $this->dcaclassname; ?> extends Backend
 {
     /**

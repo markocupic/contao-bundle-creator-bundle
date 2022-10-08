@@ -15,9 +15,6 @@ use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Dependency
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Class <?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?><?= "\n"; ?>
- */
 class <?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?> extends Bundle
 {
 <?php if ($this->addFriendlyConfiguration) { ?>

@@ -13,8 +13,6 @@ use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\ContaoMana
 use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\<?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?>;
 
 /**
- * Class PluginTest
- *
  * @package <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Tests\ContaoManager
  */
 class PluginTest extends ContaoTestCase

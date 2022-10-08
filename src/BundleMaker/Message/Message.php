@@ -14,46 +14,26 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message;
 
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Message as ContaoMessage;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Class BundleMaker.
- */
 class Message
 {
     public const CONTAO_SCOPE = 'BE';
-
     public const SESSION_KEY_ERROR = 'contao.BE.error';
-
     public const SESSION_KEY_INFO = 'contao.BE.info';
-
     public const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
 
-    /**
-     * @var ContaoFramework
-     */
-    protected $framework;
+    protected ContaoFramework $framework;
+    protected RequestStack $requestStack;
+    protected Adapter $messageAdapter;
 
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var \Contao\Message
-     */
-    protected $messageAdapter;
-
-    /**
-     * Message constructor.
-     */
-    public function __construct(ContaoFramework $framework, SessionInterface $session)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
         $this->framework = $framework;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
 
         $this->messageAdapter = $this->framework->getAdapter(ContaoMessage::class);
     }
@@ -126,8 +106,7 @@ class Message
      */
     private function getFlashMessages(string $type): array
     {
-        /** @var Session $session */
-        $session = $this->session;
+        $session = $this->requestStack->getCurrentRequest()->getSession();
         $flashBag = $session->getFlashBag();
 
         return $flashBag->get($type, []);

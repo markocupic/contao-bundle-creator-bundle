@@ -46,30 +46,13 @@ use Symfony\Component\Finder\Finder;
  *   ->truncate()
  *   ->appendContent('bla, bla');
  * }
- *
- *
- * Class FileStorage
  */
 class FileStorage
 {
-    /**
-     * @var string
-     */
-    protected $projectDir;
+    protected string $projectDir;
+    protected array $arrStorrage = [];
+    protected int $intIndex = -1;
 
-    /**
-     * @var array
-     */
-    protected $arrStorrage = [];
-
-    /**
-     * @var int
-     */
-    protected $intIndex = -1;
-
-    /**
-     * FileStorage constructor.
-     */
     public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;

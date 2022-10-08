@@ -14,9 +14,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\DependencyInjection\Configuration;
 <?php } ?>
 
-/**
- * Class <?= $this->dependencyinjectionextensionclassname; ?><?= "\n"; ?>
- */
 class <?= $this->dependencyinjectionextensionclassname; ?> extends Extension
 {
 <?php if ($this->addFriendlyConfiguration) { ?><?= "\n"; ?>

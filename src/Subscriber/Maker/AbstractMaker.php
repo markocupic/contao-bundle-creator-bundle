@@ -27,45 +27,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractMaker implements MakerInterface, EventSubscriberInterface
 {
-    /**
-     * @var ContaoFramework;
-     */
-    protected $framework;
-
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var TagStorage
-     */
-    protected $tagStorage;
-
-    /**
-     * @var FileStorage
-     */
-    protected $fileStorage;
-
-    /**
-     * @var ContaoBundleCreatorModel
-     */
-    protected $input;
-
-    /**
-     * @var Message
-     */
-    protected $message;
-
-    /**
-     * @var string
-     */
-    protected $skeletonPath;
-
-    /**
-     * @var string
-     */
-    protected $projectDir;
+    protected ContaoFramework $framework;
+    protected SessionInterface $session;
+    protected TagStorage $tagStorage;
+    protected FileStorage $fileStorage;
+    protected ContaoBundleCreatorModel $input;
+    protected Message $message;
+    protected string $skeletonPath;
+    protected string $projectDir;
 
     public function addFilesToStorage(AddMakerEvent $event): void
     {

@@ -9,11 +9,11 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
-<?php else: ?>
+<?php } else { ?>
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
-<?php endif; ?>
+<?php } ?>
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
@@ -26,13 +26,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 #[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>')]
-<?php else: ?>
+<?php } else { ?>
 /**
  * @FrontendModule(category="<?= $this->frontendmodulecategory; ?>")
  */
-<?php endif; ?>
+<?php } ?>
 class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleController
 {
     public const TYPE = '<?= $this->frontendmoduletype; ?>';
@@ -74,7 +74,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         return $services;
     }
 
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $userFirstname = 'DUDE';
         $user = $this->container->get('security.helper')->getUser();

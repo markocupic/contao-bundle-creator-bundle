@@ -7,21 +7,21 @@ declare(strict_types=1);
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 use Symfony\Component\Routing\Annotation\Route;
-<?php else: ?>
+<?php } else { ?>
 use Symfony\Component\Routing\Annotation\Route;
-<?php endif; ?>
+<?php } ?>
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment as TwigEnvironment;
 
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 #[Route('/my_custom', name: '<?= $this->routeid; ?>_my_custom', defaults: ['_scope' => 'frontend', '_token_check' => true])]
-<?php else: ?>
+<?php } else { ?>
 /**
  * @Route("/my_custom", name="<?= $this->routeid; ?>_my_custom", defaults={"_scope" = "frontend", "_token_check" = true})
  */
-<?php endif; ?>
+<?php } ?>
 class MyCustomController extends AbstractController
 {
 
@@ -32,7 +32,7 @@ class MyCustomController extends AbstractController
         $this->twig = $twig;
     }
 
-    public function __invoke()
+    public function __invoke(): Response
     {
         $animals = [
             [

@@ -8,27 +8,27 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
-<?php else: ?>
+<?php } else { ?>
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
-<?php endif; ?>
+<?php } ?>
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-<?php if ($this->useattributes): ?>
+<?php if ($this->useattributes) { ?>
 #[AsContentElement(category: '<?= $this->contentelementcategory; ?>')]
-<?php else: ?>
+<?php } else { ?>
 /**
  * @ContentElement(category="<?= $this->contentelementcategory; ?>")
  */
-<?php endif; ?>
+<?php } ?>
 class <?= $this->contentelementclassname; ?> extends AbstractContentElementController
 {
     public const TYPE = '<?= $this->contentelementtype; ?>';
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $template->text = $model->text;
 

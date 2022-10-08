@@ -12,45 +12,25 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-bundle-creator-bundle
  */
 
-use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
-use Contao\System;
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker;
-use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-/*
- * Table tl_contao_bundle_creator
- */
 $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     // Config
     'config'      => [
-        'dataContainer'     => 'Table',
-        'enableVersioning'  => true,
-        'sql'               => [
+        'dataContainer'    => DC_Table::class,
+        'enableVersioning' => true,
+        'sql'              => [
             'keys' => [
                 'id' => 'primary',
             ],
         ],
-        'onload_callback'   => [
-            ['tl_contao_bundle_creator', 'downloadZipFile'],
-        ],
-        'onsubmit_callback' => [
-            ['tl_contao_bundle_creator', 'runCreator'],
-        ],
-    ],
-    'edit'        => [
-        'buttons_callback' => [
-            ['tl_contao_bundle_creator', 'buttonsCallback'],
-        ],
     ],
     'list'        => [
         'sorting'           => [
-            'mode'        => 2,
+            'mode'        => DataContainer::MODE_SORTABLE,
             'fields'      => ['bundlename'],
-            'flag'        => 1,
+            'flag'        => DataContainer::SORT_INITIAL_LETTER_ASC,
             'panelLayout' => 'filter;sort,search,limit',
         ],
         'label'             => [
@@ -120,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -129,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_vendorname'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -138,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'doNotCopy' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_repositoryname', 'placeholder' => 'e.g. contao-pet-collection-bundle'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -161,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'cbcb_composerdescription'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -170,27 +150,26 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => false, 'maxlength' => 16, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(16) NOT NULL default ''",
         ],
         'composerlicense'                   => [
-            'inputType'        => 'select',
-            'exclude'          => true,
-            'sorting'          => true,
-            'options_callback' => ['tl_contao_bundle_creator', 'getLicenses'],
-            'default'          => 'GPL-3.0-or-later',
-            'flag'             => 1,
-            'search'           => true,
-            'eval'             => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
-            'sql'              => "varchar(255) NOT NULL default ''",
+            'inputType' => 'select',
+            'exclude'   => true,
+            'sorting'   => true,
+            'default'   => 'GPL-3.0-or-later',
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
+            'search'    => true,
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
+            'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'composerauthorname'                => [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alpha'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -199,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'email'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -208,7 +187,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -238,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'clr', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_dcatable', 'placeholder' => 'e.g. tl_pets'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -247,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_backendmodulecategory', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -256,7 +235,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -265,7 +244,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_backendmoduletype', 'placeholder' => 'e.g. pet_collection'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -289,7 +268,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmodulecategory', 'placeholder' => 'e.g. pet_modules'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -298,7 +277,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -307,7 +286,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmoduletype', 'placeholder' => 'e.g. pet_listing_module'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -331,7 +310,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementcategory', 'placeholder' => 'e.g. image_elements'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -340,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => false, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'alnum'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -349,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'inputType' => 'text',
             'exclude'   => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
             'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementtype', 'placeholder' => 'e.g. heroimage_element'],
             'sql'       => "varchar(255) NOT NULL default ''",
@@ -389,93 +368,3 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
         ],
     ],
 ];
-
-/**
- * Class tl_contao_bundle_creator.
- */
-class tl_contao_bundle_creator extends Backend
-{
-    /**
-     * tl_contao_bundle_creator constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * onsubmit callback
-     * Run the bundle maker.
-     *
-     * @throws Exception
-     */
-    public function runCreator(DataContainer $dc): void
-    {
-        if ('' !== Input::get('id') && '' === Input::post('createBundle') && 'tl_contao_bundle_creator' === Input::post('FORM_SUBMIT') && 'auto' !== Input::post('SUBMIT_TYPE')) {
-            if (null !== ($objModel = ContaoBundleCreatorModel::findByPk(Input::get('id')))) {
-                /** @var BundleMaker $bundleMakerService */
-                $bundleMakerService = System::getContainer()->get('markocupic.contao_bundle_creator_bundle.bundle_maker.bundle_maker');
-                $bundleMakerService->run($objModel);
-            }
-        }
-    }
-
-    /**
-     * onload callback
-     * Download extension as zip file when clicking on the download button.
-     */
-    public function downloadZipFile(DC_Table $dc): void
-    {
-        if ('' !== Input::get('id') && '' === Input::post('downloadBundle') && 'tl_contao_bundle_creator' === Input::post('FORM_SUBMIT') && 'auto' !== Input::post('SUBMIT_TYPE')) {
-            /** @var SessionInterface $session */
-            $session = System::getContainer()->get('session');
-
-            if ($session->has('CONTAO-BUNDLE-CREATOR.LAST-ZIP')) {
-                $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
-                $session->remove('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
-
-                $projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-                $filepath = $projectDir.'/'.$zipSrc;
-                $filename = basename($filepath);
-                header('Content-Type: application/zip');
-                header('Content-Disposition: attachment; filename="'.$filename.'"');
-                header('Content-Length: '.filesize($filepath));
-                readfile($filepath);
-                exit();
-            }
-        }
-    }
-
-    /**
-     * @param $arrButtons
-     *
-     * @return mixed
-     */
-    public function buttonsCallback($arrButtons, DC_Table $dc)
-    {
-        if ('edit' === Input::get('act')) {
-            $arrButtons['createBundle'] = '<button type="submit" name="createBundle" id="createBundle" class="tl_submit createBundle" accesskey="x">'.$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['createBundleButton'].'</button>';
-
-            /** @var SessionInterface $session */
-            $session = System::getContainer()->get('session');
-
-            if ($session->has('CONTAO-BUNDLE-CREATOR.LAST-ZIP')) {
-                $arrButtons['downloadBundle'] = '<button type="submit" name="downloadBundle" id="downloadBundle" class="tl_submit downloadBundle" accesskey="d" onclick="this.style.display = \'none\'">'.$GLOBALS['TL_LANG']['tl_contao_bundle_creator']['downloadBundleButton'].'</button>';
-            }
-        }
-
-        return $arrButtons;
-    }
-
-    public function getLicenses(): array
-    {
-        $arrLicenses = [];
-
-        foreach ($GLOBALS['contao_bundle_creator']['licenses'] as $k => $v) {
-            $arrLicenses[$k] = "$k   ($v)";
-        }
-
-        return $arrLicenses;
-    }
-}

@@ -16,9 +16,6 @@ namespace Markocupic\ContaoBundleCreatorBundle\Model;
 
 use Contao\Model;
 
-/**
- * Class ContaoBundleCreatorModel.
- */
 class ContaoBundleCreatorModel extends Model
 {
     protected static $strTable = 'tl_contao_bundle_creator';

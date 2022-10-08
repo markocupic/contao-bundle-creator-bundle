@@ -15,9 +15,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 <?php } ?>
 
-/**
- * Class Plugin
- */
 class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { ?>, RoutingPluginInterface<?php } ?><?= "\n"; ?>
 {
     public function getBundles(ParserInterface $parser): array

@@ -14,15 +14,9 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
-/**
- * Class TagStorage.
- */
 class TagStorage
 {
-    /**
-     * @var array
-     */
-    private $arrTags = [];
+    private array $arrTags = [];
 
     public function set(string $strKey, string $strValue): void
     {

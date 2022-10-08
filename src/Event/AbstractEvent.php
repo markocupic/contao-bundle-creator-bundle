@@ -19,61 +19,33 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Message\Message;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\FileStorage;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEvent extends Event
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var TagStorage
-     */
-    private $tagStorage;
-
-    /**
-     * @var FileStorage
-     */
-    private $fileStorage;
-
-    /**
-     * @var ContaoBundleCreatorModel
-     */
-    private $input;
-
-    /**
-     * @var Message
-     */
-    private $message;
-
-    /**
-     * @var string
-     */
-    private $skeletonPath;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ContaoFramework $framework;
+    private RequestStack $requestStack;
+    private TagStorage $tagStorage;
+    private FileStorage $fileStorage;
+    private ContaoBundleCreatorModel $input;
+    private Message $message;
+    private string $skeletonPath;
+    private string $projectDir;
+    private SessionInterface $session;
 
     public function __construct(\stdClass $event)
     {
         $this->framework = $event->framework;
-        $this->session = $event->session;
+        $this->requestStack = $event->requestStack;
         $this->tagStorage = $event->tagStorage;
         $this->fileStorage = $event->fileStorage;
         $this->input = $event->input;
         $this->message = $event->message;
         $this->skeletonPath = $event->skeletonPath;
         $this->projectDir = $event->projectDir;
+        $this->session = $this->requestStack->getCurrentRequest()->getSession();
     }
 
     public function getFramework(): ContaoFramework

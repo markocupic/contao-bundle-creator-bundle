@@ -16,9 +16,6 @@ namespace Markocupic\ContaoBundleCreatorBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Class MarkocupicContaoBundleCreatorBundle.
- */
 class MarkocupicContaoBundleCreatorBundle extends Bundle
 {
 }
