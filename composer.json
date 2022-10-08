@@ -44,5 +44,12 @@
   },
   "extra": {
     "contao-manager-plugin": "Markocupic\\ContaoBundleCreatorBundle\\ContaoManager\\Plugin"
+  },
+  "config": {
+    "allow-plugins": {
+      "contao/manager-plugin": true,
+      "contao-components/installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
