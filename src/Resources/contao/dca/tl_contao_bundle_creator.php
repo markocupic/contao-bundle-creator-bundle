@@ -16,7 +16,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
-    // Config
     'config'      => [
         'dataContainer'    => DC_Table::class,
         'enableVersioning' => true,
@@ -59,13 +58,11 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
                 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
             ],
             'show'   => [
-                'href'       => 'act=show',
-                'icon'       => 'show.svg',
-                'attributes' => 'style="margin-right:3px"',
+                'href' => 'act=show',
+                'icon' => 'show.svg',
             ],
         ],
     ],
-    // Palettes
     'palettes'    => [
         '__selector__' => ['editRootComposer', 'addBackendModule', 'addFrontendModule', 'addContentElement'],
         'default'      => '
@@ -81,14 +78,12 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             {coding_style_legend},addEasyCodingStandard
             ',
     ],
-    // Subpalettes
     'subpalettes' => [
         'editRootComposer'  => 'rootcomposerextendrepositorieskey',
         'addBackendModule'  => 'dcatable,backendmodulecategory,backendmodulecategorytrans,backendmoduletype,backendmoduletrans',
         'addFrontendModule' => 'frontendmodulecategory,frontendmodulecategorytrans,frontendmoduletype,frontendmoduletrans',
         'addContentElement' => 'contentelementcategory,contentelementcategorytrans,contentelementtype,contentelementtrans',
     ],
-    // Fields
     'fields'      => [
         'id'                                => [
             'sql' => 'int(10) unsigned NOT NULL auto_increment',
@@ -288,7 +283,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmoduletype', 'placeholder' => 'e.g. pet_listing_module'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_frontendmoduletype', 'placeholder' => 'e.g. pet_listing'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'frontendmoduletrans'               => [
@@ -312,7 +307,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementcategory', 'placeholder' => 'e.g. image_elements'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementcategory', 'placeholder' => 'e.g. pet_elements'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'contentelementcategorytrans'       => [
@@ -330,7 +325,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementtype', 'placeholder' => 'e.g. heroimage_element'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'nospace' => true, 'decodeEntities' => true, 'rgxp' => 'cbcb_contentelementtype', 'placeholder' => 'e.g. pet_listing'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'contentelementtrans'               => [
