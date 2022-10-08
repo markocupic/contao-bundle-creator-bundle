@@ -1,5 +1,5 @@
-:: Use this batch file in your IDE (Windows)
-:: In PhpStorm install the  "Batch Script Support" plugin
+:: Run easy-coding-standard (ecs) via this batch file inside your IDE e.g. PhpStorm (Windows only)
+:: Install inside PhpStorm the  "Batch Script Support" plugin
 cd..
 cd..
 cd..
