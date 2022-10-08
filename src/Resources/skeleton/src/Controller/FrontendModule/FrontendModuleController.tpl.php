@@ -37,7 +37,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 {
     public const TYPE = '<?= $this->frontendmoduletype; ?>';
 
-    protected PageModel $page;
+    protected ?PageModel $page;
 
     /**
      * This method extends the parent __invoke method,
