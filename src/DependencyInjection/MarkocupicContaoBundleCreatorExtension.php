@@ -31,9 +31,9 @@ class MarkocupicContaoBundleCreatorExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        $loader->load('parameters.yml');
-        $loader->load('services.yml');
-        $loader->load('listener.yml');
-        $loader->load('subscriber.yml');
+        $loader->load('parameters.yaml');
+        $loader->load('services.yaml');
+        $loader->load('listener.yaml');
+        $loader->load('subscriber.yaml');
     }
 }

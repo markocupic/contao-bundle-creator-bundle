@@ -33,8 +33,8 @@ class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
         return $resolver
-            ->resolve(__DIR__ . '/../Resources/config/routes.yml')
-            ->load(__DIR__ . '/../Resources/config/routes.yml');
+            ->resolve(__DIR__ . '/../Resources/config/routes.yaml')
+            ->load(__DIR__ . '/../Resources/config/routes.yaml');
     }
 <?php } ?>
 }
