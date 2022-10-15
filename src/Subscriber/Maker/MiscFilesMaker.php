@@ -43,7 +43,7 @@ final class MiscFilesMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
-        // src/Resources/config/*.yml yaml config files
+        // src/Resources/config/*.yaml yaml config files
         $arrFiles = [
             'listener.tpl.yaml',
             'parameters.tpl.yaml',
@@ -110,12 +110,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty stylesheet
         $source = sprintf(
-            '%s/public/css/styles.css',
+            '%s/src/Resources/public/css/styles.css',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/public/css/styles.css',
+            '%s/vendor/%s/%s/src/Resources/public/css/styles.css',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -127,12 +127,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty script file
         $source = sprintf(
-            '%s/public/js/script.js',
+            '%s/src/Resources/public/js/script.js',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/public/js/script.js',
+            '%s/vendor/%s/%s/src/Resources/public/js/script.js',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
