@@ -45,13 +45,13 @@ final class MiscFilesMaker extends AbstractMaker
 
         // src/Resources/config/*.yml yaml config files
         $arrFiles = [
-            'listener.tpl.yml',
-            'parameters.tpl.yml',
-            'services.tpl.yml',
+            'listener.tpl.yaml',
+            'parameters.tpl.yaml',
+            'services.tpl.yaml',
         ];
 
         if ($this->input->addCustomRoute) {
-            $arrFiles[] = 'routes.tpl.yml';
+            $arrFiles[] = 'routes.tpl.yaml';
         }
 
         foreach ($arrFiles as $file) {
@@ -110,12 +110,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty stylesheet
         $source = sprintf(
-            '%s/src/Resources/public/css/styles.css',
+            '%s/public/css/styles.css',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/css/styles.css',
+            '%s/vendor/%s/%s/public/css/styles.css',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -127,12 +127,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty script file
         $source = sprintf(
-            '%s/src/Resources/public/js/script.js',
+            '%s/public/js/script.js',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/js/script.js',
+            '%s/vendor/%s/%s/public/js/script.js',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
