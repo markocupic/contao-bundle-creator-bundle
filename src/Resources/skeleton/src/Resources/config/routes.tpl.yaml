@@ -1,4 +1,4 @@
-# config/routes.yml
+# config/routes.yaml
 <?= $this->routeid ?>.controller:
     resource: ../../../src/Controller
     type: annotation
