@@ -1,3 +1,4 @@
+# config/services.yaml
 services:
     _defaults:
         autowire: true          # Automatically injects dependencies in your services.
@@ -9,8 +10,8 @@ services:
             #$projectDir: '%kernel.project_dir%'
 
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\:
-        resource: ../../
-        exclude: ../../{DependencyInjection,Resources,Model}
+        resource: ../src/
+        exclude: ../src/{DependencyInjection,Model}
 
 <?php if ($this->addSessionAttribute): ?>
     # Add a session bag

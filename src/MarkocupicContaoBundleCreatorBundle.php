@@ -18,4 +18,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class MarkocupicContaoBundleCreatorBundle extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

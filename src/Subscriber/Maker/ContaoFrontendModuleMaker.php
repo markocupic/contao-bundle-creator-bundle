@@ -100,12 +100,12 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
 
         // Add frontend module template
         $source = sprintf(
-            '%s/src/Resources/contao/templates/mod_sample_module.tpl.html5',
+            '%s/contao/templates/mod_sample_module.tpl.html5',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
+            '%s/vendor/%s/%s/contao/templates/%s.html5',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
@@ -116,14 +116,14 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/dca/tl_module.php
+        // Add contao/dca/tl_module.php
         $source = sprintf(
-            '%s/src/Resources/contao/dca/tl_module.tpl.php',
+            '%s/contao/dca/tl_module.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/dca/tl_module.php',
+            '%s/vendor/%s/%s/contao/dca/tl_module.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -133,16 +133,16 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/languages/en/modules.php to file storage
+        // Add contao/languages/en/modules.php to file storage
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php',
+            '%s/vendor/%s/%s/contao/languages/en/modules.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
         );
 
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/modules.tpl.php',
+            '%s/contao/languages/en/modules.tpl.php',
             $this->skeletonPath
         );
 
@@ -150,16 +150,16 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/languages/en/default.php to file storage
+        // Add contao/languages/en/default.php to file storage
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
+            '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
         );
 
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/default.tpl.php',
+            '%s/contao/languages/en/default.tpl.php',
             $this->skeletonPath
         );
 

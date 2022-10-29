@@ -30,7 +30,7 @@ Nach der Generierung ist es lediglich nötig,
 ## Verzeichnisstruktur
 Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
 
-![Alt text](docs/file-tree.png?raw=true "Verzeichnisstruktur")
+![Alt text](docs/directory-structure.png?raw=true "Verzeichnisstruktur")
 
 
 ## Inbetriebnahme des Bundles

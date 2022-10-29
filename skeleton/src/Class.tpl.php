@@ -17,6 +17,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class <?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?> extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
+
 <?php if ($this->addFriendlyConfiguration) { ?>
 	public function getContainerExtension(): <?= $this->dependencyinjectionextensionclassname; ?><?= "\n"; ?>
 	{

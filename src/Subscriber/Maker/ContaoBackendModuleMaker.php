@@ -83,13 +83,13 @@ final class ContaoBackendModuleMaker extends AbstractMaker
 
         // Add dca table file
         $source = sprintf(
-            '%s/src/Resources/contao/dca/tl_sample_table.tpl.php',
+            '%s/contao/dca/tl_sample_table.tpl.php',
             $this->skeletonPath
         )
         ;
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/dca/%s.php',
+            '%s/vendor/%s/%s/contao/dca/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
@@ -102,12 +102,12 @@ final class ContaoBackendModuleMaker extends AbstractMaker
 
         // Add dca table translation file
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/tl_sample_table.tpl.php',
+            '%s/contao/languages/en/tl_sample_table.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/%s.php',
+            '%s/vendor/%s/%s/contao/languages/en/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
@@ -136,16 +136,16 @@ final class ContaoBackendModuleMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/languages/en/modules.php to file storage
+        // Add contao/languages/en/modules.php to file storage
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/modules.php',
+            '%s/vendor/%s/%s/contao/languages/en/modules.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
         );
 
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/modules.tpl.php',
+            '%s/contao/languages/en/modules.tpl.php',
             $this->skeletonPath
         );
 
@@ -153,16 +153,16 @@ final class ContaoBackendModuleMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/languages/en/default.php to file storage
+        // Add contao/languages/en/default.php to file storage
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
+            '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
         );
 
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/default.tpl.php',
+            '%s/contao/languages/en/default.tpl.php',
             $this->skeletonPath
         );
 

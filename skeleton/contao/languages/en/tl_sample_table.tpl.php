@@ -11,12 +11,17 @@ $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['first_legend'] = "Basis Einstell
 $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['second_legend'] = "Erweiterte Einstellungen";
 
 /**
+* Global operations
+*/
+$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['new'] = ["Neu", "Ein neues Element anlegen"];
+
+/**
  * Operations
  */
-$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['edit'] = ["Datensatz mit ID: %s bearbeiten", "Datensatz mit ID: %s bearbeiten"];
-$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['copy'] = ["Datensatz mit ID: %s kopieren", "Datensatz mit ID: %s kopieren"];
-$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['delete'] = ["Datensatz mit ID: %s löschen", "Datensatz mit ID: %s löschen"];
-$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['show'] = ["Datensatz mit ID: %s ansehen", "Datensatz mit ID: %s ansehen"];
+$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['edit'] = "Datensatz mit ID: %s bearbeiten";
+$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['copy'] = "Datensatz mit ID: %s kopieren";
+$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['delete'] = "Datensatz mit ID: %s löschen";
+$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['show'] = "Datensatz mit ID: %s ansehen";
 
 /**
  * Fields

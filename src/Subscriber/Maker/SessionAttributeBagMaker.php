@@ -117,12 +117,12 @@ final class SessionAttributeBagMaker extends AbstractMaker
 
         // Add config/services.yaml
         $source = sprintf(
-            '%s/src/Resources/config/services.tpl.yaml',
+            '%s/config/services.tpl.yaml',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/config/services.yaml',
+            '%s/vendor/%s/%s/config/services.yaml',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname

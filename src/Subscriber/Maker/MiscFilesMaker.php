@@ -43,7 +43,7 @@ final class MiscFilesMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
-        // src/Resources/config/*.yaml yaml config files
+        // config/*.yaml yaml config files
         $arrFiles = [
             'listener.tpl.yaml',
             'parameters.tpl.yaml',
@@ -56,13 +56,13 @@ final class MiscFilesMaker extends AbstractMaker
 
         foreach ($arrFiles as $file) {
             $source = sprintf(
-                '%s/src/Resources/config/%s',
+                '%s/config/%s',
                 $this->skeletonPath,
                 $file
             );
 
             $target = sprintf(
-                '%s/vendor/%s/%s/src/Resources/config/%s',
+                '%s/vendor/%s/%s/config/%s',
                 $this->projectDir,
                 $this->input->vendorname,
                 $this->input->repositoryname,
@@ -76,12 +76,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // src/Resource/contao/config/config.php
         $source = sprintf(
-            '%s/src/Resources/contao/config/config.tpl.php',
+            '%s/contao/config/config.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/config/config.php',
+            '%s/vendor/%s/%s/contao/config/config.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -110,12 +110,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty stylesheet
         $source = sprintf(
-            '%s/src/Resources/public/css/styles.css',
+            '%s/public/css/styles.css',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/css/styles.css',
+            '%s/vendor/%s/%s/public/css/styles.css',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -127,12 +127,12 @@ final class MiscFilesMaker extends AbstractMaker
 
         // Add empty script file
         $source = sprintf(
-            '%s/src/Resources/public/js/script.js',
+            '%s/public/js/script.js',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/public/js/script.js',
+            '%s/vendor/%s/%s/public/js/script.js',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname

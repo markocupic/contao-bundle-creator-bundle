@@ -50,7 +50,7 @@ class BundleMaker
         $this->message = $message;
         $this->zip = $zip;
         $this->projectDir = $projectDir;
-        $this->skeletonPath = realpath(__DIR__.'/../Resources/skeleton');
+        $this->skeletonPath = realpath(__DIR__.'/../../skeleton');
     }
 
     /**

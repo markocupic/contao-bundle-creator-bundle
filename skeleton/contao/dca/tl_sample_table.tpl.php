@@ -5,6 +5,7 @@ declare(strict_types=1);
 <?= $this->phpdoc; ?>
 
 use Contao\Backend;
+use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Input;
 
@@ -15,7 +16,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
 
     // Config
     'config'      => array(
-        'dataContainer'    => 'Table',
+        'dataContainer'    => DC_Table::class,
         'enableVersioning' => true,
         'sql'              => array(
             'keys' => array(
@@ -30,9 +31,9 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
     ),
     'list'        => array(
         'sorting'           => array(
-            'mode'        => 2,
+            'mode'        => DataContainer::MODE_SORTABLE,
             'fields'      => array('title'),
-            'flag'        => 1,
+            'flag'        => DataContainer::SORT_INITIAL_LETTER_ASC,
             'panelLayout' => 'filter;sort,search,limit'
         ),
         'label'             => array(
@@ -41,7 +42,6 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
         ),
         'global_operations' => array(
             'all' => array(
-                'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
                 'href'       => 'act=select',
                 'class'      => 'header_edit_all',
                 'attributes' => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -49,23 +49,19 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
         ),
         'operations'        => array(
             'edit'   => array(
-                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.svg'
             ),
             'copy'   => array(
-                'label' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['copy'],
                 'href'  => 'act=copy',
                 'icon'  => 'copy.svg'
             ),
             'delete' => array(
-                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.svg',
                 'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
             ),
             'show'   => array(
-                'label'      => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['show'],
                 'href'       => 'act=show',
                 'icon'       => 'show.svg',
                 'attributes' => 'style="margin-right:3px"'
@@ -95,7 +91,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'flag'      => 1,
+            'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
@@ -105,7 +101,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
+            'reference' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
             'options'   => array('firstoption', 'secondoption'),
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      => array('CLASS', 'METHOD'),
@@ -119,7 +115,7 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
             'search'    => true,
             'filter'    => true,
             'sorting'   => true,
-            'reference' => $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
+            'reference' => &$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>'],
             'options'   => array('firstoption', 'secondoption'),
             //'foreignKey'            => 'tl_user.name',
             //'options_callback'      => array('CLASS', 'METHOD'),

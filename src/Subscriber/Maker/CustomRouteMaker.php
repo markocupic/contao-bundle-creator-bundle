@@ -84,12 +84,12 @@ final class CustomRouteMaker extends AbstractMaker
 
         // Add twig template
         $source = sprintf(
-            '%s/src/Resources/views/MyCustom/my_custom.html.tpl.twig',
+            '%s/templates/MyCustom/my_custom.html.tpl.twig',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/views/MyCustom/my_custom.html.twig',
+            '%s/vendor/%s/%s/templates/MyCustom/my_custom.html.twig',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname

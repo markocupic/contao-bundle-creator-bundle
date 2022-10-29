@@ -102,12 +102,12 @@ final class ContaoContentElementMaker extends AbstractMaker
 
         // Add content element template
         $source = sprintf(
-            '%s/src/Resources/contao/templates/ce_sample_element.tpl.html5',
+            '%s/contao/templates/ce_sample_element.tpl.html5',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/templates/%s.html5',
+            '%s/vendor/%s/%s/contao/templates/%s.html5',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
@@ -118,14 +118,14 @@ final class ContaoContentElementMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/dca/tl_content.php
+        // Add contao/dca/tl_content.php
         $source = sprintf(
-            '%s/src/Resources/contao/dca/tl_content.tpl.php',
+            '%s/contao/dca/tl_content.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/dca/tl_content.php',
+            '%s/vendor/%s/%s/contao/dca/tl_content.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
@@ -135,16 +135,16 @@ final class ContaoContentElementMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add src/Resources/contao/languages/en/modules.php to file storage
+        // Add contao/languages/en/modules.php to file storage
         $target = sprintf(
-            '%s/vendor/%s/%s/src/Resources/contao/languages/en/default.php',
+            '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
         );
 
         $source = sprintf(
-            '%s/src/Resources/contao/languages/en/default.tpl.php',
+            '%s/contao/languages/en/default.tpl.php',
             $this->skeletonPath
         );
 

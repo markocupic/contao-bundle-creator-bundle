@@ -10,10 +10,8 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 return static function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->skip([
-        '*/Resources/contao/*',
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
-            '*/Resources/config/*.php',
         ],
         TypeHintOrderFixer::class,
     ]);
