@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
     'palettes'    => [
         '__selector__' => ['editRootComposer', 'addBackendModule', 'addFrontendModule', 'addContentElement'],
         'default'      => '
-		    {bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting,useattributes;
+		    {bundle_settings_legend},bundlename,vendorname,repositoryname,overwriteexisting;
             {composer_settings_legend},composerdescription,composerlicense,composerauthorname,composerauthoremail,composerauthorwebsite,composerpackageversion;
             {rootcomposer_settings_legend},editRootComposer;
             {dcatable_settings_legend},addBackendModule;
@@ -124,13 +124,6 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
-        ],
-        'useattributes'                     => [
-            'inputType' => 'checkbox',
-            'exclude'   => true,
-            'sorting'   => true,
-            'eval'      => ['tl_class' => 'w50'],
-            'sql'       => "char(1) NOT NULL default '1'",
         ],
         'composerdescription'               => [
             'inputType' => 'text',

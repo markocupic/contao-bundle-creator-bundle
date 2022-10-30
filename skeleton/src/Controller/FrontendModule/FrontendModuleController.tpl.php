@@ -7,14 +7,9 @@ declare(strict_types=1);
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
-<?php if ($this->useattributes) { ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
-<?php } ?>
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-<?php if (!$this->useattributes) { ?>
-use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
-<?php } ?>
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
@@ -28,13 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-<?php if ($this->useattributes) { ?>
 #[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>')]
-<?php } else { ?>
-/**
- * @FrontendModule(category="<?= $this->frontendmodulecategory; ?>")
- */
-<?php } ?>
 class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleController
 {
     public const TYPE = '<?= $this->frontendmoduletype; ?>';

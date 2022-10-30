@@ -80,12 +80,6 @@
       <trans-unit id="tl_contao_bundle_creator.overwriteexisting.1">
         <source>Should the bundle of the same name be overwritten?</source>
       </trans-unit>
-      <trans-unit id="tl_contao_bundle_creator.useattributes.0">
-        <source>Use native PHP 8 attributes</source>
-      </trans-unit>
-      <trans-unit id="tl_contao_bundle_creator.useattributes.1">
-        <source>Use native PHP 8 attributes instead of annotation syntax to define/configure routes, frontend modules or content elements?</source>
-      </trans-unit>
       <trans-unit id="tl_contao_bundle_creator.composerdescription.0">
         <source>composer.json: description text</source>
       </trans-unit>

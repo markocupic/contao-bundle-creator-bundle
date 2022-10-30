@@ -8,20 +8,10 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-<?php if ($this->useattributes) { ?>
 use Symfony\Component\Routing\Annotation\Route;
-<?php } else { ?>
-use Symfony\Component\Routing\Annotation\Route;
-<?php } ?>
 use Twig\Environment as TwigEnvironment;
 
-<?php if ($this->useattributes) { ?>
 #[Route('/my_custom', name: '<?= $this->routeid; ?>_my_custom', defaults: ['_scope' => 'frontend', '_token_check' => true])]
-<?php } else { ?>
-/**
- * @Route("/my_custom", name="<?= $this->routeid; ?>_my_custom", defaults={"_scope" = "frontend", "_token_check" = true})
- */
-<?php } ?>
 class MyCustomController extends AbstractController
 {
     private TwigEnvironment $twig;
