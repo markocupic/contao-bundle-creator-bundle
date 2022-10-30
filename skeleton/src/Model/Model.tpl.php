@@ -8,12 +8,7 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Mode
 
 use Contao\Model;
 
-/**
- * @package <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Model
- */
 class <?= $this->modelclassname; ?> extends Model
 {
     protected static $strTable = '<?= $this->dcatable; ?>';
-
 }
-

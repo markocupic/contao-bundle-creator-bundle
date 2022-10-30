@@ -23,20 +23,19 @@ class <?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?> extends B
     }
 
 <?php if ($this->addFriendlyConfiguration) { ?>
-	public function getContainerExtension(): <?= $this->dependencyinjectionextensionclassname; ?><?= "\n"; ?>
-	{
-		return new <?= $this->dependencyinjectionextensionclassname; ?>();
-	}
+    public function getContainerExtension(): <?= $this->dependencyinjectionextensionclassname; ?><?= "\n"; ?>
+    {
+        return new <?= $this->dependencyinjectionextensionclassname; ?>();
+    }
 
 <?php } ?>
-	/**
-	 * {@inheritdoc}
-	 */
-	public function build(ContainerBuilder $container): void
-	{
-		parent::build($container);
-		<?php if ($this->addSessionAttribute) { ?><?= "\n"; ?>
-		$container->addCompilerPass(new AddSessionBagsPass());
-		<?php } ?><?= "\n"; ?>
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+<?php if ($this->addSessionAttribute) { ?><?= "\n"; ?>
+        $container->addCompilerPass(new AddSessionBagsPass());<?php } ?><?= "\n"; ?>
+    }
 }

@@ -7,12 +7,12 @@ declare(strict_types=1);
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 <?php if ($this->useattributes) { ?>
 use Symfony\Component\Routing\Annotation\Route;
 <?php } else { ?>
 use Symfony\Component\Routing\Annotation\Route;
 <?php } ?>
-use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment as TwigEnvironment;
 
 <?php if ($this->useattributes) { ?>
@@ -24,7 +24,6 @@ use Twig\Environment as TwigEnvironment;
 <?php } ?>
 class MyCustomController extends AbstractController
 {
-
     private TwigEnvironment $twig;
 
     public function __construct(TwigEnvironment $twig)
@@ -37,17 +36,17 @@ class MyCustomController extends AbstractController
         $animals = [
             [
                 'species' => 'dogs',
-                'color'   => 'white'
+                'color' => 'white',
             ],
             [
                 'species' => 'birds',
-                'color'   => 'black'
+                'color' => 'black',
             ], [
                 'species' => 'cats',
-                'color'   => 'pink'
+                'color' => 'pink',
             ], [
                 'species' => 'cows',
-                'color'   => 'yellow'
+                'color' => 'yellow',
             ],
         ];
 

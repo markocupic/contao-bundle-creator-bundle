@@ -11,7 +11,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    const ROOT_KEY = '<?= $this->friendlyconfigurationrootkey; ?>';
+    public const ROOT_KEY = '<?= $this->friendlyconfigurationrootkey; ?>';
 
     public function getConfigTreeBuilder(): TreeBuilder
     {

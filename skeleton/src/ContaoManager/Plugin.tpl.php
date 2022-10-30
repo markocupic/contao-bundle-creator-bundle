@@ -13,6 +13,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouteCollection;
 <?php } ?>
 
 class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { ?>, RoutingPluginInterface<?php } ?><?= "\n"; ?>
@@ -27,14 +28,16 @@ class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { 
 <?php if ($this->addCustomRoute) { ?>
 
     /**
-     * @return null|\Symfony\Component\Routing\RouteCollection
      * @throws \Exception
+     *
+     * @return RouteCollection|null
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
         return $resolver
-            ->resolve(__DIR__ . '/../../config/routes.yaml')
-            ->load(__DIR__ . '/../../config/routes.yaml');
+            ->resolve(__DIR__.'/../../config/routes.yaml')
+            ->load(__DIR__.'/../../config/routes.yaml')
+    ;
     }
 <?php } ?>
 }

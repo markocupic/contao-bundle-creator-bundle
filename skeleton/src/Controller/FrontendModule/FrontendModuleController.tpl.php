@@ -7,11 +7,12 @@ declare(strict_types=1);
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 <?php if ($this->useattributes) { ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
-<?php } else { ?>
+<?php } ?>
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+<?php if (!$this->useattributes) { ?>
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 <?php } ?>
 use Contao\Date;
@@ -20,6 +21,7 @@ use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\Template;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -41,7 +43,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 
     /**
      * This method extends the parent __invoke method,
-     * its usage is usually not necessary
+     * its usage is usually not necessary.
      */
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
@@ -50,8 +52,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 
         $scopeMatcher = $this->container->get('contao.routing.scope_matcher');
 
-        if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request))
-        {
+        if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request)) {
             $this->page->loadDetails();
         }
 
@@ -59,7 +60,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     }
 
     /**
-     * Lazyload services
+     * Lazyload services.
      */
     public static function getSubscribedServices(): array
     {
@@ -80,8 +81,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         $user = $this->container->get('security.helper')->getUser();
 
         // Get the logged in frontend user... if there is one
-        if ($user instanceof FrontendUser)
-        {
+        if ($user instanceof FrontendUser) {
             $userFirstname = $user->firstname;
         }
 
@@ -95,30 +95,30 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
 
         $intWeekday = $dateAdapter->parse('w');
         $translator = $this->container->get('translator');
-        $strWeekday = $translator->trans('DAYS.' . $intWeekday, [], 'contao_default');
+        $strWeekday = $translator->trans('DAYS.'.$intWeekday, [], 'contao_default');
 
         $arrGuests = [];
 
         // Get the database connection
         $db = $this->container->get('database_connection');
 
-        /** @var \Doctrine\DBAL\Result $stmt */
+        /** @var Result $stmt */
         $stmt = $db->executeQuery('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);
 
-        while (false !== ($row = $stmt->fetchAssociative()))
-        {
+        while (false !== ($row = $stmt->fetchAssociative())) {
             $arrGuests[] = $row['firstname'];
         }
 
         $template->helloTitle = sprintf(
             'Hi %s, and welcome to the "Hello World Module". Today is %s.',
-            $userFirstname, $strWeekday
+            $userFirstname,
+            $strWeekday,
         );
 
         $template->helloText = '';
 
-        if (!empty($arrGuests)){
-            $template->helloText = 'Our guests today are: ' . implode(', ', $arrGuests);
+        if (!empty($arrGuests)) {
+            $template->helloText = 'Our guests today are: '.implode(', ', $arrGuests);
         }
 
         return $template->getResponse();
