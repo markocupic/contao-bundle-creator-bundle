@@ -238,6 +238,16 @@ class StrTest extends ContaoTestCase
     }
 
     /**
+     * Test if method returns the correct dca class name.
+     */
+    public function testAsDcaClassName(): void
+    {
+        $dcaTableName = 'tl_my_pets';
+        $actual = 'MyPets';
+        $this->assertSame(Str::asDcaClassName($dcaTableName), $actual);
+    }
+
+    /**
      * Test if method returns the correct twig namespace.
      */
     public function testAsTwigNamespace(): void
@@ -261,7 +271,7 @@ class StrTest extends ContaoTestCase
         $content = file_get_contents($this->tmpPhpdocFile);
 
         $expected = sprintf(
-            '/*%s * Here comes Line 1.%s * %s * Here comes Line 2.%s */%s',
+            '/*%s * Here comes Line 1.%s *%s * Here comes Line 2.%s */%s',
             "\n",
             "\n",
             "\n",

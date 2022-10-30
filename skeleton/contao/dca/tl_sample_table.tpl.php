@@ -13,8 +13,6 @@ use Contao\Input;
  * Table <?= $this->dcatable."\n"; ?>
  */
 $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
-
-    // Config
     'config'      => array(
         'dataContainer'    => DC_Table::class,
         'enableVersioning' => true,
@@ -23,11 +21,6 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
                 'id' => 'primary'
             )
         ),
-    ),
-    'edit'        => array(
-        'buttons_callback' => array(
-            array('<?= $this->dcaclassname; ?>', 'buttonsCallback')
-        )
     ),
     'list'        => array(
         'sorting'           => array(
@@ -68,16 +61,13 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
             ),
         )
     ),
-    // Palettes
     'palettes'    => array(
         '__selector__' => array('addSubpalette'),
         'default'      => '{first_legend},title,selectField,checkboxField,multitextField;{second_legend},addSubpalette'
     ),
-    // Subpalettes
     'subpalettes' => array(
         'addSubpalette' => 'textareaField',
     ),
-    // Fields
     'fields'      => array(
         'id'             => array(
             'sql' => "int(10) unsigned NOT NULL auto_increment"
@@ -149,21 +139,3 @@ $GLOBALS['TL_DCA']['<?= $this->dcatable; ?>'] = array(
         )
     )
 );
-
-class <?= $this->dcaclassname; ?> extends Backend
-{
-    /**
-     * @param $arrButtons
-     * @param  DC_Table $dc
-     * @return mixed
-     */
-    public function buttonsCallback($arrButtons, DC_Table $dc)
-    {
-        if (Input::get('act') === 'edit')
-        {
-            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">' . $GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['customButton'] . '</button>';
-        }
-
-        return $arrButtons;
-    }
-}

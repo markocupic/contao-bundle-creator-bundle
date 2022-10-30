@@ -291,6 +291,18 @@ final class Str
     }
 
     /**
+     * Returns the dca class name: e.g. "tl_pet_cat" => "PetCat".
+     */
+    public static function asDcaClassName(string $dcaTableName): string
+    {
+        return preg_replace(
+            '/^Tl/',
+            '',
+            self::asClassName($dcaTableName)
+        );
+    }
+
+    /**
      * Returns the twig namespace: e.g. @MarkocupicContaoBundleCreator.
      */
     public static function asTwigNamespace(string $vendorName, string $repositoryName): string

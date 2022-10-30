@@ -51,11 +51,7 @@ final class ContaoBackendModuleMaker extends AbstractMaker
 
         $controllerAdapter->loadDataContainer($this->input->dcatable);
 
-        if (class_exists($this->input->dcatable)) {
-            $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable.'_custom');
-        } else {
-            $this->tagStorage->set('dcaclassname', (string) $this->input->dcatable);
-        }
+        $this->tagStorage->set('dcaclassname', $strAdapter->asDcaClassName((string) $this->input->dcatable));
         $this->tagStorage->set('dcatable', (string) $this->input->dcatable);
         $this->tagStorage->set('modelclassname', (string) $strAdapter->asContaoModelClassName((string) $this->input->dcatable));
         $this->tagStorage->set('backendmoduletype', (string) $this->input->backendmoduletype);
@@ -94,6 +90,25 @@ final class ContaoBackendModuleMaker extends AbstractMaker
             $this->input->vendorname,
             $this->input->repositoryname,
             $this->input->dcatable
+        );
+
+        if (!$this->fileStorage->hasFile($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
+        // Add dca class
+        $source = sprintf(
+            '%s/src/DataContainer/DcaClass.tpl.php',
+            $this->skeletonPath
+        )
+        ;
+
+        $target = sprintf(
+            '%s/vendor/%s/%s/src/DataContainer/%s.php',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname,
+            $strAdapter->asDcaClassName((string) $this->input->dcatable)
         );
 
         if (!$this->fileStorage->hasFile($target)) {
