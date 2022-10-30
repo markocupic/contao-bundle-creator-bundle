@@ -28,7 +28,7 @@ Nach der Generierung ist es lediglich nötig,
 ![Alt text](docs/backend.png?raw=true "Backend")
 
 ## Verzeichnisstruktur
-Folgende Verzeichnisstruktur wird im vendor Vezeichnis angelegt.
+Folgende Verzeichnisstruktur (ohne Resources Verzeichnis) wird im vendor Ordner angelegt.
 
 ![Alt text](docs/directory-structure.png?raw=true "Verzeichnisstruktur")
 
