@@ -1,33 +1,41 @@
 {
-  "name": "",
-  "description": "",
-  "keywords": [
-    "contao",
-    "bundle",
-    "tag 3",
-    "tag 4"
-  ],
-  "type": "contao-bundle",
-  "license": "",
-  "authors": [],
-  "support": {
-    "issues": "",
-    "source": ""
-  },
-  "require": {
-    "php": "^8.0",
-    "contao/core-bundle": "^4.13 || ^5.0"
-  },
-  "require-dev": {
-    "contao/manager-plugin": "^2.3.1",
-    "contao/test-case": "^4.5",
-    "phpunit/phpunit": "^9.3",
-    "symfony/http-client": "5.4.*",
-    "symfony/phpunit-bridge": "^5.4",
-    "contao/easy-coding-standard": "^5.0"
-  },
-  "autoload": {
-    "psr-4": {}
-  },
-  "extra": {}
+    "name": "",
+    "description": "",
+    "keywords": [
+        "contao",
+        "bundle",
+        "tag 3",
+        "tag 4"
+    ],
+    "type": "contao-bundle",
+    "license": "",
+    "authors": [],
+    "support": {
+        "issues": "",
+        "source": ""
+    },
+    "require": {
+        "php": "^8.0",
+        "contao/core-bundle": "^4.13 || ^5.0"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "^4.5",
+        "phpunit/phpunit": "^9.3",
+        "symfony/http-client": "5.4.*",
+        "symfony/phpunit-bridge": "^5.4",
+        "contao/easy-coding-standard": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {}
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "contao-community-alliance/composer-plugin": true
+        }
+    },
+    "extra": {}
 }

@@ -5,36 +5,36 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  tests:
-    name: PHP ${{ matrix.php }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php: [7.4, 8.0]
+    tests:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: [ 8.0, 8.1 ]
 
-    steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-          tools: flex
-          coverage: none
+        steps:
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                    tools: flex
+                    coverage: none
 
-      - name: Checkout
-        uses: actions/checkout@v1
+            -   name: Checkout
+                uses: actions/checkout@v1
 
-      - name: Install the dependencies
-        run: composer install --no-interaction --no-suggest
+            -   name: Install the dependencies
+                run: composer install --no-interaction --no-suggest
 
-      - name: Run the unit tests
-        run: vendor/bin/phpunit --colors=always
+            -   name: Run the unit tests
+                run: vendor/bin/phpunit --colors=always
 
 
