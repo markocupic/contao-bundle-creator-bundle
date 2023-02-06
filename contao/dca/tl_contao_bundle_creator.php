@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'sorting'   => true,
             'flag'      => DataContainer::SORT_INITIAL_LETTER_ASC,
             'search'    => true,
-            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'url'],
+            'eval'      => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'rgxp' => 'httpurl'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'editRootComposer'                  => [
