@@ -31,11 +31,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "contao/easy-coding-standard": "^5.0",
-        "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^5.0",
-        "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0"
+        "contao/manager-plugin": "^2.12"
     },
     "autoload": {
         "psr-4": {
