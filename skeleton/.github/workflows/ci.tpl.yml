@@ -1,40 +1,76 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
 on:
+    pull_request: ~
     push:
-        branches: [ main ]
-    pull_request:
-        branches: [ main ]
+        branches:
+            - '*'
+        tags:
+            - '*'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+    cs:
+        name: Coding Style
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Install ecs
+                run: cd tools/ecs && composer install --no-interaction --no-suggest
+
+            -   name: Run the CS fixer
+                run: composer cs-fixer
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
-                php: [ 8.0, 8.1 ]
-
+                php: [ 8.1, 8.2 ]
         steps:
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
-                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                    tools: flex
-                    coverage: none
 
             -   name: Checkout
-                uses: actions/checkout@v1
+                uses: actions/checkout@v2
+
+            -   name: Install phpunit
+                run: cd tools/phpunit && composer install --no-interaction --no-suggest
 
             -   name: Install the dependencies
                 run: composer install --no-interaction --no-suggest
 
             -   name: Run the unit tests
-                run: vendor/bin/phpunit --colors=always
+                run: composer unit-tests
 
+    prefer-lowest-tests:
+        name: PHP ${{ matrix.php }} --prefer-lowest
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [ 8.1, 8.2 ]
+        steps:
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
 
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Install phpunit
+                run: cd tools/phpunit && composer install --no-interaction --no-suggest
+
+            -   name: Install the dependencies
+                run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+
+            -   name: Run the unit tests
+                run: composer unit-tests

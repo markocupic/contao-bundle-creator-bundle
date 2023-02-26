@@ -120,26 +120,31 @@ kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-b
 ![Templates updatesicher überschreiben](docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Codefixing mit easy-coding-standard
-Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/.ecs" abgelegt. Der Fixer kann nun so über das Terminal aufgerufen werden:
+Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/tools/ecs" abgelegt. Der Fixer kann nun so über das Terminal aufgerufen werden:
 
 Unter Windows (Backslashes als directory separator verwenden):
 
 ```
-# Default fixer
-vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/default.yaml
+# /src fixer
+php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
 
-# Tests
-vendor\bin\ecs check vendor/vendorname/my-custom-bundle/tests --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/default.yaml
+# /contao
+php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/contao --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
 
-# Contao legacy code
-vendor\bin\ecs check vendor/vendorname/my-custom-bundle/src/Resources/contao --fix --config vendor/vendorname/my-custom-bundle/.ecs/config/legacy.yaml
+# /config
+php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/config --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
 
+# /templates
+php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/templates --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
+
+# tests
+php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
 ```
 [easy-coding-standard](https://github.com/symplify/easy-coding-standard)
 
 ## App erweitern
-Die Bundle-Dateien werden in dieser App über Maker dem neu zu erstellenden Bundle hinzugefügt.
-Mit Subscribern können weitere Maker-Klassen hinzugefügt werden. Dazu muss lediglich eine Subscriberklasse angelegt und diese in src/Resources/config/subscriber.yml registriert werden.
+Die Bundle-Dateien werden in dieser App über sogenannte "Maker" dem neu zu erstellenden Bundle hinzugefügt.
+Mit EventSubscribern können weitere Maker-Klassen hinzugefügt werden. Dazu muss lediglich eine EventSubscriberklasse angelegt werden.
 
 ## Last but not least
 Der Anwender sollte wissen, was er tut ;-)
