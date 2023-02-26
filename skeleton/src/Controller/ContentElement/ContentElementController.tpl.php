@@ -13,7 +13,7 @@ use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: '<?= $this->contentelementcategory; ?>')]
+#[AsContentElement(category: '<?= $this->contentelementcategory; ?>', template: '<?= $this->contentelementtemplate ?>')]
 class <?= $this->contentelementclassname; ?> extends AbstractContentElementController
 {
     public const TYPE = '<?= $this->contentelementtype; ?>';

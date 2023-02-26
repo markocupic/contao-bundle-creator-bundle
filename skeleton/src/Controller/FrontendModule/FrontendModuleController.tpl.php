@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>')]
+#[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>', template: '<?= $this->frontendmoduletemplate ?>')]
 class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleController
 {
     public const TYPE = '<?= $this->frontendmoduletype; ?>';
