@@ -20,6 +20,8 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 
 class StrTest extends ContaoTestCase
 {
+    private string $tmpPhpdocFile = '';
+    
     protected function setUp(): void
     {
         parent::setUp();

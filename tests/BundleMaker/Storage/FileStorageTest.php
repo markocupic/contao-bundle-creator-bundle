@@ -23,8 +23,9 @@ class FileStorageTest extends ContaoTestCase
 {
     protected TagStorage $tagStorage;
     protected FileStorage $fileStorage;
-    protected string $tmpSourceFile1;
-    protected string $tmpTargetFile;
+    protected string $tmpSourceFile1 = '';
+    protected string $tmpSourceFile2 = '';
+    protected string $tmpTargetFile = '';
 
     protected function setUp(): void
     {
