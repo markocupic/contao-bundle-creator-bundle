@@ -60,6 +60,10 @@ class StrTest extends ContaoTestCase
         $test = 'foo_Bar_fooBar99';
         $actual = 'FooBarFooBar99';
         $this->assertSame(Str::asClassName($test), $actual);
+
+        $test = 'code4nix';
+        $actual = 'Code4Nix';
+        $this->assertSame(Str::asClassName($test), $actual);
     }
 
     public function testAddPrefix(): void

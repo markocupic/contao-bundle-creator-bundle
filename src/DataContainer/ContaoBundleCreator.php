@@ -76,7 +76,7 @@ class ContaoBundleCreator
 
                 // Send headers before outputting anything.
                 $response->sendHeaders();
-                $response->setContent(readfile($filepath));
+                $response->setContent((string) readfile($filepath));
 
                 throw new ResponseException($response);
             }

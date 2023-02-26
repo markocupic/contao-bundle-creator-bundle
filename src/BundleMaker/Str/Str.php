@@ -17,8 +17,8 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
 final class Str
 {
     /**
-     * Sanitize vendorname (github 6 packagist restrictions)
-     * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name, Vendorname
+     * Sanitize vendor name (github 6 packagist restrictions)
+     * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name,
      * But allow vendor-name.
      */
     public static function asVendorName(string $value): string
@@ -122,7 +122,7 @@ final class Str
 
     /**
      * Transforms the given string into the format commonly used by PHP classes,
-     * (e.g. `app:do_this-and_that` -> `AppDoThisAndThat`) but it doesn't check
+     * (e.g. `this-app:do_this-and_that4you` -> `thisAppDoThisAndThat4You`) but it doesn't check
      * the validity of the class name.
      */
     public static function asClassName(string $value, string $suffix = ''): string
@@ -132,6 +132,9 @@ final class Str
         $value = ucwords($value);
         $value = str_replace(' ', '', $value);
         $value = ucfirst($value);
+
+        // Uppercase the first character that follows a number (positive lookbehind https://stackoverflow.com/questions/2341184/what-does-x-mean-in-regex)
+        $value = preg_replace_callback('/(?<=\d)\w/', static fn ($matches) => strtoupper($matches[0]), $value);
 
         return self::addSuffix($value, $suffix);
     }

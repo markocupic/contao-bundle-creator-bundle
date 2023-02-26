@@ -157,14 +157,14 @@ class BundleMaker
         );
 
         $zipTarget = sprintf(
-            '%s/system/tmp/%s.zip',
+            '%s/system/tmp/%s-main.zip',
             $this->projectDir,
             $this->input->repositoryname
         );
 
         $zip = $this->zip
             ->ignoreDotFiles(false)
-            ->stripSourcePath($zipSource)
+            ->stripSourcePath($this->projectDir.'/vendor/'.$this->input->vendorname)
             ->addDirRecursive($zipSource)
         ;
 
