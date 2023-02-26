@@ -80,6 +80,8 @@ class MessageTest extends ContaoTestCase
 
     private function mockFramework($expectError = true): ContaoFramework
     {
+        $this->getContainerWithContaoConfiguration();
+
         $adapter = $this->mockAdapter(['addInfo', 'addError', 'addConfirmation', 'hasInfo', 'hasError', 'hasConfirmation']);
 
         $adapter
