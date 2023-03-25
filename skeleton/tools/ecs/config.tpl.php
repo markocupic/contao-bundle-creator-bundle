@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-<?= $this->phpdoc; ?>
-
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
@@ -24,13 +22,13 @@ return static function (ECSConfig $ecsConfig): void {
         ->set(HeaderCommentFixer::class)
         ->call('configure', [
             [
-				'header' => "<?= $this->ecsphpdoc ?>",
+                'header' => "This file is part of <?= $this->bundlename ?>.\n\n(c) <?= $this->composerauthorname ?> ".date('Y')." <<?= $this->composerauthoremail ?>>\n@license <?= $this->composerlicense ?>\nFor the full copyright and license information,\nplease view the LICENSE file that was distributed with this source code.\n@link https://github.com/<?= $this->vendorname ?>/<?= $this->repositoryname ?>",
             ],
         ]);
 
     $ecsConfig->skip([
-		'*/contao/dca*',
-		MethodChainingIndentationFixer::class => [
+        '*/contao/dca*',
+        MethodChainingIndentationFixer::class => [
             'DependencyInjection/Configuration.php',
         ],
     ]);
