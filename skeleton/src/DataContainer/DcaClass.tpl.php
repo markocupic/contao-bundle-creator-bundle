@@ -10,6 +10,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Input;
+use Contao\System;
 
 #[AsCallback(table: '<?= $this->dcatable; ?>', target: 'edit.buttons', priority: 100)]
 class <?= $this->dcaclassname; ?><?= "\n" ?>
@@ -24,9 +25,12 @@ class <?= $this->dcaclassname; ?><?= "\n" ?>
     public function __invoke(array $arrButtons, DataContainer $dc): array
     {
         $inputAdapter = $this->framework->getAdapter(Input::class);
+        $systemAdapter = $this->framework->getAdapter(System::class);
+
+        $systemAdapter->loadLanguageFile('<?= $this->dcatable; ?>');
 
         if ('edit' === $inputAdapter->get('act')) {
-            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">'.$GLOBALS['TL_LANG']['tl_my_pets']['customButton'].'</button>';
+            $arrButtons['customButton'] = '<button type="submit" name="customButton" id="customButton" class="tl_submit customButton" accesskey="x">'.$GLOBALS['TL_LANG']['<?= $this->dcatable; ?>']['customButton'].'</button>';
         }
 
         return $arrButtons;
