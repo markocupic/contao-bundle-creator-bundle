@@ -11,11 +11,19 @@ services:
 
     <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\:
         resource: ../src/
-        exclude: ../src/{DependencyInjection,Model}
+        exclude: ../src/{DependencyInjection,Model,Session}
 
 <?php if ($this->addSessionAttribute): ?>
     # Add a session bag
-    <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag:
+    <?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.factory:
+        class: <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\SessionFactory
+        decorates: session.factory
+        arguments:
+            - '@<?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.factory.inner'
+            - '@<?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.attribute.array_attribute_bag'
+
+    <?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.attribute.array_attribute_bag:
+        class: <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag
         arguments:
             - <?= $this->sessionAttributeKey ?><?="\n" ?>
         calls:

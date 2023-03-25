@@ -6,9 +6,6 @@ declare(strict_types=1);
 
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>;
 
-<?php if ($this->addSessionAttribute) { ?>
-use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\DependencyInjection\Compiler\AddSessionBagsPass;
-<?php } ?>
 <?php if ($this->addFriendlyConfiguration) { ?>
 use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\DependencyInjection\<?= $this->dependencyinjectionextensionclassname; ?>;
 <?php } ?>
@@ -35,7 +32,5 @@ class <?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?> extends B
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
-<?php if ($this->addSessionAttribute) { ?><?= "\n"; ?>
-        $container->addCompilerPass(new AddSessionBagsPass());<?php } ?><?= "\n"; ?>
     }
 }

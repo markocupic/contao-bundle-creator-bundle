@@ -41,6 +41,12 @@ final class SessionAttributeBagMaker extends AbstractMaker
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 
+        $this->tagStorage->set('servicevendornamekey', $strAdapter->asSnakeCase(strtolower((string) $this->input->vendorname)));
+        $this->tagStorage->set('servicerepositorynamekey', $strAdapter->asSnakeCase(strtolower((string) $this->input->repositoryname)));
+
+        $strRootKey = str_replace('Bundle', '', $this->tagStorage->get('toplevelnamespace').$this->tagStorage->get('sublevelnamespace'));
+        $this->tagStorage->set('friendlyconfigurationrootkey', $strAdapter->asSnakeCase($strRootKey));
+
         $this->tagStorage->set('sessionAttributeName', $strAdapter->asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
         $this->tagStorage->set('sessionAttributeKey', '_'.$strAdapter->asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
         $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
@@ -59,9 +65,6 @@ final class SessionAttributeBagMaker extends AbstractMaker
             return;
         }
 
-        /** @var Str $strAdapter */
-        $strAdapter = $this->framework->getAdapter(Str::class);
-
         // Add attribute bag
         $source = sprintf(
             '%s/src/Session/Attribute/ArrayAttributeBag.tpl.php',
@@ -79,36 +82,17 @@ final class SessionAttributeBagMaker extends AbstractMaker
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add AddSessionBagsPass
+        // Add SessionFactory
         $source = sprintf(
-            '%s/src/DependencyInjection/Compiler/AddSessionBagsPass.tpl.php',
+            '%s/src/Session/SessionFactory.tpl.php',
             $this->skeletonPath
         );
 
         $target = sprintf(
-            '%s/vendor/%s/%s/src/DependencyInjection/Compiler/AddSessionBagsPass.php',
+            '%s/vendor/%s/%s/src/Session/SessionFactory.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname
-        );
-
-        if (!$this->fileStorage->hasFile($target)) {
-            $this->fileStorage->addFile($source, $target);
-        }
-
-        // Add BundleClass
-        $source = sprintf(
-            '%s/src/Class.tpl.php',
-            $this->skeletonPath
-        );
-
-        $target = sprintf(
-            '%s/vendor/%s/%s/src/%s%s.php',
-            $this->projectDir,
-            $this->input->vendorname,
-            $this->input->repositoryname,
-            $strAdapter->asClassName((string) $this->input->vendorname),
-            $strAdapter->asClassName((string) $this->input->repositoryname)
         );
 
         if (!$this->fileStorage->hasFile($target)) {
