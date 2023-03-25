@@ -20,7 +20,7 @@ services:
         decorates: session.factory
         arguments:
             - '@<?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.factory.inner'
-            - '@<?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.attribute.array_attribute_bag'
+            - '@<?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.attribute.array_attribute_bag'
 
     <?= $this->servicevendornamekey ?>.<?= $this->servicerepositorynamekey ?>.session.attribute.array_attribute_bag:
         class: <?= $this->toplevelnamespace ?>\<?= $this->sublevelnamespace ?>\Session\Attribute\ArrayAttributeBag
