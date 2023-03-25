@@ -1,8 +1,4 @@
-![passed tests at travis-ci.org](https://travis-ci.org/markocupic/contao-bundle-creator-bundle.svg?branch=master "")
-
-
 ![Marko Cupic](docs/logo.png?raw=true "Marko Cupic")
-
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
