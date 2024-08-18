@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -26,15 +26,12 @@ class Message
     public const SESSION_KEY_INFO = 'contao.BE.info';
     public const SESSION_KEY_CONFIRM = 'contao.BE.confirm';
 
-    protected ContaoFramework $framework;
-    protected RequestStack $requestStack;
     protected Adapter $messageAdapter;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
-    {
-        $this->framework = $framework;
-        $this->requestStack = $requestStack;
-
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
         $this->messageAdapter = $this->framework->getAdapter(ContaoMessage::class);
     }
 

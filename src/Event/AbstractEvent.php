@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -25,26 +25,18 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEvent extends Event
 {
-    private ContaoFramework $framework;
-    private RequestStack $requestStack;
-    private TagStorage $tagStorage;
-    private FileStorage $fileStorage;
-    private ContaoBundleCreatorModel $input;
-    private Message $message;
-    private string $skeletonPath;
-    private string $projectDir;
     private SessionInterface $session;
 
-    public function __construct(\stdClass $event)
-    {
-        $this->framework = $event->framework;
-        $this->requestStack = $event->requestStack;
-        $this->tagStorage = $event->tagStorage;
-        $this->fileStorage = $event->fileStorage;
-        $this->input = $event->input;
-        $this->message = $event->message;
-        $this->skeletonPath = $event->skeletonPath;
-        $this->projectDir = $event->projectDir;
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+        private readonly TagStorage $tagStorage,
+        private readonly FileStorage $fileStorage,
+        private readonly ContaoBundleCreatorModel $input,
+        private readonly Message $message,
+        private readonly string $skeletonPath,
+        private readonly string $projectDir,
+    ) {
         $this->session = $this->requestStack->getCurrentRequest()->getSession();
     }
 

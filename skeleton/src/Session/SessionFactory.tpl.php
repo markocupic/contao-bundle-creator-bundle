@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
-        readonly private SessionFactoryInterface $inner,
-        readonly private SessionBagInterface $sessionBag,
+        private readonly SessionFactoryInterface $inner,
+        private readonly SessionBagInterface $sessionBag,
     ) {
     }
 

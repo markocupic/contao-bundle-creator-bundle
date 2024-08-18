@@ -9,16 +9,15 @@ namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\Cont
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Environment as TwigEnvironment;
+use Twig\Environment as Twig;
 
-#[Route('/my_custom', name: '<?= $this->routeid; ?>_my_custom', defaults: ['_scope' => 'frontend', '_token_check' => true])]
+#[Route('/my_custom', name: MyCustomController::class, defaults: ['_scope' => 'frontend', '_token_check' => true])]
 class MyCustomController extends AbstractController
 {
-    private TwigEnvironment $twig;
 
-    public function __construct(TwigEnvironment $twig)
-    {
-        $this->twig = $twig;
+    public function __construct(
+        private readonly Twig $twig,
+    ) {
     }
 
     public function __invoke(): Response

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -29,27 +29,19 @@ use Symfony\Component\Yaml\Yaml;
 
 class BundleMaker
 {
-    protected ContaoFramework $framework;
-    protected RequestStack $requestStack;
-    protected FileStorage $fileStorage;
-    protected TagStorage $tagStorage;
-    protected EventDispatcherInterface $eventDispatcher;
-    protected Message $message;
-    protected Zip $zip;
-    protected string $projectDir;
-    protected ContaoBundleCreatorModel $input;
+    protected ContaoBundleCreatorModel|null $input = null;
     protected string $skeletonPath;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, FileStorage $fileStorage, TagStorage $tagStorage, EventDispatcherInterface $eventDispatcher, Message $message, Zip $zip, string $projectDir)
-    {
-        $this->framework = $framework;
-        $this->requestStack = $requestStack;
-        $this->fileStorage = $fileStorage;
-        $this->tagStorage = $tagStorage;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->message = $message;
-        $this->zip = $zip;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+        private readonly FileStorage $fileStorage,
+        private readonly TagStorage $tagStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Message $message,
+        private readonly Zip $zip,
+        private readonly string $projectDir,
+    ) {
         $this->skeletonPath = realpath(__DIR__.'/../../skeleton');
     }
 
@@ -83,20 +75,22 @@ class BundleMaker
          *
          * 1. Add all the necessary tags to the tag storage.
          */
-        $this->eventDispatcher->dispatch(new AddTagsEvent((object) get_object_vars($this)), AddTagsEvent::NAME);
+        $event = new AddTagsEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, $this->skeletonPath, $this->projectDir);
+        $this->eventDispatcher->dispatch($event, AddTagsEvent::NAME);
 
         /*
          * 2. Add all the files to a virtual file storage.
          */
-        $this->eventDispatcher->dispatch(new AddMakerEvent((object) get_object_vars($this)), AddMakerEvent::NAME);
+        $event = new AddMakerEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, $this->skeletonPath, $this->projectDir);
+        $this->eventDispatcher->dispatch($event, AddMakerEvent::NAME);
 
         /*
-         * 3. Replace tags in file storage.
+         * 3. Replace tags in the file storage.
          */
         $this->replaceTags();
 
         /*
-         * 4. Check yaml/yml files.
+         * 4. Check yaml files.
          */
         $this->checkYamlFiles();
 

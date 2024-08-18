@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -26,15 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoBundleCreator
 {
-    private BundleMaker $bundleMaker;
-    private RequestStack $requestStack;
-    private string $projectDir;
-
-    public function __construct(BundleMaker $bundleMaker, RequestStack $requestStack, string $projectDir)
-    {
-        $this->bundleMaker = $bundleMaker;
-        $this->requestStack = $requestStack;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private readonly BundleMaker $bundleMaker,
+        private readonly RequestStack $requestStack,
+        private readonly string $projectDir,
+    ) {
     }
 
     /**

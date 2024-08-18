@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -49,13 +49,12 @@ use Symfony\Component\Finder\Finder;
  */
 class FileStorage
 {
-    protected string $projectDir;
     protected array $arrStorrage = [];
     protected int $intIndex = -1;
 
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private readonly string $projectDir,
+    ) {
     }
 
     /**
