@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\ContaoManager;
 
+use <?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\<?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?>;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -18,26 +20,26 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Plugin implements BundlePluginInterface<?php if ($this->addCustomRoute) { ?>, RoutingPluginInterface<?php } ?><?= "\n"; ?>
 {
-    public function getBundles(ParserInterface $parser): array
+    /**
+     * @return array
+     */
+    public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('<?= $this->toplevelnamespace; ?>\<?= $this->sublevelnamespace; ?>\<?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?>')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
+            BundleConfig::create(<?= $this->toplevelnamespace; ?><?= $this->sublevelnamespace; ?>::class)
+                ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }
 <?php if ($this->addCustomRoute) { ?>
 
     /**
-     * @throws \Exception
-     *
      * @return RouteCollection|null
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
         return $resolver
-            ->resolve(__DIR__.'/../../config/routes.yaml')
-            ->load(__DIR__.'/../../config/routes.yaml')
-    ;
+            ->resolve(__DIR__.'/../Controller')
+            ->load(__DIR__.'/../Controller');
     }
 <?php } ?>
 }

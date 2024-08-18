@@ -1,4 +1,0 @@
-# config/routes.yaml
-<?= $this->routeid ?>.controller:
-    resource: ../src/Controller
-    type: attribute
