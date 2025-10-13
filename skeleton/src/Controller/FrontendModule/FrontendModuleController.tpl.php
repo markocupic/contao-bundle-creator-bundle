@@ -20,7 +20,7 @@ use Doctrine\DBAL\Result;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsFrontendModule(category: '<?= $this->frontendmodulecategory; ?>', template: '<?= $this->frontendmoduletemplate ?>')]
@@ -29,6 +29,11 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     public const TYPE = '<?= $this->frontendmoduletype; ?>';
 
     protected ?PageModel $page;
+
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+    ) {
+    }
 
     /**
      * This method extends the parent __invoke method,
@@ -58,7 +63,6 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
         $services['contao.framework'] = ContaoFramework::class;
         $services['database_connection'] = Connection::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
-        $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
 
         return $services;
@@ -67,7 +71,7 @@ class <?= $this->frontendmoduleclassname; ?> extends AbstractFrontendModuleContr
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         $userFirstname = 'DUDE';
-        $user = $this->container->get('security.helper')->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         // Get the logged in frontend user... if there is one
         if ($user instanceof FrontendUser) {
