@@ -116,27 +116,7 @@ kann man seine eigene Templates im Verzeichnis templates/contao-bundle-creator-b
 ![Templates updatesicher überschreiben](docs/custom-templates.png?raw=true "Templates updatesicher überschreiben")
 
 ## Codefixing mit easy-coding-standard
-Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/tools/ecs" abgelegt. Der Fixer kann nun so über das Terminal aufgerufen werden:
-
-Unter Windows (Backslashes als directory separator verwenden):
-
-```
-# /src fixer
-php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/src --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
-
-# /contao
-php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/contao --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
-
-# /config
-php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/config --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
-
-# /templates
-php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/templates --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
-
-# tests
-php vendor\bin\ecs check vendor/markocupic/contao-bundle-creator-bundle/tests --fix --config vendor/markocupic/contao-bundle-creator-bundle/tools/ecs/config.php
-```
-[easy-coding-standard](https://github.com/symplify/easy-coding-standard)
+Auf Wunsch lässt sich "contao/easy-coding-standard" als Abhängigkeit installieren. Bei der Installation werden die Konfigurationsdateien im "vendor/my-custom-bundle/tools/ecs" abgelegt. Der Fixer kann nun so über das Terminal oder über die batch Dateien aufgerufen werden:
 
 ## App erweitern
 Die Bundle-Dateien werden in dieser App über sogenannte "Maker" dem neu zu erstellenden Bundle hinzugefügt.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -40,27 +40,11 @@ $GLOBALS['TL_DCA']['tl_contao_bundle_creator'] = [
             'all' => [
                 'href'       => 'act=select',
                 'class'      => 'header_edit_all',
-                'attributes' => 'onclick="Backend.getScrollOffset()" accesskey="e"',
+                'attributes' => 'data-action="contao--scroll-offset#store"',
             ],
         ],
         'operations'        => [
-            'edit'   => [
-                'href' => 'act=edit',
-                'icon' => 'edit.svg',
-            ],
-            'copy'   => [
-                'href' => 'act=copy',
-                'icon' => 'copy.svg',
-            ],
-            'delete' => [
-                'href'       => 'act=delete',
-                'icon'       => 'delete.svg',
-                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-            ],
-            'show'   => [
-                'href' => 'act=show',
-                'icon' => 'show.svg',
-            ],
+            'all',
         ],
     ],
     'palettes'    => [

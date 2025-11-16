@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -22,6 +22,7 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage\TagStorage;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Markocupic\ContaoBundleCreatorBundle\Skeleton;
 use Markocupic\ZipBundle\Zip\Zip;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +31,6 @@ use Symfony\Component\Yaml\Yaml;
 class BundleMaker
 {
     protected ContaoBundleCreatorModel|null $input = null;
-    protected string $skeletonPath;
 
     public function __construct(
         private readonly ContaoFramework $framework,
@@ -42,7 +42,6 @@ class BundleMaker
         private readonly Zip $zip,
         private readonly string $projectDir,
     ) {
-        $this->skeletonPath = realpath(__DIR__.'/../../skeleton');
     }
 
     /**
@@ -65,23 +64,23 @@ class BundleMaker
             $this->createBackup();
         }
 
-        $this->message->addInfo(sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
+        $this->message->addInfo(\sprintf('Started generating "%s/%s" bundle.', $this->input->vendorname, $this->input->repositoryname));
 
         /*
          * Keep the application extensible.
-         * Add maker classes to add tags & files to the bundle.
-         * Store maker classes in src/Subscriber/Maker and
+         * Write maker classes to add tags & files to the bundle.
+         * Store maker classes in src/EventSubscriber/Maker and
          * implement these makers as event subscribers.
          *
          * 1. Add all the necessary tags to the tag storage.
          */
-        $event = new AddTagsEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, $this->skeletonPath, $this->projectDir);
+        $event = new AddTagsEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, Skeleton::getDefaultPath(), $this->projectDir);
         $this->eventDispatcher->dispatch($event, AddTagsEvent::NAME);
 
         /*
          * 2. Add all the files to a virtual file storage.
          */
-        $event = new AddMakerEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, $this->skeletonPath, $this->projectDir);
+        $event = new AddMakerEvent($this->framework, $this->requestStack, $this->tagStorage, $this->fileStorage, $this->input, $this->message, Skeleton::getDefaultPath(), $this->projectDir);
         $this->eventDispatcher->dispatch($event, AddMakerEvent::NAME);
 
         /*
@@ -100,7 +99,7 @@ class BundleMaker
         $this->writeBundleFiles();
 
         /*
-         * 6. Store new bundle also as a zip-package in system/tmp for downloading it after the generating process.
+         * 6. Store the new bundle also as a zip-package in system/tmp for downloading it after the generating process.
          */
         $this->generateZipArchive();
     }
@@ -115,17 +114,17 @@ class BundleMaker
 
     protected function createBackup(): void
     {
-        $zipSource = sprintf(
+        $zipSource = \sprintf(
             '%s/vendor/%s/%s',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $zipTarget = sprintf(
+        $zipTarget = \sprintf(
             '%s/system/tmp/%s.zip',
             $this->projectDir,
-            $this->input->repositoryname.'_backup_'.Date::parse('Y-m-d_H-i-s', time())
+            $this->input->repositoryname.'_backup_'.Date::parse('Y-m-d_H-i-s', time()),
         );
 
         $this->zip
@@ -137,23 +136,23 @@ class BundleMaker
 
     protected function generateZipArchive(): void
     {
-        // Do not create the bundle, if there is an error.
+        // Do not create the bundle if there is an error.
         if ($this->message->hasError()) {
             return;
         }
 
-        // Store new bundle also as a zip-package in system/tmp for downloading it after the generating process
-        $zipSource = sprintf(
+        // Store the new bundle also as a zip-package in system/tmp for downloading it after the generating process
+        $zipSource = \sprintf(
             '%s/vendor/%s/%s',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $zipTarget = sprintf(
+        $zipTarget = \sprintf(
             '%s/system/tmp/%s-main.zip',
             $this->projectDir,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
         $zip = $this->zip
@@ -173,17 +172,17 @@ class BundleMaker
      */
     protected function replaceTags(): void
     {
-        // Do not create the bundle, if there is an error.
+        // Do not create the bundle if there is an error.
         if ($this->message->hasError()) {
             return;
         }
 
         foreach ($this->fileStorage->getAll() as $arrFile) {
-            if ($this->fileStorage->hasFile($arrFile['target'])) {
+            if ($this->fileStorage->has($arrFile['target'])) {
                 $this->fileStorage
                     ->getFile($arrFile['target'])
-                    ->replaceTags($this->tagStorage, ['.tpl.'])
-                    ;
+                    ->replaceTags($this->tagStorage, ['ttpl'])
+                ;
             }
         }
     }
@@ -193,7 +192,7 @@ class BundleMaker
      */
     protected function checkYamlFiles(): void
     {
-        // Do not create the bundle, if there is an error.
+        // Do not create the bundle if there is an error.
         if ($this->message->hasError()) {
             return;
         }
@@ -202,7 +201,7 @@ class BundleMaker
         $yamlAdapter = $this->framework->getAdapter(Yaml::class);
 
         foreach ($this->fileStorage->getAll() as $arrFile) {
-            if ($this->fileStorage->hasFile($arrFile['target'])) {
+            if ($this->fileStorage->has($arrFile['target'])) {
                 $info = new \SplFileInfo($arrFile['target']);
 
                 if ('yaml' === $info->getExtension() || 'yml' === $info->getExtension()) {
@@ -223,18 +222,18 @@ class BundleMaker
      */
     protected function writeBundleFiles(): void
     {
-        // Do not create the bundle, if there is an error.
+        // Do not generate the bundle if there is an error.
         if ($this->message->hasError()) {
             return;
         }
 
         foreach ($this->fileStorage->getAll() as $arrFile) {
-            if (false !== $this->fileStorage->createFile($arrFile['target'])) {
-                // Display message in the backend
-                $this->message->addInfo(sprintf('Created file "%s".', $arrFile['target']));
-            } else {
-                // Display message in the backend
-                $this->message->addError(sprintf('Could not create file "%s".', $arrFile['target']));
+            try {
+                $this->fileStorage->createFile($arrFile['target']);
+                $this->message->addInfo(\sprintf('Created file "%s".', $arrFile['target']));
+            } catch (\Exception $e) {
+                // Display a message in the backend
+                $this->message->addError(\sprintf('Could not create file "%s".', $arrFile['target']));
             }
         }
 

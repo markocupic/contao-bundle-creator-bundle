@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -48,24 +48,19 @@ final class EasyCodingStandardMaker extends AbstractMaker
         }
 
         // tools/ecs/*.*
-        $source = sprintf(
+        $source = \sprintf(
             '%s/tools/ecs',
-            $this->skeletonPath
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/tools/ecs',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
         // Add to storage
-        $arrFiles = $this->fileStorage->addFilesFromFolder($source, $target, true);
-
-        // Replace tags
-        foreach ($arrFiles as $strTargetPath) {
-            $this->fileStorage->getFile($strTargetPath);
-        }
+        $this->fileStorage->addFilesFromFolder($source, $target, true);
     }
 }

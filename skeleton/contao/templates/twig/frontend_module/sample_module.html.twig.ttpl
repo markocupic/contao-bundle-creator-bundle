@@ -1,0 +1,9 @@
+{%- verbatim -%}
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+{% use "@Contao/component/_download.html.twig" %}
+
+{% block content %}
+    <h3>{{ helloTitle }}</h3>
+    <p>{{ helloText }}
+{% endblock %}
+{%- endverbatim %}

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -21,8 +21,6 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str\Str;
 class AddCustomRegexpListener
 {
     /**
-     * @param $input
-     *
      * @throws \Exception
      */
     #[AsHook('addCustomRegexp', priority: 100)]
@@ -52,7 +50,7 @@ class AddCustomRegexpListener
                     case 'backendmodulecategory':
                     case 'frontendmodulecategory':
                     case 'contentelementcategory':
-                    $blnTested = true;
+                        $blnTested = true;
                         $fittedInput = Str::asSnakeCase($input);
                         break;
 
@@ -78,7 +76,7 @@ class AddCustomRegexpListener
                 }
 
                 if ($blnTested && $fittedInput !== $input) {
-                    $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['cbcb_rgxp'], $fittedInput, $input));
+                    $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['cbcb_rgxp'], $fittedInput, $input));
 
                     return true;
                 }

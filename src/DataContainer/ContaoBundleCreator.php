@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -21,8 +21,10 @@ use Contao\DC_Table;
 use Contao\Input;
 use Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Yaml;
 
 class ContaoBundleCreator
 {
@@ -42,7 +44,7 @@ class ContaoBundleCreator
     public function runCreator(DataContainer $dc): void
     {
         if ('' !== Input::get('id') && '' === Input::post('createBundle') && 'tl_contao_bundle_creator' === Input::post('FORM_SUBMIT') && 'auto' !== Input::post('SUBMIT_TYPE')) {
-            if (null !== ($objModel = ContaoBundleCreatorModel::findByPk(Input::get('id')))) {
+            if (null !== ($objModel = ContaoBundleCreatorModel::findById(Input::get('id')))) {
                 $this->bundleMaker->run($objModel);
             }
         }
@@ -98,14 +100,14 @@ class ContaoBundleCreator
     #[AsCallback(table: 'tl_contao_bundle_creator', target: 'fields.composerlicense.options', priority: 100)]
     public function getLicenses(): array
     {
-        $arrLicenses = [];
+        $data = Yaml::parseFile(Path::join(__DIR__.'/../../config/licenses.yaml'));
 
-        if (isset($GLOBALS['contao_bundle_creator']['licenses']) && \is_array($GLOBALS['contao_bundle_creator']['licenses'])) {
-            foreach ($GLOBALS['contao_bundle_creator']['licenses'] as $k => $v) {
-                $arrLicenses[$k] = "$k   ($v)";
-            }
+        $licenses = [];
+
+        foreach ($data['licenses'] as $k => $v) {
+            $licenses[$k] = "$k   ($v)";
         }
 
-        return $arrLicenses;
+        return $licenses;
     }
 }

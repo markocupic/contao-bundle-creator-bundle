@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -47,8 +47,8 @@ final class SessionAttributeBagMaker extends AbstractMaker
         $strRootKey = str_replace('Bundle', '', $this->tagStorage->get('toplevelnamespace').$this->tagStorage->get('sublevelnamespace'));
         $this->tagStorage->set('friendlyconfigurationrootkey', $strAdapter->asSnakeCase($strRootKey));
 
-        $this->tagStorage->set('sessionAttributeName', $strAdapter->asSessionAttributeName(sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
-        $this->tagStorage->set('sessionAttributeKey', '_'.$strAdapter->asSessionAttributeName(sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeName', $strAdapter->asSessionAttributeName(\sprintf('%s_%s', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
+        $this->tagStorage->set('sessionAttributeKey', '_'.$strAdapter->asSessionAttributeName(\sprintf('%s_%s_attributes', $this->input->vendorname, str_replace('bundle', '', $this->input->repositoryname))));
         $this->tagStorage->set('addSessionAttribute', (string) $this->input->addSessionAttribute);
     }
 
@@ -66,53 +66,53 @@ final class SessionAttributeBagMaker extends AbstractMaker
         }
 
         // Add attribute bag
-        $source = sprintf(
-            '%s/src/Session/Attribute/ArrayAttributeBag.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Session/Attribute/ArrayAttributeBag.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Session/Attribute/ArrayAttributeBag.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add SessionFactory
-        $source = sprintf(
-            '%s/src/Session/SessionFactory.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Session/SessionFactory.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Session/SessionFactory.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add config/services.yaml
-        $source = sprintf(
-            '%s/config/services.tpl.yaml',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/config/services.yaml.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/config/services.yaml',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

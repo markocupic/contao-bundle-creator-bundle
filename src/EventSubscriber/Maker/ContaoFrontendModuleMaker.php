@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -48,11 +48,10 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
         $sublevelnamespace = $strAdapter->asClassName((string) $this->input->repositoryname);
         $frontendmoduleclassname = $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
 
-        $this->tagStorage->set('fullyquallifiedfrontendmoduleclassname', sprintf('%s\%s\Controller\FrontendModule\%s', $toplevelnamespace, $sublevelnamespace, $frontendmoduleclassname));
+        $this->tagStorage->set('fullyquallifiedfrontendmoduleclassname', \sprintf('%s\%s\Controller\FrontendModule\%s', $toplevelnamespace, $sublevelnamespace, $frontendmoduleclassname));
         $this->tagStorage->set('frontendmoduleclassname', $frontendmoduleclassname);
         $this->tagStorage->set('frontendmoduletype', (string) $this->input->frontendmoduletype);
         $this->tagStorage->set('frontendmodulecategory', (string) $this->input->frontendmodulecategory);
-        $this->tagStorage->set('frontendmoduletemplate', $strAdapter->asContaoFrontendModuleTemplateName((string) $this->input->frontendmoduletype));
         $arrLabel = $stringUtilAdaper->deserialize($this->input->frontendmoduletrans, true);
         $this->tagStorage->set('frontendmoduletrans_0', $arrLabel[0]);
         $this->tagStorage->set('frontendmoduletrans_1', $arrLabel[1]);
@@ -80,90 +79,107 @@ final class ContaoFrontendModuleMaker extends AbstractMaker
         // Get the frontend module classname
         $strFrontendModuleClassname = $strAdapter->asContaoFrontendModuleClassName((string) $this->input->frontendmoduletype);
 
-        // Add frontend module class to src/Controller/FrontendModuleController
-        $source = sprintf(
-            '%s/src/Controller/FrontendModule/FrontendModuleController.tpl.php',
-            $this->skeletonPath
+        // Add the frontend module class to src/Controller/FrontendModuleController
+        $source = \sprintf(
+            '%s/src/Controller/FrontendModule/FrontendModuleController.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Controller/FrontendModule/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strFrontendModuleClassname
+            $strFrontendModuleClassname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add frontend module template
-        $source = sprintf(
-            '%s/contao/templates/mod_sample_module.tpl.html5',
-            $this->skeletonPath
+        // Add the content element template
+        $source = \sprintf(
+            '%s/contao/templates/twig/frontend_module/sample_module.html.twig.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
-            '%s/vendor/%s/%s/contao/templates/%s.html5',
+        $target = \sprintf(
+            '%s/vendor/%s/%s/contao/templates/twig/frontend_module/%s.html.twig',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strFrontenModuleTemplateName
+            $strFrontenModuleTemplateName,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
+        // Add the .twig-root file to the content element template directory
+        $source = \sprintf(
+            '%s/contao/templates/twig/.twig-root',
+            $this->skeletonPath,
+        );
+
+        $target = \sprintf(
+            '%s/vendor/%s/%s/contao/templates/twig/.twig-root',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname,
+        );
+
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/dca/tl_module.php
-        $source = sprintf(
-            '%s/contao/dca/tl_module.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/dca/tl_module.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/dca/tl_module.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/languages/en/modules.php to file storage
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/modules.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $source = sprintf(
-            '%s/contao/languages/en/modules.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/modules.php.ttpl',
+            $this->skeletonPath,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/languages/en/default.php to file storage
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $source = sprintf(
-            '%s/contao/languages/en/default.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/default.php.ttpl',
+            $this->skeletonPath,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

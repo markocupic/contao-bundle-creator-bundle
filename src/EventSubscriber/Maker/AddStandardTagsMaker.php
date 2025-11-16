@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -56,11 +56,9 @@ final class AddStandardTagsMaker extends AbstractMaker
         $this->tagStorage->set('year', date('Y'));
 
         // Phpdoc
-        $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(sprintf('%s/partials/phpdoc.tpl.txt', $this->skeletonPath), $this->tagStorage);
-        $this->tagStorage->set('phpdoc', $strAdapter->generateHeaderCommentFromString($strPhpdoc));
-        $phpdoclines = explode(PHP_EOL, $strPhpdoc);
-        $ecsphpdoc = preg_replace("/[\r\n|\n]+/", '', implode('', array_map(static fn ($line) => $line.'\n', $phpdoclines)));
-        $this->tagStorage->set('ecsphpdoc', rtrim($ecsphpdoc, '\\n'));
+        $strPhpdoc = $this->fileStorage->getTagReplacedContentFromFilePath(\sprintf('%s/partials/phpdoc.twig.ttpl', $this->skeletonPath), $this->tagStorage);
+        $this->tagStorage->set('phpdoc', rtrim($strPhpdoc, " \t\n\r\0\x0B"));
+        $this->tagStorage->set('ecsphpdoc', Str::generatePhpDocStringForECS($strPhpdoc));
     }
 
     public function addFilesToStorage(AddMakerEvent $event): void

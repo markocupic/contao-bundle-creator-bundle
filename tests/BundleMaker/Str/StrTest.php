@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2023 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -258,29 +258,6 @@ class StrTest extends ContaoTestCase
         $repositoryName = 'contao-super-bundle';
         $actual = '@DirtyHarryContaoSuper';
         $this->assertSame(Str::asTwigNamespace($vendorName, $repositoryName), $actual);
-    }
-
-    /**
-     * Test if method returns the correct header comment.
-     */
-    public function testGenerateHeaderCommentFromString(): void
-    {
-        file_put_contents($this->tmpPhpdocFile, sprintf(
-            'Here comes Line 1.%s%sHere comes Line 2.',
-            "\n",
-            "\n"
-        ));
-        $content = file_get_contents($this->tmpPhpdocFile);
-
-        $expected = sprintf(
-            '/*%s * Here comes Line 1.%s *%s * Here comes Line 2.%s */%s',
-            "\n",
-            "\n",
-            "\n",
-            "\n",
-            "\n"
-        );
-        $this->assertSame(Str::generateHeaderCommentFromString($content), $expected);
     }
 
     /**

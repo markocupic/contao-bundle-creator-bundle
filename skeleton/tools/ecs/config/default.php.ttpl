@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+use Contao\EasyCodingStandard\Set\SetList;
+use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
+use Symplify\EasyCodingStandard\ValueObject\Option;
+
+return ECSConfig::configure()
+	->withSets([SetList::CONTAO])
+	->withPaths([
+		__DIR__ . '/../../src',
+	])
+	->withSkip([
+		'*.docx',
+		'*.jpg',
+		'*.jpeg',
+		'*.png',
+		'*.ttf',
+		\Contao\EasyCodingStandard\Fixer\CommentLengthFixer::class          => ['*.php'],
+		\PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer::class  => [
+			'*/DependencyInjection/Configuration.php',
+		],
+	])
+	->withRootFiles()
+	->withParallel()
+	->withSpacing(Option::INDENTATION_SPACES, "\n")
+	->withConfiguredRule(HeaderCommentFixer::class, [
+        'header' => "{{ ecsphpdoc }}",
+	])
+	->withCache(sys_get_temp_dir() . '/ecs/{{ vendorname }}/{{ repositoryname }}');

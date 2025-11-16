@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Storage;
 
-use Markocupic\ContaoBundleCreatorBundle\BundleMaker\ParseToken\ParsePhpToken;
+use Markocupic\ContaoBundleCreatorBundle\Skeleton;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Twig\Environment;
 
 /**
  * Usage:.
@@ -33,13 +36,13 @@ use Symfony\Component\Finder\Finder;
  * ->addFile('somefolder/somefile.txt', 'destination/somefile.txt', true);
  *
  * or:
- * // Create new file from string
+ * // Create a new file from string
  * $fileStorage
  * ->addFileFromString('destination/somefile.txt', 'Lorem ipsum',);
  *
  * or:
  *
- * if($fileStorage->hasFile('somefolder/someotherfile.txt'))
+ * if($fileStorage->has('somefolder/someotherfile.txt'))
  * {
  *   $fileStorage
  *   ->getFile('somefolder/someotherfile.txt')
@@ -49,49 +52,52 @@ use Symfony\Component\Finder\Finder;
  */
 class FileStorage
 {
-    protected array $arrStorrage = [];
+    protected array $storage = [];
+
     protected int $intIndex = -1;
 
     public function __construct(
-        private readonly string $projectDir,
+        private readonly Environment $twig,
     ) {
     }
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
-    public function addFile(string $sourcePath, string $targetPath, bool $blnForceOverride = false): self
+    public function addFile(string $sourcePath, string $targetPath, bool $forceOverride = false): self
     {
+        $sourcePath = Path::canonicalize($sourcePath);
+        $targetPath = Path::canonicalize($targetPath);
+
         if (!is_file($sourcePath)) {
-            throw new FileNotFoundException(sprintf('File "%s" not found.', $sourcePath));
+            throw new FileNotFoundException(\sprintf('File "%s" not found.', $sourcePath));
         }
 
-        if ($this->hasFile($targetPath) && !$blnForceOverride) {
-            throw new \Exception(sprintf('File "%s" is already set. Please use the $blnForceOverride parameter or call FileStorage::getFile()->replaceContent() instead.', $targetPath));
+        if ($this->has($targetPath) && !$forceOverride) {
+            throw new \Exception(\sprintf('File "%s" is already set. Please use the $forceOverride parameter or call FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
-        // Replace default source with a custom source
+        // Replace the default source with a custom source
         // stored in the "templates/contao-bundle-creator-bundle/skeleton" directory
-        $search = 'vendor/markocupic/contao-bundle-creator-bundle/src/Resources';
-        $replace = 'templates/contao-bundle-creator-bundle';
-        $customSource = str_replace($search, $replace, $sourcePath);
+        $search = Skeleton::getDefaultPath();
+        $replace = Skeleton::getCustomTemplatePath();
 
-        if (is_file($customSource)) {
-            $sourcePath = $customSource;
+        $customSourcePath = str_replace($search, $replace, $sourcePath);
+
+        if (is_file($customSourcePath)) {
+            $sourcePath = $customSourcePath;
         }
 
-        $arrData = [
+        $data = [
             'source' => $sourcePath,
             'target' => $targetPath,
             'content' => file_get_contents($sourcePath),
         ];
 
         if (($index = $this->getIndexOf($targetPath)) < 0) {
-            $this->arrStorrage[] = $arrData;
+            $this->storage[] = $data;
         } else {
-            $this->arrStorrage[$index] = $arrData;
+            $this->storage[$index] = $data;
         }
 
         $this->intIndex = $this->getIndexOf($targetPath);
@@ -102,10 +108,13 @@ class FileStorage
     /**
      * @throws \Exception
      */
-    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false, bool $blnForceOverride = false): array
+    public function addFilesFromFolder(string $sourcePath, string $targetPath, bool $traverseSubdirectories = false, bool $forceOverride = false): array
     {
+        $sourcePath = Path::canonicalize($sourcePath);
+        $targetPath = Path::canonicalize($targetPath);
+
         if (!is_dir($sourcePath)) {
-            throw new FileNotFoundException(sprintf('Folder "%s" not found.', $sourcePath));
+            throw new FileNotFoundException(\sprintf('Folder "%s" not found.', $sourcePath));
         }
 
         $finder = new Finder();
@@ -117,9 +126,15 @@ class FileStorage
         $arrFiles = [];
 
         foreach ($finder->files()->ignoreDotFiles(false)->in($sourcePath) as $file) {
-            $basename = str_replace([$sourcePath, 'tpl.'], ['', ''], $file->getRealPath());
-            $this->addFile($file->getRealPath(), $targetPath.$basename, $blnForceOverride);
-            $arrFiles[] = $targetPath.$basename;
+            $relPath = Path::makeRelative($file->getRealPath(), $sourcePath);
+
+            if ('ttpl' === $file->getExtension()) {
+                // Remove the .ttpl extension from the file path
+                $relPath = preg_replace('/\.ttpl$/', '', $relPath);
+            }
+
+            $this->addFile($file->getRealPath(), Path::join($targetPath, $relPath), $forceOverride);
+            $arrFiles[] = Path::join($targetPath, $relPath);
         }
 
         return $arrFiles;
@@ -127,25 +142,25 @@ class FileStorage
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
-    public function addFileFromString(string $targetPath, string $stringContent = '', bool $blnForceOverride = false): self
+    public function addFileFromString(string $targetPath, string $content = '', bool $forceOverride = false): self
     {
-        if ($this->hasFile($targetPath) && !$blnForceOverride) {
-            throw new \Exception(sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
+        $targetPath = Path::canonicalize($targetPath);
+
+        if ($this->has($targetPath) && !$forceOverride) {
+            throw new \Exception(\sprintf('File "%s" is already set. Please use FileStorage::getFile()->replaceContent() instead.', $targetPath));
         }
 
-        $arrData = [
+        $data = [
             'source' => null,
             'target' => $targetPath,
-            'content' => $stringContent,
+            'content' => $content,
         ];
 
         if (($index = $this->getIndexOf($targetPath)) < 0) {
-            $this->arrStorrage[] = $arrData;
+            $this->storage[] = $data;
         } else {
-            $this->arrStorrage[$index] = $arrData;
+            $this->storage[$index] = $data;
         }
 
         $this->intIndex = $this->getIndexOf($targetPath);
@@ -155,13 +170,13 @@ class FileStorage
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
     public function getFile(string $targetPath): self
     {
+        $targetPath = Path::canonicalize($targetPath);
+
         if (($index = $this->getIndexOf($targetPath)) < 0) {
-            throw new \Exception(sprintf('File "%s" not found in the storage', $targetPath));
+            throw new \Exception(\sprintf('File "%s" not found in the storage', $targetPath));
         }
 
         $this->intIndex = $index;
@@ -169,8 +184,10 @@ class FileStorage
         return $this;
     }
 
-    public function hasFile(string $targetPath): bool
+    public function has(string $targetPath): bool
     {
+        $targetPath = Path::canonicalize($targetPath);
+
         if ($this->getIndexOf($targetPath) < 0) {
             return false;
         }
@@ -178,14 +195,11 @@ class FileStorage
         return true;
     }
 
-    /**
-     * @return FileStorage
-     */
     public function removeFile(): self
     {
         if ($this->intIndex > -1) {
-            if (isset($this->arrStorrage[$this->intIndex])) {
-                unset($this->arrStorrage[$this->intIndex]);
+            if (isset($this->storage[$this->intIndex])) {
+                unset($this->storage[$this->intIndex]);
             }
         }
 
@@ -194,12 +208,9 @@ class FileStorage
         return $this;
     }
 
-    /**
-     * @return FileStorage
-     */
     public function removeAll(): self
     {
-        $this->arrStorrage = [];
+        $this->storage = [];
         $this->intIndex = -1;
 
         return $this;
@@ -207,8 +218,6 @@ class FileStorage
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
     public function appendContent(string $strContent): self
     {
@@ -216,15 +225,13 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        $this->arrStorrage[$this->intIndex]['content'] .= $strContent;
+        $this->storage[$this->intIndex]['content'] .= $strContent;
 
         return $this;
     }
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
     public function replaceContent(string $strContent): self
     {
@@ -232,7 +239,7 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        $this->arrStorrage[$this->intIndex]['content'] = $strContent;
+        $this->storage[$this->intIndex]['content'] = $strContent;
 
         return $this;
     }
@@ -246,13 +253,11 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        return (string) $this->arrStorrage[$this->intIndex]['content'];
+        return (string) $this->storage[$this->intIndex]['content'];
     }
 
     /**
      * @throws \Exception
-     *
-     * @return FileStorage
      */
     public function truncate(): self
     {
@@ -260,27 +265,22 @@ class FileStorage
             throw $this->sendFilePointerNotSetException();
         }
 
-        $this->arrStorrage[$this->intIndex]['content'] = '';
+        $this->storage[$this->intIndex]['content'] = '';
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getAll()
+    public function getAll(): array
     {
-        return $this->arrStorrage;
+        return $this->storage;
     }
 
     /**
      * Replace tags.
      *
      * @throws \Exception
-     *
-     * @return FileStorage
      */
-    public function replaceTags(TagStorage $tagStorage, array $filePatternFilter = []): self
+    public function replaceTags(TagStorage $tagStorage, array $extensions = []): self
     {
         if ($this->intIndex < 0) {
             throw $this->sendFilePointerNotSetException();
@@ -288,24 +288,27 @@ class FileStorage
 
         $blnReplace = true;
 
-        if (\count($filePatternFilter) > 0) {
+        if (\count($extensions) > 0) {
             $blnReplace = false;
 
-            foreach ($filePatternFilter as $pattern) {
-                if (isset($this->arrStorrage[$this->intIndex]['source'])) {
-                    if (!empty($this->arrStorrage[$this->intIndex]['source'])) {
-                        if (false !== strpos(basename($this->arrStorrage[$this->intIndex]['source']), $pattern)) {
-                            $blnReplace = true;
-                        }
+            foreach ($extensions as $extension) {
+                if (isset($this->storage[$this->intIndex]['source'])) {
+                    if (empty($this->storage[$this->intIndex]['source'])) {
+                        continue;
+                    }
+                    $file = new \SplFileObject($this->storage[$this->intIndex]['source'], 'rb'); // 'rb' = read binary safe
+                    if ($file->getExtension() === $extension) {
+                        $blnReplace = true;
                     }
                 }
             }
         }
 
         if ($blnReplace) {
-            $content = $this->arrStorrage[$this->intIndex]['content'];
-            $templateParser = new ParsePhpToken($tagStorage);
-            $this->arrStorrage[$this->intIndex]['content'] = $templateParser->parsePhpTokensFromString($content);
+            if ($this->isTemplate($file)) {
+                $content = file_get_contents($file->getRealPath());
+                $this->storage[$this->intIndex]['content'] = $this->twig->createTemplate($content)->render($tagStorage->getAll());
+            }
         }
 
         return $this;
@@ -318,42 +321,47 @@ class FileStorage
      */
     public function getTagReplacedContentFromFilePath(string $strPath, TagStorage $tagStorage): string
     {
-        if (!is_file($strPath)) {
-            throw new FileNotFoundException(sprintf('File "%s" not found.', $strPath));
+        $strPath = Path::canonicalize($strPath);
+
+        $file = new \SplFileObject($strPath);
+
+        $content = $this->fileGetContents($file);
+
+        if ($this->isTemplate($file)) {
+            return $this->twig->createTemplate($content)->render($tagStorage->getAll());
         }
 
-        if (false === ($content = file_get_contents($strPath))) {
-            throw new \Exception(sprintf('Could not read content from file "%s".', $strPath));
-        }
-
-        return (new ParsePhpToken($tagStorage))->parsePhpTokensFromString($content);
+        return $content;
     }
 
     /**
      * Create the file in the target directory in vendor/vendorname/bundlename.
-     *
-     * @return false|int
      */
-    public function createFile(string $targetPath)
+    public function createFile(string $targetPath): void
     {
-        if (!$this->hasFile($targetPath)) {
-            return false;
+        $targetPath = Path::canonicalize($targetPath);
+
+        if (!$this->has($targetPath)) {
+            throw new \Exception(\sprintf('File "%s" not found in the storage', $targetPath));
         }
 
-        $arrFile = $this->arrStorrage[$this->getIndexOf($targetPath)];
+        $arrFile = $this->storage[$this->getIndexOf($targetPath)];
 
-        // Create directory recursive
-        if (!is_dir(\dirname($arrFile['target']))) {
-            mkdir(\dirname($arrFile['target']), 0777, true);
+        $parentDir = \dirname($arrFile['target']);
+
+        $fs = new Filesystem();
+
+        if (!is_dir($parentDir)) {
+            // Create directory recursive
+            $fs->mkdir($parentDir);
         }
 
-        // Create file
-        return file_put_contents($arrFile['target'], $arrFile['content']);
+        $fs->dumpFile($arrFile['target'], $arrFile['content']);
     }
 
     private function getIndexOf(string $targetPath): int
     {
-        foreach ($this->arrStorrage as $index => $arrFile) {
+        foreach ($this->storage as $index => $arrFile) {
             if ($arrFile['target'] === $targetPath) {
                 return $index;
             }
@@ -368,5 +376,35 @@ class FileStorage
     private function sendFilePointerNotSetException()
     {
         return new \Exception('There is no pointer pointing to a file. Please use FileStorage::getFile() or FileStorage::addFile() or FileStorage::addFileFromString()');
+    }
+
+    private function isTemplate(\SplFileObject $file): bool
+    {
+        if (!is_file($file->getRealPath())) {
+            throw new FileNotFoundException(\sprintf('File "%s" not found.', $file->getRealPath()));
+        }
+
+        if ('ttpl' === $file->getExtension()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function fileGetContents(\SplFileObject $file): string
+    {
+        $content = '';
+
+        while (!$file->eof()) {
+            $chunk = $file->fread(8192); // Read in 8KB chunks
+
+            if (false === $chunk) {
+                throw new \RuntimeException('Failed to read from file.');
+            }
+
+            $content .= $chunk;
+        }
+
+        return $content;
     }
 }

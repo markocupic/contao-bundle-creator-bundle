@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -68,10 +68,10 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
             }
 
             $objRepositories->type = 'path';
-            $objRepositories->url = sprintf(
+            $objRepositories->url = \sprintf(
                 'vendor/%s/%s',
                 $this->input->vendorname,
-                $this->input->repositoryname
+                $this->input->repositoryname,
             );
 
             // Prevent duplicate entries
@@ -84,10 +84,10 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
 
         if ('vcs-github' === $this->input->rootcomposerextendrepositorieskey) {
             $objRepositories->type = 'vcs';
-            $objRepositories->url = sprintf(
+            $objRepositories->url = \sprintf(
                 'https://github.com/%s/%s',
                 $this->input->vendorname,
-                $this->input->repositoryname
+                $this->input->repositoryname,
             );
 
             // Prevent duplicate entries
@@ -104,7 +104,7 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
         if (!empty(trim((string) $this->input->composerpackageversion))) {
             $version = trim((string) $this->input->composerpackageversion);
         }
-        $objJSON->require->{sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = $version;
+        $objJSON->require->{\sprintf('%s/%s', $this->input->vendorname, $this->input->repositoryname)} = $version;
         $this->message->addInfo('Extended the require section in the root composer.json. Please check!');
         $blnModified = true;
 
@@ -113,29 +113,29 @@ final class AlterRootComposerJsonMaker extends AbstractMaker
             $dateAdapter = $this->framework->getAdapter(Date::class);
 
             // Make a backup first
-            $strBackupPath = sprintf(
+            $strBackupPath = \sprintf(
                 'system/tmp/composer_backup_%s.json',
-                $dateAdapter->parse('Y-m-d _H-i-s', time())
+                $dateAdapter->parse('Y-m-d _H-i-s', time()),
             );
 
             copy(
                 $this->projectDir.\DIRECTORY_SEPARATOR.'composer.json',
-                $this->projectDir.\DIRECTORY_SEPARATOR.$strBackupPath
+                $this->projectDir.\DIRECTORY_SEPARATOR.$strBackupPath,
             );
 
-            $this->message->addInfo(sprintf('Created backup of composer.json in "%s"', $strBackupPath));
+            $this->message->addInfo(\sprintf('Created backup of composer.json in "%s"', $strBackupPath));
 
             // Append modifications
             $content = json_encode($objJSON, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-            $source = sprintf(
+            $source = \sprintf(
                 '%s/composer.json',
-                $this->projectDir
+                $this->projectDir,
             );
 
             $target = $source;
 
-            if (!$this->fileStorage->hasFile($target)) {
+            if (!$this->fileStorage->has($target)) {
                 $this->fileStorage->addFile($source, $target);
             }
 

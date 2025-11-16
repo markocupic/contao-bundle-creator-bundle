@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -45,164 +45,164 @@ final class MiscFilesMaker extends AbstractMaker
 
         // config/*.yaml yaml config files
         $arrFiles = [
-            'listener.tpl.yaml',
-            'parameters.tpl.yaml',
-            'services.tpl.yaml',
+            'listener.yaml.ttpl',
+            'parameters.yaml.ttpl',
+            'services.yaml.ttpl',
         ];
 
         foreach ($arrFiles as $file) {
-            $source = sprintf(
+            $source = \sprintf(
                 '%s/config/%s',
                 $this->skeletonPath,
-                $file
+                $file,
             );
 
-            $target = sprintf(
+            $target = \sprintf(
                 '%s/vendor/%s/%s/config/%s',
                 $this->projectDir,
                 $this->input->vendorname,
                 $this->input->repositoryname,
-                str_replace('tpl.', '', $file)
+                str_replace('.ttpl', '', $file),
             );
 
-            if (!$this->fileStorage->hasFile($target)) {
+            if (!$this->fileStorage->has($target)) {
                 $this->fileStorage->addFile($source, $target);
             }
         }
 
         // src/Resource/contao/config/config.php
-        $source = sprintf(
-            '%s/contao/config/config.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/config/config.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/config/config.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add logo to the docs folder
-        $source = sprintf(
+        $source = \sprintf(
             '%s/docs/logo.png',
-            $this->skeletonPath
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/docs/logo.png',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add empty stylesheet
-        $source = sprintf(
+        $source = \sprintf(
             '%s/public/css/styles.css',
-            $this->skeletonPath
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/public/css/styles.css',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add empty script file
-        $source = sprintf(
+        $source = \sprintf(
             '%s/public/js/script.js',
-            $this->skeletonPath
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/public/js/script.js',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Readme.md
-        $source = sprintf(
-            '%s/README.tpl.md',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/README.md.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/README.md',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // .editorconfig
-        $source = sprintf(
-            '%s/.editorconfig.tpl.txt',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/.editorconfig.txt',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/.editorconfig',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // .gitattributes
-        $source = sprintf(
-            '%s/.gitattributes.tpl.txt',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/.gitattributes.txt',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/.gitattributes',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // .gitignore
-        $source = sprintf(
-            '%s/.gitignore.tpl.txt',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/.gitignore.txt',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/.gitignore',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

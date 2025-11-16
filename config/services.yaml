@@ -10,5 +10,3 @@ services:
     Markocupic\ContaoBundleCreatorBundle\:
         resource: ../src/
         exclude: ../src/{DependencyInjection,Model,Event}
-
-

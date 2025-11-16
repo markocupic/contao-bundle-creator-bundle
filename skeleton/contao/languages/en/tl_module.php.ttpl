@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+{{ phpdoc }}
+
+/**
+ * Legends
+ */
+//$GLOBALS['TL_LANG']['tl_module']['custom_legend'] = '';
+
+/**
+ * Fields
+ */
+//$GLOBALS['TL_LANG']['tl_module']['customField'] = ['', ''];

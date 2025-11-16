@@ -1,0 +1,8 @@
+{%- verbatim -%}
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_download.html.twig" %}
+
+{% block content %}
+    {{ text|raw }}
+{% endblock %}
+{%- endverbatim %}

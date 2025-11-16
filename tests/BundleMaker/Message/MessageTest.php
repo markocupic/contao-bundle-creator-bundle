@@ -27,6 +27,8 @@ class MessageTest extends ContaoTestCase
 {
     protected Session $session;
 
+    protected Message|null $message;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -83,7 +85,6 @@ class MessageTest extends ContaoTestCase
         $this->getContainerWithContaoConfiguration();
 
         $adapter = $this->mockAdapter(['addInfo', 'addError', 'addConfirmation', 'hasInfo', 'hasError', 'hasConfirmation']);
-
         $adapter
             ->method('addInfo')
             ->with('something')

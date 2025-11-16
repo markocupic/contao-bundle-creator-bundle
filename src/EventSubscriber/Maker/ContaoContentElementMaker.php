@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -49,12 +49,11 @@ final class ContaoContentElementMaker extends AbstractMaker
         $sublevelnamespace = $strAdapter->asClassName((string) $this->input->repositoryname);
         $contentelementclassname = $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype);
 
-        $this->tagStorage->set('fullyquallifiedcontentelementclassname', sprintf('%s\%s\Controller\ContentElement\%s', $toplevelnamespace, $sublevelnamespace, $contentelementclassname));
+        $this->tagStorage->set('fullyquallifiedcontentelementclassname', \sprintf('%s\%s\Controller\ContentElement\%s', $toplevelnamespace, $sublevelnamespace, $contentelementclassname));
 
         $this->tagStorage->set('contentelementclassname', $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype));
         $this->tagStorage->set('contentelementtype', (string) $this->input->contentelementtype);
         $this->tagStorage->set('contentelementcategory', (string) $this->input->contentelementcategory);
-        $this->tagStorage->set('contentelementtemplate', $strAdapter->asContaoContentElementTemplateName((string) $this->input->contentelementtype));
         $arrLabel = $stringUtilAdapter->deserialize($this->input->contentelementtrans, true);
         $this->tagStorage->set('contentelementtrans_0', $arrLabel[0]);
         $this->tagStorage->set('contentelementtrans_1', $arrLabel[1]);
@@ -83,72 +82,89 @@ final class ContaoContentElementMaker extends AbstractMaker
         $strContentElementClassname = $strAdapter->asContaoContentElementClassName((string) $this->input->contentelementtype);
 
         // Add content element class to src/Controller/ContentElement
-        $source = sprintf(
-            '%s/src/Controller/ContentElement/ContentElementController.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Controller/ContentElement/ContentElementController.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Controller/ContentElement/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strContentElementClassname
+            $strContentElementClassname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
-        // Add content element template
-        $source = sprintf(
-            '%s/contao/templates/ce_sample_element.tpl.html5',
-            $this->skeletonPath
+        // Add the content element template
+        $source = \sprintf(
+            '%s/contao/templates/twig/content_element/sample_element.html.twig.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
-            '%s/vendor/%s/%s/contao/templates/%s.html5',
+        $target = \sprintf(
+            '%s/vendor/%s/%s/contao/templates/twig/content_element/%s.html.twig',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strContentElementTemplateName
+            $strContentElementTemplateName,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
+
+        // Add the .twig-root file to the content element template directory
+        $source = \sprintf(
+            '%s/contao/templates/twig/.twig-root',
+            $this->skeletonPath,
+        );
+
+        $target = \sprintf(
+            '%s/vendor/%s/%s/contao/templates/twig/.twig-root',
+            $this->projectDir,
+            $this->input->vendorname,
+            $this->input->repositoryname,
+        );
+
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/dca/tl_content.php
-        $source = sprintf(
-            '%s/contao/dca/tl_content.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/dca/tl_content.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/dca/tl_content.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/languages/en/modules.php to file storage
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $source = sprintf(
-            '%s/contao/languages/en/default.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/default.php.ttpl',
+            $this->skeletonPath,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

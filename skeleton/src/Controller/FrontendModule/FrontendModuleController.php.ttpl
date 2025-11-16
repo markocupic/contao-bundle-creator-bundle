@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+{{ phpdoc }}
+
+namespace {{ toplevelnamespace }}\{{ sublevelnamespace }}\Controller\FrontendModule;
+
+use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Date;
+use Contao\FrontendUser;
+use Contao\ModuleModel;
+use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+#[AsFrontendModule(category: '{{ frontendmodulecategory }}')]
+class {{ frontendmoduleclassname }} extends AbstractFrontendModuleController
+{
+    public const TYPE = '{{ frontendmoduletype }}';
+
+    protected PageModel|null $page;
+
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+    ) {
+    }
+
+    /**
+     * This method extends the parent __invoke method,
+     * its usage is usually not necessary.
+     */
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null, PageModel|null $page = null): Response
+    {
+        // Get the page model
+        $this->page = $page;
+
+        $scopeMatcher = $this->container->get('contao.routing.scope_matcher');
+
+        if ($this->page instanceof PageModel && $scopeMatcher->isFrontendRequest($request)) {
+            $this->page->loadDetails();
+        }
+
+        return parent::__invoke($request, $model, $section, $classes);
+    }
+
+    /**
+     * Lazyload services.
+     */
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['database_connection'] = Connection::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+        $services['translator'] = TranslatorInterface::class;
+
+        return $services;
+    }
+
+    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
+    {
+        $userFirstname = 'DUDE';
+        $user = $this->tokenStorage->getToken()?->getUser();
+
+        // Get the logged-in frontend user... if there is one
+        if ($user instanceof FrontendUser) {
+            $userFirstname = $user->firstname;
+        }
+
+        /** @var Session $session */
+        $session = $request->getSession();
+        $bag = $session->getBag('contao_frontend');
+        $bag->set('foo', 'bar');
+
+        /** @var Date $dateAdapter */
+        $dateAdapter = $this->getContaoAdapter(Date::class);
+
+        $intWeekday = $dateAdapter->parse('w');
+        $translator = $this->container->get('translator');
+        $strWeekday = $translator->trans('DAYS.'.$intWeekday, [], 'contao_default');
+
+        $guests = [];
+
+        // Get the database connection
+        $db = $this->container->get('database_connection');
+
+        /** @var Result $stmt */
+        $rows = $db->fetchAllAssociative('SELECT * FROM tl_member WHERE gender = ? ORDER BY lastname', ['female']);
+
+        foreach ($rows as $row) {
+            $guests[] = $row['firstname'];
+        }
+
+        $template->set('helloTitle', \sprintf(
+            'Hi %s, and welcome to the "Hello World Module". Today is %s.',
+            $userFirstname,
+            $strWeekday,
+        ));
+
+        $template->set('helloText', '');
+
+        if (!empty($arrGuests)) {
+            $template->set('helloText', 'Our guests today are: '.implode(', ', $arrGuests));
+        }
+
+        return $template->getResponse();
+    }
+}

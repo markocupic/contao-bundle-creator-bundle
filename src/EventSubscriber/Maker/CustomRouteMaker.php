@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -41,10 +41,10 @@ final class CustomRouteMaker extends AbstractMaker
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 
-        $subject = sprintf(
+        $subject = \sprintf(
             '%s_%s',
             strtolower($this->input->vendorname),
-            strtolower($this->input->repositoryname)
+            strtolower($this->input->repositoryname),
         );
         $subject = preg_replace('/-bundle$/', '', $subject);
         $routeId = preg_replace('/-/', '_', $subject);
@@ -66,36 +66,36 @@ final class CustomRouteMaker extends AbstractMaker
         }
 
         // Add controller (custom route)
-        $source = sprintf(
-            '%s/src/Controller/Controller.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Controller/Controller.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Controller/MyCustomController.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add twig template
-        $source = sprintf(
-            '%s/templates/MyCustom/my_custom.html.tpl.twig',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/templates/MyCustom/my_custom.html.twig.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/templates/MyCustom/my_custom.html.twig',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

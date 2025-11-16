@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -17,7 +17,7 @@ namespace Markocupic\ContaoBundleCreatorBundle\BundleMaker\Str;
 final class Str
 {
     /**
-     * Sanitize vendor name (github 6 packagist restrictions)
+     * Sanitize vendor name (GitHub 6 packagist restrictions)
      * Do no allow: vendor_name, -vendorname, vendorname-, vendor--name,
      * But allow vendor-name.
      */
@@ -31,7 +31,7 @@ final class Str
     }
 
     /**
-     * Sanitize repository name (github restrictions)
+     * Sanitize repository name (GitHub restrictions)
      * Remove not accepted strings and replace them with "-"
      * contao-my-repository#" will be converted to "contao-my-repository-".
      */
@@ -54,9 +54,9 @@ final class Str
     }
 
     /**
-     * Ensures that the given string doesn't starts with the given prefix. If the
+     * Ensures that the given string doesn't start with the given prefix. If the
      * string contains the prefix multiple times, only the first one is removed.
-     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo').
      */
     public static function removePrefix(string $value, string $prefix): string
     {
@@ -77,7 +77,7 @@ final class Str
      */
     public static function asComposerDescription(string $value): string
     {
-        return $value = str_replace('"', "'", $value);
+        return str_replace('"', "'", $value);
     }
 
     /**
@@ -108,22 +108,20 @@ final class Str
     /**
      * Return Dependeny Injection Extension Classname
      * e.g. ContaoCalendarExtension.
-     *
-     * @return string|array<string>|null
      */
-    public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName)
+    public static function asDependencyInjectionExtensionClassname(string $vendorName, string $repositoryName): string
     {
         return preg_replace(
             '/Bundle$/',
             '',
-            self::asClassName($vendorName).self::asClassName($repositoryName)
+            self::asClassName($vendorName).self::asClassName($repositoryName),
         ).'Extension';
     }
 
     /**
      * Transforms the given string into the format commonly used by PHP classes,
-     * (e.g. `this-app:do_this-and_that4you` -> `thisAppDoThisAndThat4You`) but it doesn't check
-     * the validity of the class name.
+     * (e.g. `this-app:do_this-and_that4you` -> `thisAppDoThisAndThat4You`),
+     * but it doesn't check the validity of the class name.
      */
     public static function asClassName(string $value, string $suffix = ''): string
     {
@@ -152,7 +150,7 @@ final class Str
     /**
      * Ensures that the given string doesn't end with the given suffix. If the
      * string contains the suffix multiple times, only the last one is removed.
-     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo'.
+     * It's case-insensitive (e.g. value: 'Foocommand' suffix: 'Command' -> result: 'Foo').
      */
     public static function removeSuffix(string $value, string $suffix): string
     {
@@ -168,7 +166,7 @@ final class Str
     }
 
     /**
-     * Get the frontend module classname from module type and add the "Controller" suffix
+     * Get the frontend module classname from the module type and add the "Controller" suffix
      * f.ex. my_custom_module => MyCustomModuleController.
      *
      * @param string $value (requires tl_contao_bundle_creator.frontendmoduletype)
@@ -188,9 +186,9 @@ final class Str
      * @param string $value  (requires tl_contao_bundle_creator.frontendmoduletype)
      * @param string $suffix (add a suffix e.g. "_module")
      */
-    public static function asContaoFrontendModuleType(string $value, $suffix = ''): string
+    public static function asContaoFrontendModuleType(string $value, string $suffix = ''): string
     {
-        $value = self::asSnakeCase((string) $value);
+        $value = self::asSnakeCase($value);
 
         $pattern = '/^(module_|module|mod_|mod|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -223,9 +221,9 @@ final class Str
      * @param string $value  (requires tl_contao_bundle_creator.contentelementtype)
      * @param string $suffix (add a suffix e.g. "_element")
      */
-    public static function asContaoContentElementType(string $value, $suffix = ''): string
+    public static function asContaoContentElementType(string $value, string $suffix = ''): string
     {
-        $value = self::asSnakeCase((string) $value);
+        $value = self::asSnakeCase($value);
 
         $pattern = '/^(element_|element|ce_|ce|_{1})/';
         $value = preg_replace($pattern, '', $value);
@@ -261,7 +259,7 @@ final class Str
      */
     public static function asContaoDcaTable(string $value): string
     {
-        if (!\strlen((string) $value)) {
+        if (!\strlen($value)) {
             throw new \Exception('No dca tablename set.');
         }
 
@@ -270,14 +268,14 @@ final class Str
         $value = preg_replace('/_{2,}/', '_', $value);
         $value = preg_replace('/[^A-Za-z0-9_]|_$/', '', $value);
 
-        if (!preg_match('/^tl_/', $value)) {
+        if (!str_starts_with($value, 'tl_')) {
             $value = 'tl_'.$value;
         }
 
         return $value;
     }
 
-    public static function asContaoFrontendModuleTemplateName(string $value, $prefix = 'mod_'): string
+    public static function asContaoFrontendModuleTemplateName(string $value, $prefix = ''): string
     {
         $value = self::asContaoFrontendModuleType($value);
         $value = self::addPrefix($value, $prefix);
@@ -285,7 +283,7 @@ final class Str
         return preg_replace('/_{2,}/', '_', $value);
     }
 
-    public static function asContaoContentElementTemplateName(string $value, $prefix = 'ce_'): string
+    public static function asContaoContentElementTemplateName(string $value, $prefix = ''): string
     {
         $value = self::asContaoContentElementType($value);
         $value = self::addPrefix($value, $prefix);
@@ -301,7 +299,7 @@ final class Str
         return preg_replace(
             '/^Tl/',
             '',
-            self::asClassName($dcaTableName)
+            self::asClassName($dcaTableName),
         );
     }
 
@@ -313,19 +311,24 @@ final class Str
         return preg_replace(
             '/Bundle$/',
             '',
-            '@'.self::asClassName($vendorName).self::asClassName($repositoryName)
+            '@'.self::asClassName($vendorName).self::asClassName($repositoryName),
         );
     }
 
     /**
      * Generate phpdoc header comment from string.
      */
-    public static function generateHeaderCommentFromString(string $value): string
+    public static function generatePhpDocStringForECS(string $value): string
     {
-        $lines = explode("\n", $value);
-        $lines = array_map(static fn ($line) => !empty($line) ? ' * '.$line : ' *', $lines);
+        // Left and right trim
+        $value = str_replace(['/*', ' */', ' * ', ' *'], ['', '', '', '', ''], $value);
 
-        return sprintf('%s%s%s', '/*'."\n", implode("\n", $lines), "\n".' */'."\n");
+        // Trim empty lines
+        $value = preg_replace('/^\s+|\s+$/u', '', $value);
+
+        $lines = explode("\n", $value);
+
+        return implode('\n', $lines);
     }
 
     /**

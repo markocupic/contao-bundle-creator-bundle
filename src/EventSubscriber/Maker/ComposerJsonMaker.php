@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -49,19 +49,19 @@ final class ComposerJsonMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
-        $source = sprintf(
-            '%s/composer.tpl.json',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/composer.json',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/composer.json',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
@@ -77,7 +77,7 @@ final class ComposerJsonMaker extends AbstractMaker
         // License
         $objComposer->license = $this->input->composerlicense;
 
-        //Authors
+        // Authors
         if (!isset($objComposer->authors) && !\is_array($objComposer->authors)) {
             $objComposer->authors = [];
         }
@@ -93,16 +93,16 @@ final class ComposerJsonMaker extends AbstractMaker
             $objComposer->support = new \stdClass();
         }
 
-        $objComposer->support->issues = sprintf(
+        $objComposer->support->issues = \sprintf(
             'https://github.com/%s/%s/issues',
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $objComposer->support->source = sprintf(
+        $objComposer->support->source = \sprintf(
             'https://github.com/%s/%s',
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
         // Version composerpackageversion
@@ -120,10 +120,10 @@ final class ComposerJsonMaker extends AbstractMaker
             $objComposer->autoload->{'psr-4'} = new \stdClass();
         }
 
-        $psr4Key = sprintf(
+        $psr4Key = \sprintf(
             '%s\\%s\\',
             $this->tagStorage->get('toplevelnamespace'),
-            $this->tagStorage->get('sublevelnamespace')
+            $this->tagStorage->get('sublevelnamespace'),
         );
 
         $objComposer->autoload->{'psr-4'}->{$psr4Key} = 'src/';
@@ -133,14 +133,13 @@ final class ComposerJsonMaker extends AbstractMaker
             $objComposer->extra = new \stdClass();
         }
 
-        $objComposer->extra->{'contao-manager-plugin'} = sprintf(
+        $objComposer->extra->{'contao-manager-plugin'} = \sprintf(
             '%s\%s\ContaoManager\Plugin',
             $this->tagStorage->get('toplevelnamespace'),
-            $this->tagStorage->get('sublevelnamespace')
+            $this->tagStorage->get('sublevelnamespace'),
         );
 
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
         $this->fileStorage->replaceContent($content);
     }
 }

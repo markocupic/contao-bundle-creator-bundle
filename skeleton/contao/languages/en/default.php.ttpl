@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+{{ phpdoc }}
+
+{% if addContentElement %}
+use {{ fullyquallifiedcontentelementclassname }};
+
+/**
+ * Content element
+ */
+{% if contentelementcategorytrans|default %}
+$GLOBALS['TL_LANG']['CTE']['{{ contentelementcategory }}'] = '{{ contentelementcategorytrans }}';
+{% endif %}
+$GLOBALS['TL_LANG']['CTE'][{{ contentelementclassname }}::TYPE] = ['{{ contentelementtrans_0 }}', '{{ contentelementtrans_1 }}'];
+{% endif %}
+
+/**
+ * Miscellaneous
+ */
+//$GLOBALS['TL_LANG']['MSC'][''] = '';
+
+/**
+ * Errors
+ */
+//$GLOBALS['TL_LANG']['ERR'][''] = '';

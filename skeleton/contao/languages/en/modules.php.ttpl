@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+{{ phpdoc }}
+
+{% if addFrontendModule|default %}
+use {{ fullyquallifiedfrontendmoduleclassname }};
+{% endif %}
+{% if addBackendModule|default %}
+
+/**
+ * Backend modules
+ */
+{% if backendmodulecategorytrans|default %}
+$GLOBALS['TL_LANG']['MOD']['{{ backendmodulecategory }}'] = '{{ backendmodulecategorytrans }}';
+{% endif %}
+$GLOBALS['TL_LANG']['MOD']['{{ backendmoduletype }}'] = ['{{ backendmoduletrans_0 }}', '{{ backendmoduletrans_1 }}'];
+{% endif %}
+{% if addFrontendModule|default %}
+
+/**
+ * Frontend modules
+ */
+{% if frontendmodulecategorytrans|default %}
+$GLOBALS['TL_LANG']['FMD']['{{ frontendmodulecategory }}'] = '{{ frontendmodulecategorytrans }}';
+{% endif %}
+$GLOBALS['TL_LANG']['FMD'][{{ frontendmoduleclassname }}::TYPE] = ['{{ frontendmoduletrans_0 }}', '{{ frontendmoduletrans_1 }}'];
+{% endif %}

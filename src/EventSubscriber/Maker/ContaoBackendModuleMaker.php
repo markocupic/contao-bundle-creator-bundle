@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -78,110 +78,108 @@ final class ContaoBackendModuleMaker extends AbstractMaker
         $strAdapter = $this->framework->getAdapter(Str::class);
 
         // Add dca table file
-        $source = sprintf(
-            '%s/contao/dca/tl_sample_table.tpl.php',
-            $this->skeletonPath
-        )
-        ;
+        $source = \sprintf(
+            '%s/contao/dca/tl_sample_table.php.ttpl',
+            $this->skeletonPath,
+        );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/dca/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $this->input->dcatable
+            $this->input->dcatable,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add dca class
-        $source = sprintf(
-            '%s/src/DataContainer/DcaClass.tpl.php',
-            $this->skeletonPath
-        )
-        ;
+        $source = \sprintf(
+            '%s/src/DataContainer/DcaClass.php.ttpl',
+            $this->skeletonPath,
+        );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/DataContainer/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strAdapter->asDcaClassName((string) $this->input->dcatable)
+            $strAdapter->asDcaClassName((string) $this->input->dcatable),
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add dca table translation file
-        $source = sprintf(
-            '%s/contao/languages/en/tl_sample_table.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/tl_sample_table.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $this->input->dcatable
+            $this->input->dcatable,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add a sample model
-        $source = sprintf(
-            '%s/src/Model/Model.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Model/Model.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/Model/%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
-            $strAdapter->asContaoModelClassName((string) $this->input->dcatable)
+            $strAdapter->asContaoModelClassName((string) $this->input->dcatable),
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/languages/en/modules.php to file storage
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/modules.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $source = sprintf(
-            '%s/contao/languages/en/modules.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/modules.php.ttpl',
+            $this->skeletonPath,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
 
         // Add contao/languages/en/default.php to file storage
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/contao/languages/en/default.php',
             $this->projectDir,
             $this->input->vendorname,
-            $this->input->repositoryname
+            $this->input->repositoryname,
         );
 
-        $source = sprintf(
-            '%s/contao/languages/en/default.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/contao/languages/en/default.php.ttpl',
+            $this->skeletonPath,
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

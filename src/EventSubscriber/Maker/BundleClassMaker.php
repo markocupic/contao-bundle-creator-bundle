@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of Contao Bundle Creator Bundle.
  *
- * (c) Marko Cupic 2024 <m.cupic@gmx.ch>
+ * (c) Marko Cupic <m.cupic@gmx.ch>
  * @license MIT
  * For the full copyright and license information,
  * please view the LICENSE file that was distributed with this source code.
@@ -47,21 +47,21 @@ final class BundleClassMaker extends AbstractMaker
         /** @var Str $strAdapter */
         $strAdapter = $this->framework->getAdapter(Str::class);
 
-        $source = sprintf(
-            '%s/src/Class.tpl.php',
-            $this->skeletonPath
+        $source = \sprintf(
+            '%s/src/Class.php.ttpl',
+            $this->skeletonPath,
         );
 
-        $target = sprintf(
+        $target = \sprintf(
             '%s/vendor/%s/%s/src/%s%s.php',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
             $strAdapter->asClassName((string) $this->input->vendorname),
-            $strAdapter->asClassName((string) $this->input->repositoryname)
+            $strAdapter->asClassName((string) $this->input->repositoryname),
         );
 
-        if (!$this->fileStorage->hasFile($target)) {
+        if (!$this->fileStorage->has($target)) {
             $this->fileStorage->addFile($source, $target);
         }
     }

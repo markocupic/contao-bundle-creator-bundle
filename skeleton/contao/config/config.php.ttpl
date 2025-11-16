@@ -1,0 +1,19 @@
+<?php
+
+{{ phpdoc }}
+
+{% if addBackendModule|default %}
+use {{ toplevelnamespace }}\{{ sublevelnamespace }}\Model\{{ modelclassname }};
+
+/**
+ * Backend modules
+ */
+$GLOBALS['BE_MOD']['{{ backendmodulecategory }}']['{{ backendmoduletype }}'] = array(
+    'tables' => array('{{ dcatable }}')
+);
+
+/**
+ * Models
+ */
+$GLOBALS['TL_MODELS']['{{ dcatable }}'] = {{ modelclassname }}::class;
+{% endif %}
