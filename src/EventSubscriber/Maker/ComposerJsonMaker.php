@@ -16,9 +16,12 @@ namespace Markocupic\ContaoBundleCreatorBundle\EventSubscriber\Maker;
 
 use Markocupic\ContaoBundleCreatorBundle\Event\AddMakerEvent;
 use Markocupic\ContaoBundleCreatorBundle\Event\AddTagsEvent;
+use Markocupic\ContaoBundleCreatorBundle\EventSubscriber\Maker\Trait\ComposerJsonTrait;
 
 final class ComposerJsonMaker extends AbstractMaker
 {
+    use ComposerJsonTrait;
+
     public const PRIORITY = 1000;
 
     public static function getSubscribedEvents(): array
@@ -49,23 +52,11 @@ final class ComposerJsonMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
-        $source = \sprintf(
-            '%s/composer.json',
-            $this->skeletonPath,
-        );
-
-        $target = \sprintf(
-            '%s/vendor/%s/%s/composer.json',
-            $this->projectDir,
-            $this->input->vendorname,
-            $this->input->repositoryname,
-        );
-
-        if (!$this->fileStorage->has($target)) {
-            $this->fileStorage->addFile($source, $target);
-        }
+        // Add composer.json to file storage if not exists and set the FileStorage cursor to the new file
+        $this->addComposerJsonFileToFileStorage($this->fileStorage, $this->skeletonPath, $this->projectDir, $this->input->vendorname, $this->input->repositoryname);
 
         $content = $this->fileStorage->getContent();
+
         $objComposer = json_decode($content);
 
         // Name

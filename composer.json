@@ -33,7 +33,9 @@
     "require-dev": {
         "contao/manager-plugin": "^2.12",
         "contao/easy-coding-standard": "^6.13",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "contao/test-case": "^5.3",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
