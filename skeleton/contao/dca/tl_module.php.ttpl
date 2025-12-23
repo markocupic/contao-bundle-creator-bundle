@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-{{ phpdoc }}
+{{ phpdoc|raw }}
 
 {% if addFrontendModule|default %}
 use {{ fullyquallifiedfrontendmoduleclassname }};

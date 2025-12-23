@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-{{ phpdoc }}
+{{ phpdoc|raw }}
 
 use Contao\DataContainer;
 use Contao\DC_Table;

@@ -1,6 +1,6 @@
 <?php
 
-{{ phpdoc }}
+{{ phpdoc|raw }}
 
 {% if addBackendModule|default %}
 use {{ toplevelnamespace }}\{{ sublevelnamespace }}\Model\{{ modelclassname }};

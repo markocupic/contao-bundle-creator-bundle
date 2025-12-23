@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-{{ phpdoc }}
+{{ phpdoc|raw }}
 
 namespace {{ toplevelnamespace }}\{{ sublevelnamespace }}\DependencyInjection\Compiler;
 
