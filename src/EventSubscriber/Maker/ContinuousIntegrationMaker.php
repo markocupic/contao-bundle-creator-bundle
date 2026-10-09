@@ -46,21 +46,22 @@ final class ContinuousIntegrationMaker extends AbstractMaker
     {
         parent::addFilesToStorage($event);
 
-        // tools/phpunit/*.*
+        // phpunit.xml.dist
         $source = \sprintf(
-            '%s/tools/phpunit',
+            '%s/phpunit.xml.dist.ttpl',
             $this->skeletonPath,
         );
 
         $target = \sprintf(
-            '%s/vendor/%s/%s/tools/phpunit',
+            '%s/vendor/%s/%s/phpunit.xml.dist',
             $this->projectDir,
             $this->input->vendorname,
             $this->input->repositoryname,
         );
 
-        // Add to storage
-        $this->fileStorage->addFilesFromFolder($source, $target, true);
+        if (!$this->fileStorage->has($target)) {
+            $this->fileStorage->addFile($source, $target);
+        }
 
         // Add plugin test
         $source = \sprintf(
@@ -106,7 +107,7 @@ final class ContinuousIntegrationMaker extends AbstractMaker
         $objComposer = json_decode($content);
 
         // Add scripts.unit-tests to composer.json
-        $objComposer->scripts->{'unit-tests'} = '@php tools/phpunit/vendor/bin/phpunit -c tools/phpunit/phpunit.xml.dist';
+        $objComposer->scripts->{'unit-tests'} = '@php vendor/bin/phpunit --colors=always';
 
         // Encode and save composer.json
         $content = json_encode($objComposer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

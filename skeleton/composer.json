@@ -16,13 +16,12 @@
     },
     "require": {
         "php": "^8.1",
-        "contao/core-bundle": "^5.3"
+        "contao/core-bundle": "^5.3 || ^6.0"
     },
     "require-dev": {
         "contao/easy-coding-standard": "^6.13",
         "contao/manager-plugin": "^2.12",
-        "contao/test-case": "^5.3",
-        "phpunit/phpunit": "^9.5"
+        "contao/test-case": "^5.3 || ^6.0"
     },
     "autoload": {
         "psr-4": {}
@@ -32,7 +31,7 @@
             "contao-components/installer": false,
             "contao/manager-plugin": false,
             "contao-community-alliance/composer-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": false
         }
     },
     "extra": {},

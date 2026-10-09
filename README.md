@@ -2,7 +2,7 @@
 
 # Contao Bundle Creator (Boilerplate für eigene Erweiterungen)
 
-Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate/Skeleton) für ein Contao 4 Bundle.
+Das Modul ist für Entwickler gedacht, und generiert nach Eingabe einiger Parameter ein Grundgerüst (Boilerplate/Skeleton) für ein Contao Bundle. Der Bundle Creator läuft unter Contao 5.3 und Contao 6, die generierten Bundles unterstützen ebenfalls Contao 5.3 und Contao 6.
 
 Es können...
 - ein Frontendmodul generiert werden.

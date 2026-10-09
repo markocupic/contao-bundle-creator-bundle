@@ -23,7 +23,8 @@ use Markocupic\ContaoBundleCreatorBundle\BundleMaker\BundleMaker;
 use Markocupic\ContaoBundleCreatorBundle\Model\ContaoBundleCreatorModel;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Yaml\Yaml;
 
 class ContaoBundleCreator
@@ -63,18 +64,10 @@ class ContaoBundleCreator
                 $zipSrc = $session->get('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
                 $session->remove('CONTAO-BUNDLE-CREATOR.LAST-ZIP');
 
-                $filepath = $this->projectDir.'/'.$zipSrc;
-                $filename = basename($filepath);
-
-                $response = new Response();
-                $response->headers->set('Cache-Control', 'private');
-                $response->headers->set('Content-type', 'application/zip');
-                $response->headers->set('Content-disposition', 'attachment;filename="'.$filename.'"');
-                $response->headers->set('Content-length', (string) filesize($filepath));
-
-                // Send headers before outputting anything.
-                $response->sendHeaders();
-                $response->setContent((string) readfile($filepath));
+                $response = new BinaryFileResponse($this->projectDir.'/'.$zipSrc);
+                $response->setPrivate();
+                $response->headers->set('Content-Type', 'application/zip');
+                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, basename($zipSrc));
 
                 throw new ResponseException($response);
             }
