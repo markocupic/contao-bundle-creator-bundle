@@ -1,6 +1,6 @@
 {
     "name": "markocupic/contao-bundle-creator-bundle",
-    "description": "This bundle provides a bundle maker for Contao 4.*. The extension will create a fully working backend- or/and frontend module after you have defined a few parameters in the contao backend.",
+    "description": "This bundle provides a bundle maker for Contao 5.3 and Contao 6. The extension will create a fully working backend- or/and frontend module after you have defined a few parameters in the Contao backend.",
     "keywords": [
         "contao",
         "bundle",
@@ -26,20 +26,35 @@
     },
     "require": {
         "php": "^8.1",
-        "contao/core-bundle": "^5.3",
-        "markocupic/zip-bundle": "^1.1",
-        "ext-json": "*"
+        "ext-json": "*",
+        "contao/core-bundle": "^5.3 || ^6.0",
+        "markocupic/zip-bundle": "^1.1 || ^2.0",
+        "symfony/config": "^6.4 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0 || ^8.0",
+        "symfony/event-dispatcher": "^6.4 || ^7.0 || ^8.0",
+        "symfony/event-dispatcher-contracts": "^3.0",
+        "symfony/filesystem": "^6.4 || ^7.0 || ^8.0",
+        "symfony/finder": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^6.4 || ^7.0 || ^8.0",
+        "symfony/yaml": "^6.4 || ^7.0 || ^8.0",
+        "twig/twig": "^3.8"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.12",
-        "contao/easy-coding-standard": "^6.13",
-        "phpstan/phpstan": "^2.1",
-        "contao/test-case": "^5.3",
-        "phpunit/phpunit": "^9.5"
+        "contao/test-case": "^5.3 || ^6.0"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {
             "Markocupic\\ContaoBundleCreatorBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Markocupic\\ContaoBundleCreatorBundle\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -49,13 +64,23 @@
         "allow-plugins": {
             "contao/manager-plugin": false,
             "contao-components/installer": false,
+            "php-http/discovery": false,
             "contao-community-alliance/composer-plugin": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": [
+                    "PKSA-8j6w-3kr7-s9xk",
+                    "PKSA-6j95-1jtb-x6wc",
+                    "PKSA-cbx2-m9db-bmzd"
+                ]
+            }
         }
     },
     "scripts": {
         "cs-fixer": "@php tools/ecs/vendor/bin/ecs check config/ src/ tests/ --config tools/ecs/config/default.php --fix --ansi",
         "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyse src tests",
-        "unit-tests": "@php tools/phpunit/vendor/bin/phpunit -c tools/phpunit/phpunit.xml.dist"
+        "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }

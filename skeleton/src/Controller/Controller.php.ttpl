@@ -8,7 +8,7 @@ namespace {{ toplevelnamespace }}\{{ sublevelnamespace }}\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment as Twig;
 
 #[Route('/my_custom', name: MyCustomController::class, defaults: ['_scope' => 'frontend', '_token_check' => true])]

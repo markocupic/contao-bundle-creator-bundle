@@ -110,8 +110,8 @@ class {{ frontendmoduleclassname }} extends AbstractFrontendModuleController
 
         $template->set('helloText', '');
 
-        if (!empty($arrGuests)) {
-            $template->set('helloText', 'Our guests today are: '.implode(', ', $arrGuests));
+        if (!empty($guests)) {
+            $template->set('helloText', 'Our guests today are: '.implode(', ', $guests));
         }
 
         return $template->getResponse();

@@ -17,7 +17,7 @@ jobs:
                 uses: shivammathur/setup-php@v2
 
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v4
 
             -   name: Install ecs
                 run: cd tools/ecs && composer update --no-interaction
@@ -39,13 +39,11 @@ jobs:
                     php-version: ${{ matrix.php }}
 
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v4
 
-            -   name: Install phpunit
-                run: cd tools/phpunit && composer update --no-interaction --no-suggest
 
             -   name: Install the dependencies
-                run: composer update --no-interaction --no-suggest
+                run: composer update --no-interaction
 
             -   name: Run the unit tests
                 run: composer unit-tests

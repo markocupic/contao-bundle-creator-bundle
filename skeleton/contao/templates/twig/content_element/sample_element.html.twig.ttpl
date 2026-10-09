@@ -3,6 +3,6 @@
 {% use "@Contao/component/_download.html.twig" %}
 
 {% block content %}
-    {{ text|raw }}
+    {{ text|sanitize_html('contao') }}
 {% endblock %}
 {%- endverbatim %}

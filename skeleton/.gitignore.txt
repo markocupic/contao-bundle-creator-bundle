@@ -6,4 +6,5 @@
 /tools/*/vendor
 /composer.lock
 /.php-cs-fixer.cache
-/tools/phpunit/.phpunit.result.cache
+/.phpunit.result.cache
+/.phpunit.cache/
