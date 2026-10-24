@@ -1,0 +1,4 @@
+/* Icon (Lucide "package-plus") for the "dev_tools" back end menu category */
+#tl_navigation .group-dev_tools {
+    background: url("../icons/package-plus.svg") 3px 2px no-repeat;
+}
